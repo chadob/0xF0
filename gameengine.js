@@ -13,6 +13,8 @@ class GameEngine {
         this.click = null;
         this.mouse = null;
         this.wheel = null;
+        this.left = false;
+        this.right = false;
         this.keys = {};
 
         // Options and the Details
@@ -72,8 +74,32 @@ class GameEngine {
             this.rightclick = getXandY(e);
         });
 
-        this.ctx.canvas.addEventListener("keydown", event => this.keys[event.key] = true);
-        this.ctx.canvas.addEventListener("keyup", event => this.keys[event.key] = false);
+        this.ctx.canvas.addEventListener("keydown", e => {
+            switch (e.code) {
+                case "ArrowLeft":
+                case "KeyA":
+                    this.left = true;
+                    break;
+                case "ArrowRight":
+                case "KeyD":
+                    this.right = true;
+                    break;
+            }
+        }, false);
+        this.ctx.canvas.addEventListener("keyup", e => {
+            switch (e.code) {
+                case "ArrowLeft":
+                case "KeyA":
+                    this.left = false;
+                    break;
+                case "ArrowRight":
+                case "KeyD":
+                    this.right = false;
+                    break;
+            }
+        }, false);
+        //this.ctx.canvas.addEventListener("keydown", event => this.keys[event.key] = true);
+        //this.ctx.canvas.addEventListener("keyup", event => this.keys[event.key] = false);
     };
 
     addEntity(entity) {
