@@ -13,9 +13,10 @@ ASSET_MANAGER.downloadAll(() => {
 	const ctx = canvas.getContext("2d");
 
 	// Add entities to Game Enginge
+	gameEngine.addEntity(new Car(gameEngine));
 	gameEngine.addEntity(new Canvas(gameEngine, 0, 0));
 
-	gameEngine.addEntity(new Car(gameEngine));
+	
 
 	gameEngine.init(ctx);
 
