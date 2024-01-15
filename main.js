@@ -23,15 +23,15 @@ ASSET_MANAGER.downloadAll(() => {
 			let x = -img.width/2,
 			y = img.height/2,
 			height = 1,
-			horizon = img.height/2,
+			horizon = img.height/2 //a change in the magitude of 1 x 10^-15 to make canvas gone,
 			theta = -320*Math.PI;
 
 		let keys = [];
 
 		let velocity = 0,
-			accel = 0.01,
-			decel = 0.01,
-			max_vel = 1;
+			accel = 0.005,	//0.01
+			decel = 0.1,	//0.01
+			max_vel = 1;	//1
 
 		let turn_velocity = 0,
 			turn_accel = Math.PI / 2048,
@@ -42,18 +42,12 @@ ASSET_MANAGER.downloadAll(() => {
 		let m7 = new mode7({img_tag: img, canvas: mapCanvas});
 		m7.update(x, y, height, horizon, theta);
 
-		document.addEventListener('keydown', (evt)=>{
-		keys[evt.keyCode] = true;
-		});
-
-		document.addEventListener('keyup', (evt)=>{
-		keys[evt.keyCode] = false;
-		});
+		
 
 		function update(){
-		if(keys[87]){
+		if(gameEngine.up){
 			velocity = Math.min(velocity+accel, max_vel);
-		} else if(keys[83]){
+		} else if(gameEngine.down){
 			velocity = Math.max(velocity-accel, -max_vel);
 		} else if(velocity < 0) {
 			velocity = Math.min(velocity+decel, 0);
@@ -64,10 +58,10 @@ ASSET_MANAGER.downloadAll(() => {
 		x += velocity * Math.sin(theta);
 		y += velocity * Math.cos(theta);
 
-		if(keys[65]){
+		if(gameEngine.left){
 			turn_velocity = Math.min(turn_velocity+turn_accel, turn_max_vel);
-		} else if(keys[68]){
-			turn_velocity = Math.max(turn_velocity-turn_accel, -turn_max_vel);
+		} else if(gameEngine.right){
+		turn_velocity = Math.max(turn_velocity-turn_accel, -turn_max_vel);
 		} else if(turn_velocity < 0){
 			turn_velocity = Math.min(turn_velocity+turn_decel, 0);
 		} else {

@@ -5,6 +5,7 @@ class GameEngine {
         // What you will use to draw
         // Documentation: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
         this.ctx = null;
+        let keys = [];
 
         // Everything that will be updated and drawn each frame
         this.entities = [];
@@ -15,6 +16,8 @@ class GameEngine {
         this.wheel = null;
         this.left = false;
         this.right = false;
+        this.up = false;
+        this.down = false;
         this.keys = {};
 
         // Options and the Details
@@ -84,6 +87,16 @@ class GameEngine {
                 case "KeyD":
                     this.right = true;
                     break;
+                } 
+                switch (e.code) {
+                case "ArrowUp":
+                case "KeyW":
+                    this.up = true;
+                    break;
+                case "ArrowDown":
+                case "KeyS":
+                    this.down = true;
+                    break;
             }
         }, false);
         this.ctx.canvas.addEventListener("keyup", e => {
@@ -95,6 +108,16 @@ class GameEngine {
                 case "ArrowRight":
                 case "KeyD":
                     this.right = false;
+                    break;
+            } 
+            switch (e.code) {
+                case "ArrowUp":
+                case "KeyW":
+                    this.up = false;
+                    break;
+                case "ArrowDown":
+                case "KeyS":
+                    this.down = false;
                     break;
             }
         }, false);
