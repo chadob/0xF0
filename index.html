@@ -4,7 +4,9 @@
 <head>
     <meta charset="utf-8">
     <title>OxFO</title>
-  
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <script type="text/javascript" src="./mode7.js"></script>
+    <script type="text/javascript" src="./mode7_worker.js"></script>
     <script type="text/javascript" src="./assetmanager.js"></script>
     <script type="text/javascript" src="./timer.js"></script>
     <script type="text/javascript" src="./gameengine.js"></script>
@@ -12,11 +14,11 @@
     <script type="text/javascript" src="./animator.js"></script>
     <script type="text/javascript" src="./car.js"></script>
     <script type="text/javascript" src="./main.js"></script>
-    <script type="text/javascript" src="./animator.js"></script>
     <script type="text/javascript" src="./player.js"></script>
     <script type="text/javascript" src = "./Canvas.js"></script>
 </head>
 <body>
-    <canvas id="gameWorld" width="1024" height="768" style="background: white; border: 1px solid black" tabindex="0" autofocus></canvas>
+    <canvas id="mapCanvas" width="1024" height="522" style="background: grey; border: 1px solid black" tabindex="0"></canvas>
+    <canvas id="gameworld" width="1024" height="522" style="border: 1px solid black" tabindex="0" autofocus></canvas>
 </body>
 </html>
