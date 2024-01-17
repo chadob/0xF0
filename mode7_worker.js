@@ -66,6 +66,16 @@ function update(){
         if(xprime >= 0 && xprime <= image.width &&
             yprime >= 0 && yprime <= image.height){
           let i_dest = ((yprime * image.width) + xprime) * 4; /* again for performance, this function has been inlined */
+          
+          /* NOTE from @Paul: This is where the remaping of pixels happens.
+             "out".data is the array of pixels. From i to i + 3 represents 
+             the RGBA values of a single pixel on the destination canvas.
+             Conversely, image.data represents our source image and from 
+             i_dest to i_dest + 3 represents the RGBA value of the source pixel.
+             
+             The i_dest is the calculated pixel that we are grabbing from 
+             based on the math above. It could useful to keep this information 
+             in mind when implementing features of the game :)  */
 
           out.data[i] = image.data[i_dest];
           out.data[i+1] = image.data[i_dest+1];
@@ -75,7 +85,13 @@ function update(){
       }
     }
 
-    /***/
+    /**
+     * NOTE from @Paul: This portion of code is responsible for
+     * taking the new array of pixel data and turning it into
+     * an image bit map that can then be drawn to the ground/map
+     * canvas. Note that this canvas is seperate from the one where
+     * our car is being drawn at.
+    */
 
     createImageBitmap(out).then((bitmap)=>{
       ctx.clearRect(0, 0, out.width, out.height);

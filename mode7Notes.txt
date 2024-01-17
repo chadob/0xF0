@@ -1,0 +1,93 @@
+From the Author's Github @ https://github.com/Cubified/mode7/tree/master
+
+let m7 = new mode7({
+  img_tag: [an HTML <img> tag],      /* mode7 only needs one of these two lines */
+  img_data: [an ImageData() object],
+
+  canvas: [an HTML <canvas> tag]     /* this cannot be only a rendering context due to the way this variable is transferred to the worker */
+});
+
+m7.update({
+  camera_x_pos,  /* x position of camera in both 2d and 3d space */
+  camera_y_pos,  /* y position of camera in 2d space, equivalent of z position of camera in 3d space */
+  camera_height, /* y position of camera in 3d space */
+  horizon,       /* typically 1/2 of the input image's height */
+  theta          /* rotation around the y axis in 3d space */
+});
+
+m7.stop();  /* pause the render update loop inside the worker */
+...
+m7.start(); /* restart the render update loop */
+
+ /******** Mode 7 **********/
+ /**
+ *  We can include this code into the main.js in the callback function od the downloadAll callback
+ *  if we are having performance problems.
+ */
+	{
+		/**
+		 * x: x position of camera in both 2d and 3d space
+		 * y: y position of camera in 3d space
+		 * horizon: typically 1/2 of the input image's height
+		 * theta: rotation around the y axis in 3d space (think of this as the way the camera is facing)
+		 * 		  not sure if in radians or degrees
+		 */ 
+
+		let x = -img.width/2,
+			y = img.height/2,
+			height = 1,
+			horizon = img.height/2, //a change in the magitude of 1 x 10^-15 to make canvas gone,
+			theta = -320*Math.PI;
+
+		let velocity = 0,
+			accel = 0.005,	//0.01
+			decel = 0.1,	//0.01
+			max_vel = 1;	//1
+
+		let turn_velocity = 0,
+			// turn_accel = Math.PI / 2048,
+			// turn_decel = Math.PI / 2048,
+			// turn_max_vel = Math.PI;
+
+			// Paul likes these settings
+			turn_accel = Math.PI / 1024,
+			turn_decel = Math.PI / 1024,
+			turn_max_vel = Math.PI / (64 -8);
+
+		let m7 = new mode7({img_tag: img, canvas: mapCanvas});
+		m7.update(x, y, height, horizon, theta);
+
+		
+
+		function update(){
+		if(gameEngine.up){
+			velocity = Math.min(velocity+accel, max_vel);
+		} else if(gameEngine.down){
+			velocity = Math.max(velocity-accel, -max_vel);
+		} else if(velocity < 0) {
+			velocity = Math.min(velocity+decel, 0);
+		} else {
+			velocity = Math.max(velocity-decel, 0);
+		}
+
+		x += velocity * Math.sin(theta);
+		y += velocity * Math.cos(theta);
+
+		if(gameEngine.left){
+			turn_velocity = Math.min(turn_velocity+turn_accel, turn_max_vel);
+		} else if(gameEngine.right){
+		turn_velocity = Math.max(turn_velocity-turn_accel, -turn_max_vel);
+		} else if(turn_velocity < 0){
+			turn_velocity = Math.min(turn_velocity+turn_decel, 0);
+		} else {
+			turn_velocity = Math.max(turn_velocity-turn_decel, 0);
+		}
+
+		theta += turn_velocity;
+
+		m7.update(x, y, height, horizon, theta);
+
+		requestAnimationFrame(update);
+		}
+		update();
+	}

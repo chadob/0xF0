@@ -49,23 +49,70 @@ class mode7 {
    *  - canvas: an HTML <canvas> tag
    */
   constructor(opts){
+
+    /* Game Engine entity reference that we can use to access information about gamestate/keys */
+    this.gameEngine = opts.game_engine;
+
+    /* Original Image to sample from */
     this.image = opts.img_data || this.get_image(opts.img_tag);
+
+    /* Canvas html element that we are drawing the ground on */
     this.canv = opts.canvas;
-    this.w = this.image.width;
+
+    /* Width of the original image */
+    this.w = -this.image.width;
+
+    /* Height of the original image */
     this.h = this.image.height;
+
+    /* These are the arguments passed into the constructor. */
     this.opts = opts;
-    
+
+    /* Only one JavaScript Object can hold onto and interact with
+     * the context that is used to draw to a single canvas. Here 
+     * the author is created a Worker (psuedo-multithreading?) JS Object
+     * and transferring the controls of this canvas to that Worker.
+     */
     this.ofscr = this.canv.transferControlToOffscreen();
     this.worker = new Worker('mode7_worker.js');
     this.worker.postMessage({
       cmd: 'init',
-
       canv: this.ofscr,
       image: this.image,
     }, [this.ofscr]);
     this.worker.postMessage({
       cmd: 'start'
     });
+
+    /**
+		 * x      : x position of camera in both 2d and 3d space
+		 * y      : y position of camera in 3d space
+		 * horizon: typically 1/2 of the input image's height
+		 * theta  : rotation around the y axis in 3d space (think of this as the way the camera is facing)
+		 * 		      not sure if in radians or degrees or what unit this is.
+		 */ 
+    this.x = this.opts.start_pos.x,
+    this.y = this.opts.start_pos.y,
+    this.height = 1,
+    this.horizon = this.h/2, //a change in the magitude of 1 x 10^-15 to make canvas gone,
+    this.theta = this.opts.start_pos.theta;
+
+    this.velocity = 0,
+    this.accel = 0.005,	//0.01
+    this.decel = 0.1,	//0.01
+    this.max_vel = 1;	//1
+    // OG Turning settings
+    // this.turn_velocity = 0,
+    // turn_accel = Math.PI / 2048,
+    // turn_decel = Math.PI / 2048,
+    // turn_max_vel = Math.PI;
+
+    // Paul likes these settings
+    this.turn_velocity = 0,
+    this.turn_accel = Math.PI / 1024,
+    this.turn_decel = Math.PI / 1024,
+    this.turn_max_vel = Math.PI / (64 -8);
+
   }
   /*
    * Given an HTML <img> tag, grabs the
@@ -80,12 +127,52 @@ class mode7 {
     return fake_context.getImageData(0, 0, img_tag.width, img_tag.height);
   }
   /*
-   * Passes a camera position, height, horizon
-   * level, and rotation to the worker
-   *
-   * (Refer to mode7_worker.js)
+   * The game engine is keeping track of which keys are being pressed.
+   * Use them here to simulate the car moving by "moving" the camera 
+   * around the ground canvas.
    */
-  update(x0, y0, height, horizon, theta){
+  update() {
+    // console.log("x: " + this.x + " y: " + this.y + " theta: " + this.theta);
+		if(gameEngine.up){
+			this.velocity = Math.min(this.velocity+this.accel, this.max_vel);
+		} else if(gameEngine.down){
+			this.velocity = Math.max(this.velocity-this.accel, -this.max_vel);
+		} else if(this.velocity < 0) {
+			this.velocity = Math.min(this.velocity+this.decel, 0);
+		} else {
+			this.velocity = Math.max(this.velocity-this.decel, 0);
+		}
+
+		this.x += this.velocity * Math.sin(this.theta);
+		this.y += this.velocity * Math.cos(this.theta);
+
+		if(gameEngine.left){
+			this.turn_velocity = Math.min(this.turn_velocity+this.turn_accel, this.turn_max_vel);
+		} else if(gameEngine.right){
+		this.turn_velocity = Math.max(this.turn_velocity-this.turn_accel, -this.turn_max_vel);
+		} else if(this.turn_velocity < 0){
+			this.turn_velocity = Math.min(this.turn_velocity+this.turn_decel, 0);
+		} else {
+			this.turn_velocity = Math.max(this.turn_velocity-this.turn_decel, 0);
+		}
+
+		this.theta += this.turn_velocity;
+	}
+
+  /**
+   * From Paul:
+   * 
+   * This method was added to comply with the update/draw loop of the Game Engine
+   */
+  draw() {
+    this.update_worker(this.x, this.y, this.height, this.horizon, this.theta);
+  }
+  /*
+  * Passes a camera position, height, horizon level, and rotation to the worker.
+  * The worker will then do the actual drawing of the ground canvas.
+  * (Refer to mode7_worker.js)
+  */
+  update_worker(x0, y0, height, horizon, theta){
     this.worker.postMessage({
       cmd: 'set_params',
 
