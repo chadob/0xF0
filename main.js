@@ -1,19 +1,19 @@
 const gameEngine = new GameEngine();
-
 const ASSET_MANAGER = new AssetManager();
 
 // Load sprites into Asset Manager
 
-
 ASSET_MANAGER.queueDownload("./lambo.png");
 ASSET_MANAGER.queueDownload("Sprites/Tracks/SNES - F-Zero - White Land I II.png");
+ASSET_MANAGER.queueDownload("Sprites/Tracks/edited track.png");
+
 
 ASSET_MANAGER.downloadAll(() => {
 	const mapCanvas = document.getElementById("mapCanvas");
 	const gameCanvas = document.getElementById("gameworld");
 	const ctx = gameCanvas.getContext("2d");
-	const img = ASSET_MANAGER.getAsset("Sprites/Tracks/SNES - F-Zero - White Land I II.png");
-
+	//const img = ASSET_MANAGER.getAsset("Sprites/Tracks/SNES - F-Zero - White Land I II.png");
+	const img = ASSET_MANAGER.getAsset("Sprites/Tracks/edited track.png");
 
 	// Add entities to Game Enginge
 	gameEngine.addEntity(new Car(gameEngine));
