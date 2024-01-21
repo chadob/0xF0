@@ -8,10 +8,7 @@ class PlayerCar {
 		this.height = 30;
 		this.health = 100;
 
-        this.track = image;
-        this.x = start_pos.x;
-        this.y = start_pos.y;
-        this.theta = start_pos.theta;
+		this.position = new position(start_pos);
         this.pixelMap = this.get_image(image);
 
         this.velocity = 0,
@@ -26,7 +23,7 @@ class PlayerCar {
         this.turn_max_vel = Math.PI / (64 -8);
     };
 	updateBB() {
-        this.BB = new BoundingBox(this.x, this.y, this.width, this.height)
+        this.BB = new BoundingBox(this.position.x, this.position.y, this.width, this.height)
     };
 
 	get_image(img_tag){
@@ -91,19 +88,19 @@ class PlayerCar {
 			this.turn_velocity = Math.max(this.turn_velocity-this.turn_decel, 0);
 		}
 
-		this.theta += this.turn_velocity;
+		this.position.theta += this.turn_velocity;
     };
 	
     move(v) {
-        var possibleX = this.x + v * Math.sin(this.theta);
-        var possibleY = this.y + v * Math.cos(this.theta);
+        var possibleX = this.position.x + v * Math.sin(this.position.theta);
+        var possibleY = this.position.y + v * Math.cos(this.position.theta);
         if (this.canMove(possibleX, possibleY)){
-            this.x += v * Math.sin(this.theta);
-            this.y += v * Math.cos(this.theta);
-        } else if (this.canMove( this.x, possibleY)){
-            this.y += v * Math.cos(this.theta);
-        } else if(this.canMove( this.x, possibleY)){
-            this.x += v * Math.sin(this.theta);
+            this.position.x += v * Math.sin(this.position.theta);
+            this.position.y += v * Math.cos(this.position.theta);
+        } else if (this.canMove( this.position.x, possibleY)){
+            this.position.y += v * Math.cos(this.position.theta);
+        } else if(this.canMove( this.position.x, possibleY)){
+            this.position.x += v * Math.sin(this.position.theta);
         }
     };
 

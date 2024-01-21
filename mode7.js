@@ -48,7 +48,7 @@ class mode7 {
    * as well as:
    *  - canvas: an HTML <canvas> tag
    */
-  constructor(car, img_tag, canvas, game_engine, start_pos){
+  constructor(car, img_tag, canvas, game_engine){
 
     /* Game Engine entity reference that we can use to access information about gamestate/keys */
     this.gameEngine = game_engine;
@@ -65,7 +65,7 @@ class mode7 {
     /* Height of the original image */
     this.h = this.image.height;
 
-    this.mainCar = car;
+    this.mainCar = car.position;
 
 
     /* Only one JavaScript Object can hold onto and interact with
