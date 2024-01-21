@@ -17,9 +17,9 @@ ASSET_MANAGER.downloadAll(() => {
 
 	// Add entities to Game Enginge
 	let starting_pos = {x: -140.98064874052415, y: 14.980766027134674, theta: -1006.8800071953033};
-	let playerPosition = new Position(starting_pos, )
-	gameEngine.addEntity(new mode7({img_tag: img, canvas: mapCanvas, game_engine: gameEngine, start_pos: starting_pos}));
-	gameEngine.addEntity(new PlayerCar(gameEngine));
+	let mainPlayer = new PlayerCar(starting_pos, img, gameEngine);
+	gameEngine.addEntity(mainPlayer);
+	gameEngine.addEntity(new mode7(mainPlayer, img, mapCanvas, gameEngine, starting_pos));
 	// gameEngine.addEntity(new Enemy(gameEngine));
 	gameEngine.addEntity(new FinishLine(gameEngine));
 
