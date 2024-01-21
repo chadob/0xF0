@@ -22,8 +22,8 @@ class PlayerCar {
 		} else {
 			this.direction = 950;
 		}
-		this.x = this.game.entities.mode7.position.x;
-		this.y = this.game.entities.mode7.position.y;
+		// this.x = this.game.entities.mode7.position.x;
+		// this.y = this.game.entities.mode7.position.y;
 		this.updateBB();
 		var that = this;
         this.game.entities.forEach(function (entity) {
