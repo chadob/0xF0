@@ -20,7 +20,7 @@ class Position {
     };
 
     update() {
-        console.log("x: " + this.x + " y: " + this.y + " theta: " + this.theta);
+       
 
 		if(gameEngine.up){
 			this.velocity = Math.min(this.velocity+this.accel, this.max_vel);
