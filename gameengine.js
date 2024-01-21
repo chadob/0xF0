@@ -121,8 +121,6 @@ class GameEngine {
                     break;
             }
         }, false);
-        //this.ctx.canvas.addEventListener("keydown", event => this.keys[event.key] = true);
-        //this.ctx.canvas.addEventListener("keyup", event => this.keys[event.key] = false);
     };
 
     addEntity(entity) {
