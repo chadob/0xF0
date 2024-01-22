@@ -4,8 +4,8 @@ class PlayerCar {
 		this.direction = 0;
         this.animator = new Animator(ASSET_MANAGER.getAsset("./lambo.png"), 0, 0, 950, 600, 3, 0.5);
 		this.curLap = 0;
-		this.width = 30;
-		this.height = 30;
+		this.width = .5;
+		this.height = .5;
 		this.health = 100;
 
 		this.position = new position(start_pos);
@@ -49,19 +49,27 @@ class PlayerCar {
         this.game.entities.forEach(function (entity) {
             if (entity.BB && that.BB.collide(entity.BB)) {
                 if (entity instanceof FinishLine) {
-                    that.curLap++;
-					console.log(that.curLap);
+					if (entity.passable) {
+						that.curLap++;
+						console.log(that.curLap);
+						if (that.curLap === 3) {
+							console.log("You win!");
+						}   
+						entity.passable = false;
+						setTimeout(() => {
+							entity.passable = true
+						}, 20000);
+					}
+                    
                 }  else if (entity instanceof Enemy) {
 					//slow down velocity
 					that.health -= 5;
 				} 
             }
         });
-
+		// console.log(this.position.x, this.position.y)
 		//win condition
-		if (this.curLap === 1) {
-			console.log("You win!");
-		}   
+		
 		 	
 		if (this.health === 0) {
 			console.log("You lose");

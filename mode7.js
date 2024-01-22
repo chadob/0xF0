@@ -110,7 +110,7 @@ class mode7 {
    * around the ground canvas.
    */
   update() {
-    console.log(this.mainCar.x + " x " + this.mainCar.y);
+    // console.log(this.mainCar.x + " x " + this.mainCar.y);
 	}
 
   /**
