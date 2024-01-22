@@ -7,6 +7,7 @@ class PlayerCar {
 		this.width = .5;
 		this.height = .5;
 		this.health = 100;
+		this.indestructible = false;
 
 		this.position = new position(start_pos);
         this.pixelMap = this.get_image(image);
@@ -117,6 +118,14 @@ class PlayerCar {
         const rgba1 = this.pixelMap.data[pos];
         const rgba2 = this.pixelMap.data[pos +1];
         const rgba3 = this.pixelMap.data[pos+2];
+		if (rgba1+rgba2+rgba3 <= 110 && this.indestructible === false) {
+			this.health -= 5;
+			this.indestructible = true;
+			setTimeout(()=> {
+				this.indestructible = false;
+			}, 250);
+			console.log(this.health)
+		}
         return rgba1+rgba2+rgba3 > 110;
     }
 
