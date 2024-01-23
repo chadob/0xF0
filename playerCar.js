@@ -74,6 +74,7 @@ class PlayerCar {
 		 	
 		if (this.health === 0) {
 			console.log("You lose");
+			this.health/0;
 		}
 		if(this.game.up){
 			this.velocity = Math.min(this.velocity+this.accel, this.max_vel);
@@ -118,6 +119,7 @@ class PlayerCar {
         const rgba1 = this.pixelMap.data[pos];
         const rgba2 = this.pixelMap.data[pos +1];
         const rgba3 = this.pixelMap.data[pos+2];
+		//lose health on collision
 		if (rgba1+rgba2+rgba3 <= 110 && this.indestructible === false) {
 			this.health -= 5;
 			this.indestructible = true;
