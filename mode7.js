@@ -48,16 +48,16 @@ class mode7 {
    * as well as:
    *  - canvas: an HTML <canvas> tag
    */
-  constructor(opts){
+  constructor(car, img_tag, canvas, game_engine){
 
     /* Game Engine entity reference that we can use to access information about gamestate/keys */
-    this.gameEngine = opts.game_engine;
+    this.gameEngine = game_engine;
 
-    /* Original Image to sample from */
-    this.image = opts.img_data || this.get_image(opts.img_tag);
+    /* Original Image to sample from */ 
+    this.image = this.get_image(img_tag);
 
     /* Canvas html element that we are drawing the ground on */
-    this.canv = opts.canvas;
+    this.canv = canvas;
 
     /* Width of the original image */
     this.w = -this.image.width;
@@ -65,7 +65,8 @@ class mode7 {
     /* Height of the original image */
     this.h = this.image.height;
 
-    this.position = new Position(opts.start_pos, this.image, this.map);
+    this.mainCar = car.position;
+
 
     /* Only one JavaScript Object can hold onto and interact with
      * the context that is used to draw to a single canvas. Here 
@@ -86,7 +87,7 @@ class mode7 {
 
     this.height = 1,
     this.horizon = this.h/2, //a change in the magitude of 1 x 10^-15 to make canvas gone,
-    this.theta = opts.start_pos.theta;
+    this.theta = this.mainCar.theta;
 
   }
   /*
@@ -101,7 +102,6 @@ class mode7 {
     fake_canvas.height = img_tag.height;
     console.log(fake_canvas.height);
     fake_context.drawImage(img_tag, 0, 0);
-    this.map = fake_context.getImageData(0, 0, img_tag.width, img_tag.height);
     return fake_context.getImageData(0, 0, img_tag.width, img_tag.height);
   }
   /*
@@ -110,8 +110,7 @@ class mode7 {
    * around the ground canvas.
    */
   update() {
-    this.theta = this.position.theta;
-     this.position.update();
+    // console.log(this.mainCar.x + " x " + this.mainCar.y);
 	}
 
   /**
@@ -120,9 +119,7 @@ class mode7 {
    * This method was added to comply with the update/draw loop of the Game Engine
    */
   draw() {
-
-    //this.update_worker(this.x, this.y, this.height, this.horizon, this.theta);
-    this.update_worker(this.position.x, this.position.y, this.height, this.horizon, this.position.theta);
+    this.update_worker(this.mainCar.x, this.mainCar.y, this.height, this.horizon, this.mainCar.theta);
   }
   /*
   * Passes a camera position, height, horizon level, and rotation to the worker.
@@ -151,69 +148,3 @@ class mode7 {
     });
   }
 }
-    /**
-		 * x      : x position of camera in both 2d and 3d space
-		 * y      : y position of camera in 3d space
-		 * horizon: typically 1/2 of the input image's height
-		 * theta  : rotation around the y axis in 3d space (think of this as the way the camera is facing)
-		 * 		      not sure if in radians or degrees or what unit this is.
-		 */ 
-    // this.x = this.opts.start_pos.x,
-    // this.y = this.opts.start_pos.y,
-
-    
-    // this.velocity = 0,
-    // this.accel = 0.005,	//0.01
-    // this.decel = 0.1,	//0.01
-    // this.max_vel = 1;	//1
-    // OG Turning settings
-    // this.turn_velocity = 0,
-    // turn_accel = Math.PI / 2048,
-     //turn_decel = Math.PI / 2048,
-     //turn_max_vel = Math.PI;
-
-    // Paul likes these settings
-    // this.turn_velocity = 0,
-    // this.turn_accel = Math.PI / 1024,
-    // this.turn_decel = Math.PI / 1024,
-    // this.turn_max_vel = Math.PI / (64 -8);
-
-        //  console.log("x: " + this.position.x + " y: " + this.position.y + " theta: " + this.theta);
-		// if(gameEngine.up){
-		// 	this.velocity = Math.min(this.velocity+this.accel, this.max_vel);
-		// } else if(gameEngine.down){
-		// 	this.velocity = Math.max(this.velocity-this.accel, -this.max_vel);
-		// } else if(this.velocity < 0) {
-		// 	this.velocity = Math.min(this.velocity+this.decel, 0);
-		// } else {
-		// 	this.velocity = Math.max(this.velocity-this.decel, 0);
-		// }
-       /* These are the arguments passed into the constructor. */
-   // this.opts = opts;
-
-
-    // this.position.move(this.velocity);
-
-     //  var possibleX = this.x + this.velocity * Math.sin(this.theta);
-    //  var possibleY = this.y + this.velocity * Math.cos(this.theta);
-    // if (this.x += v * Math.sin(this.theta);){
-		//   this.x += this.velocity * Math.sin(this.theta);
-		//   this.y += this.velocity * Math.cos(this.theta);
-    // } else if (this.position.canMove(this.map, this.x, possibleY)) {
-    //   this.y += this.velocity * Math.cos(this.theta);
-    // } else if (this.position.canMove(this.map, possibleX, this.y)) {
-    //   this.x += this.velocity * Math.sin(this.theta);
-    // }
-
-    		// if(gameEngine.left){
-		// 	this.turn_velocity = Math.min(this.turn_velocity+this.turn_accel, this.turn_max_vel);
-		// } else if(gameEngine.right){
-		// this.turn_velocity = Math.max(this.turn_velocity-this.turn_accel, -this.turn_max_vel);
-		// } else if(this.turn_velocity < 0){
-		// 	this.turn_velocity = Math.min(this.turn_velocity+this.turn_decel, 0);
-		// } else {
-		// 	this.turn_velocity = Math.max(this.turn_velocity-this.turn_decel, 0);
-		// }
-
-		// this.theta += this.turn_velocity;
-    // this.position.theta = this.theta;

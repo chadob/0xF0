@@ -16,7 +16,12 @@ ASSET_MANAGER.downloadAll(() => {
 	const img = ASSET_MANAGER.getAsset("Sprites/Tracks/edited track.png");
 
 	// Add entities to Game Enginge
-	gameEngine.addEntity(new Car(gameEngine));
+	let starting_pos = {x: -140.98064874052415, y: 14.980766027134674, theta: -1006.8800071953033};
+	let mainPlayer = new PlayerCar(starting_pos, img, gameEngine);
+	gameEngine.addEntity(mainPlayer);
+	gameEngine.addEntity(new mode7(mainPlayer, img, mapCanvas, gameEngine));
+	// gameEngine.addEntity(new Enemy(gameEngine));
+	gameEngine.addEntity(new FinishLine(gameEngine));
 
 	/**
 	 *	Adding the mode7 to the Game Engine's entity list will make it execute its update/draw
@@ -26,8 +31,7 @@ ASSET_MANAGER.downloadAll(() => {
 	 *  Worker created by the mode7 class will be responsible for doing the actual calculations
 	 *  and drawing of the ground/map.
 	 */
-	let starting_pos = {x: -140.98064874052415, y: 14.980766027134674, theta: -1006.8800071953033};
-	gameEngine.addEntity(new mode7({img_tag: img, canvas: mapCanvas, game_engine: gameEngine, start_pos: starting_pos}));
+	
 
 	
 

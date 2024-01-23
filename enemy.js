@@ -1,20 +1,21 @@
-class Car {
+class Enemy {
     constructor(game) {
         this.game = game;
 		this.direction = 0;
         this.animator = new Animator(ASSET_MANAGER.getAsset("./lambo.png"), 0, 0, 950, 600, 3, 0.5);
 															//"./sampleCar.png"), 0, 0, 100, 97, 3, 0.5);
+		this.curLap = 0;
+		this.width = 30;
+		this.height = 30;
+        this.x = 144;
+        this .y = 7;
 
     };
+	updateBB() {
+        this.BB = new BoundingBox(this.x, this.y, this.width, this.height)
+    };
     update() {
-		if (this.game.left) {
-			this.direction = 0;
-		} else if (this.game.right) {
-			this.direction = 1800;
-		} else {
-			this.direction = 950;
-		}
-		
+		this.updateBB();
     };
     draw(ctx) {
 		ctx.save();
