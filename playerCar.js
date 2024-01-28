@@ -72,9 +72,9 @@ class PlayerCar {
 		//win condition
 		
 		 	
-		if (this.health === 0) {
+		if (this.health < 5 ) {
 			console.log("You lose");
-			this.health/0;
+			sceneManager.playerDeath();
 		}
 		if(this.game.up){
 			this.velocity = Math.min(this.velocity+this.accel, this.max_vel);

@@ -41,6 +41,20 @@ class GameEngine {
         gameLoop();
     };
 
+    stop(callback) {
+        setTimeout(callback, 500);
+        this.running = false;
+    }
+    clearInput() {
+        this.click = null;
+        this.mouse = null;
+        this.wheel = null;
+        this.left = false;
+        this.right = false;
+        this.up = false;
+        this.down = false;
+        this.keys = {};
+    };
     startInput() {
         const getXandY = e => ({
             x: e.clientX - this.ctx.canvas.getBoundingClientRect().left,
@@ -127,6 +141,9 @@ class GameEngine {
         this.entities.push(entity);
     };
 
+    clearEntities() {
+        this.entities = [];
+    }
     draw() {
         // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
@@ -156,9 +173,11 @@ class GameEngine {
     };
 
     loop() {
-        this.clockTick = this.timer.tick();
-        this.update();
-        this.draw();
+        if(this.running) {
+            this.clockTick = this.timer.tick();
+            this.update();
+            this.draw();
+        }
     };
 
 };
