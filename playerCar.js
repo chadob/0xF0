@@ -1,5 +1,5 @@
 class PlayerCar {
-    constructor(start_pos, image, game) {
+    constructor(start_pos, image, game, hudTimer) {
         this.game = game;
 		this.direction = 0;
         this.animator = new Animator(ASSET_MANAGER.getAsset("./lambo.png"), 0, 0, 950, 600, 3, 0.5);
@@ -8,10 +8,10 @@ class PlayerCar {
 		this.height = .5;
 		this.health = 100;
 		this.indestructible = false;
-
+		this.hudCurLap = document.getElementById('curLap');
 		this.position = new position(start_pos);
         this.pixelMap = this.get_image(image);
-
+		this.hudTimer = hudTimer;
         this.velocity = 0,
         this.accel = 0.005,	//0.01
         this.decel = 0.1,	//0.01
@@ -52,9 +52,14 @@ class PlayerCar {
                 if (entity instanceof FinishLine) {
 					if (entity.passable) {
 						that.curLap++;
-						console.log(that.curLap);
+						that.hudCurLap.innerText = that.curLap + ": ";
+						that.createLapTime();
+						that.hudTimer.reset();
 						if (that.curLap === 3) {
 							console.log("You win!");
+							that.hudTimer.end();
+							document.querySelectorAll('.lapTime').forEach(e => e.remove());
+							sceneManager.playerDeath();
 						}   
 						entity.passable = false;
 						setTimeout(() => {
@@ -72,9 +77,11 @@ class PlayerCar {
 		//win condition
 		
 		 	
-		if (this.health === 0) {
+		if (this.health < 5 ) {
 			console.log("You lose");
-			this.health/0;
+			sceneManager.playerDeath();
+			this.hudTimer.end();
+			document.querySelectorAll('.lapTime').forEach(e => e.remove());
 		}
 		if(this.game.up){
 			this.velocity = Math.min(this.velocity+this.accel, this.max_vel);
@@ -100,7 +107,29 @@ class PlayerCar {
 
 		this.position.theta += this.turn_velocity;
     };
-	
+	//code to create lap time in hud
+	createLapTime() {
+		if (this.curLap > 1) {
+			const newDiv = document.createElement("div");
+			newDiv.classList.add("lapTime");
+			let text = document.createTextNode("Lap " + (this.curLap - 1) + ": ");
+			// and give it some content
+
+			// add the text node to the newly created div
+			newDiv.appendChild(text);
+			let hudMinutes = document.createTextNode(this.hudTimer.minute+ ":");
+			let hudSeconds = document.createTextNode(this.hudTimer.second+":");
+			let hudMilliseconds = document.createTextNode(this.hudTimer.millisecond);
+
+			// add the newly created element and its content into the DOM
+			let hud = document.getElementById("hud")
+			hud.appendChild(newDiv);
+			newDiv.appendChild(hudMinutes);
+			newDiv.appendChild(hudSeconds);
+			newDiv.appendChild(hudMilliseconds);
+		}
+		
+	}
     move(v) {
         var possibleX = this.position.x + v * Math.sin(this.position.theta);
         var possibleY = this.position.y + v * Math.cos(this.position.theta);

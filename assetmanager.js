@@ -5,7 +5,10 @@ class AssetManager {
         this.cache = [];
         this.downloadQueue = [];
     };
-
+    clearEntities() {
+        this.cache = [];
+        this.downloadQueue = [];
+    }
     queueDownload(path) {
         console.log("Queueing " + path);
         this.downloadQueue.push(path);
@@ -16,12 +19,14 @@ class AssetManager {
     };
 
     downloadAll(callback) {
-        if (this.downloadQueue.length === 0) setTimeout(callback, 10);
+        // setTimeout(callback, 10);
+        console.log("START OF DOWNLOAD ALL");
+        // if (this.downloadQueue.length === 0) setTimeout(callback, 10);
         for (let i = 0; i < this.downloadQueue.length; i++) {
             const img = new Image();
 
             const path = this.downloadQueue[i];
-            console.log(path);
+            // console.log(path);
 
             img.addEventListener("load", () => {
                 console.log("Loaded " + img.src);
@@ -38,6 +43,7 @@ class AssetManager {
             img.src = path;
             this.cache[path] = img;
         }
+        console.log("END OF DOWNLOAD ALL");
     };
 
     getAsset(path) {

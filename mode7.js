@@ -48,7 +48,7 @@ class mode7 {
    * as well as:
    *  - canvas: an HTML <canvas> tag
    */
-  constructor(car, img_tag, canvas, game_engine){
+  constructor(car, img_tag, canvas, game_engine, imgBG){
 
     /* Game Engine entity reference that we can use to access information about gamestate/keys */
     this.gameEngine = game_engine;
@@ -58,6 +58,14 @@ class mode7 {
 
     /* Canvas html element that we are drawing the ground on */
     this.canv = canvas;
+
+    //Canvas for drawing bg
+    this.bgCanv = document.getElementById("bgCanvas");
+    this.bgCtx = this.bgCanv.getContext("2d");
+    this.imgBG = imgBG;
+    this.imgBG.width=10*this.bgCanv.width;
+    this.imgBG.height = .6 *this.bgCanv.height;
+    
 
     /* Width of the original image */
     this.w = -this.image.width;
@@ -86,7 +94,7 @@ class mode7 {
 
 
     this.height = 1,
-    this.horizon = this.h/2, //a change in the magitude of 1 x 10^-15 to make canvas gone,
+    this.horizon = this.h/2 + .00000000000001, //a change in the magitude of 1 x 10^-15 to make canvas gone,
     this.theta = this.mainCar.theta;
 
   }
@@ -98,9 +106,7 @@ class mode7 {
     let fake_canvas = document.createElement('canvas'),
         fake_context = fake_canvas.getContext('2d');
     fake_canvas.width = img_tag.width;
-    console.log(fake_canvas.width);
     fake_canvas.height = img_tag.height;
-    console.log(fake_canvas.height);
     fake_context.drawImage(img_tag, 0, 0);
     return fake_context.getImageData(0, 0, img_tag.width, img_tag.height);
   }
@@ -111,6 +117,13 @@ class mode7 {
    */
   update() {
     // console.log(this.mainCar.x + " x " + this.mainCar.y);
+
+    // code for the horizon
+      for (let w = this.bgCanv.width*(this.mainCar.theta % (2*Math.PI)); w < this.bgCanv.width; w += this.imgBG.width) {
+        for (let h = 0; h < this.bgCanv.height; h += this.imgBG.height) {
+          this.bgCtx.drawImage(this.imgBG,  w, h, 10*this.bgCanv.width, .6*this.bgCanv.height);
+        }
+      }
 	}
 
   /**

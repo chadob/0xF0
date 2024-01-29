@@ -3,8 +3,10 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>OxFO</title>
+    <title>0xF0</title>
     <link rel="stylesheet" type="text/css" href="style.css"/>
+    <script type="text/javascript" src="./sceneManager.js"></script>
+    <script type="text/javascript" src="./mainMenu.js"></script>
     <script type="text/javascript" src="./mode7.js"></script>
     <script type="text/javascript" src="./mode7_worker.js"></script>
     <script type="text/javascript" src="./assetmanager.js"></script>
@@ -18,9 +20,23 @@
     <script type="text/javascript" src="./finishLine.js"></script>
     <script type="text/javascript" src="./main.js"></script>
     <script type="text/javascript" src="./boundingBox.js"></script>
+    <script type="text/javascript" src="./hudTimer.js"></script>
 </head>
 <body>
-    <canvas id="mapCanvas" width="1024" height="522" style="background: grey; border: 1px solid black" tabindex="0"></canvas>
-    <canvas id="gameworld" width="1024" height="522" style="border: 1px solid black" tabindex="0" autofocus></canvas>
+    <canvas id="bgCanvas" width="1024" height="522" style="border: 1px solid black" tabindex="0"></canvas>
+    <div id="mainMenu">
+        <img id="titleImg" src="./Sprites/Menu/fzero_title.png">
+        <button id="startRaceButton" >
+            <h1 style="color: #4b2e83">START RACE</h1>
+        </button>
+    </div>
+    
+    <div id="hud">
+        <text>Lap&nbsp
+            <text id="curLap" style="padding-right: 20px;">1:&nbsp</text>
+            
+        </text>
+            <text id="minute">00</text>:<text id="second">00</text>:<text id="millisecond">000</text>
+    </div>
 </body>
 </html>
