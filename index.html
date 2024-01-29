@@ -18,9 +18,19 @@
     <script type="text/javascript" src="./finishLine.js"></script>
     <script type="text/javascript" src="./main.js"></script>
     <script type="text/javascript" src="./boundingBox.js"></script>
+    <script type="text/javascript" src="./hudTimer.js"></script>
 </head>
 <body>
-    <canvas id="mapCanvas" width="1024" height="522" style="background: grey; border: 1px solid black" tabindex="0"></canvas>
+    <canvas id="bgCanvas" width="1024" height="522" style="border: 1px solid black" tabindex="0"></canvas>
+    <canvas id="mapCanvas" width="1024" height="522" style="border: 1px solid black" tabindex="0"></canvas>
+    
     <canvas id="gameworld" width="1024" height="522" style="border: 1px solid black" tabindex="0" autofocus></canvas>
+    <div id="hud">
+        <text>Lap&nbsp
+            <text id="curLap" style="padding-right: 20px;">1:&nbsp</text>
+            
+        </text>
+            <text id="minute">00</text>:<text id="second">00</text>:<text id="millisecond">000</text>
+    </div>
 </body>
 </html>
