@@ -86,7 +86,7 @@ class mode7 {
 
 
     this.height = 1,
-    this.horizon = this.h/2, //a change in the magitude of 1 x 10^-15 to make canvas gone,
+    this.horizon = this.h/2 + .00000000000001, //a change in the magitude of 1 x 10^-15 to make canvas gone,
     this.theta = this.mainCar.theta;
 
   }

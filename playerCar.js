@@ -55,6 +55,7 @@ class PlayerCar {
 						console.log(that.curLap);
 						if (that.curLap === 3) {
 							console.log("You win!");
+							sceneManager.playerDeath();
 						}   
 						entity.passable = false;
 						setTimeout(() => {
