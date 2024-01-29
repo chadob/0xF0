@@ -35,6 +35,10 @@ class HudTimer {
       draw() {
 
       }
+      end() {
+        clearInterval(this.cron);
+        this.reset();
+      }
       returnData(input) {
         return input > 10 ? input : `0${input}`
       }

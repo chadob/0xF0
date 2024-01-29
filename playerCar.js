@@ -57,6 +57,8 @@ class PlayerCar {
 						that.hudTimer.reset();
 						if (that.curLap === 3) {
 							console.log("You win!");
+							that.hudTimer.end();
+							document.querySelectorAll('.lapTime').forEach(e => e.remove());
 							sceneManager.playerDeath();
 						}   
 						entity.passable = false;
@@ -78,6 +80,8 @@ class PlayerCar {
 		if (this.health < 5 ) {
 			console.log("You lose");
 			sceneManager.playerDeath();
+			this.hudTimer.end();
+			document.querySelectorAll('.lapTime').forEach(e => e.remove());
 		}
 		if(this.game.up){
 			this.velocity = Math.min(this.velocity+this.accel, this.max_vel);
@@ -120,9 +124,9 @@ class PlayerCar {
 			// add the newly created element and its content into the DOM
 			let hud = document.getElementById("hud")
 			hud.appendChild(newDiv);
-			hud.appendChild(hudMinutes);
-			hud.appendChild(hudSeconds);
-			hud.appendChild(hudMilliseconds);
+			newDiv.appendChild(hudMinutes);
+			newDiv.appendChild(hudSeconds);
+			newDiv.appendChild(hudMilliseconds);
 		}
 		
 	}
