@@ -55,7 +55,7 @@ class PlayerCar {
 						that.hudCurLap.innerText = that.curLap + ": ";
 						that.createLapTime();
 						that.hudTimer.reset();
-						if (that.curLap === 3) {
+						if (that.curLap === 4) {
 							console.log("You win!");
 							that.hudTimer.end();
 							document.querySelectorAll('.lapTime').forEach(e => e.remove());
@@ -112,6 +112,8 @@ class PlayerCar {
 		if (this.curLap > 1) {
 			const newDiv = document.createElement("div");
 			newDiv.classList.add("lapTime");
+			console.log("Lap " + (this.curLap -1) + ": " + this.hudTimer.minute + ":" + 
+				this.hudTimer.second + ":" + this.hudTimer.millisecond);
 			let text = document.createTextNode("Lap " + (this.curLap - 1) + ": ");
 			// and give it some content
 
