@@ -20,6 +20,7 @@
     <script type="text/javascript" src="./finishLine.js"></script>
     <script type="text/javascript" src="./main.js"></script>
     <script type="text/javascript" src="./boundingBox.js"></script>
+    <script type="text/javascript" src="./hudTimer.js"></script>
 </head>
 <body>
     <div id="mainMenu">
@@ -27,6 +28,14 @@
         <button id="startRaceButton" >
             <h1 style="color: #4b2e83">START RACE</h1>
         </button>
+    </div>
+    <canvas id="bgCanvas" width="1024" height="522" style="border: 1px solid black" tabindex="0"></canvas>
+    <div id="hud">
+        <text>Lap&nbsp
+            <text id="curLap" style="padding-right: 20px;">1:&nbsp</text>
+            
+        </text>
+            <text id="minute">00</text>:<text id="second">00</text>:<text id="millisecond">000</text>
     </div>
 </body>
 </html>

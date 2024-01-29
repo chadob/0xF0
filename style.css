@@ -40,3 +40,16 @@ canvas{
     height: 50%;
 }
 /* tabindex="0" style="background: violet; border: 1px solid;" */
+#hud{
+    display: flex;
+  justify-content: start;
+  align-items: start;
+  height: 50%;
+  border: 3px solid green;    
+}
+.lapTime {
+    display: flex;
+    justify-content: center;
+    padding-left: 10px;
+    padding-right: 10px;
+}
