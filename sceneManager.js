@@ -14,6 +14,8 @@ class SceneManager {
             this.gameEngine = null;
             // ASSET_MANAGER.clearEntities();
             var map = document.getElementById("mapCanvas");
+            var hud = document.getElementById("hud");
+            hud.style.display="none";
             var gameCanvas = document.getElementById("gameworld");
             map.remove();
             gameCanvas.remove();
@@ -23,6 +25,7 @@ class SceneManager {
     loadAssets() {
         ASSET_MANAGER.queueDownload("./lambo.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/edited track.png");
+        ASSET_MANAGER.queueDownload("Sprites/Tracks/whiteland_hidden.png");
         ASSET_MANAGER.queueDownload("Sprites/Menu/fzero_title.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/bg.png");
         ASSET_MANAGER.downloadAll(() => {this.menu = new MainMenu();});
@@ -57,17 +60,20 @@ class SceneManager {
         let gameCanvas = document.getElementById("gameworld");
         let ctx = gameCanvas.getContext("2d");
         let img = ASSET_MANAGER.getAsset("Sprites/Tracks/edited track.png");
+        let hiddenImg = ASSET_MANAGER.getAsset("Sprites/Tracks/whiteland_hidden.png");
         const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/bg.png");
     
         // Add entities to Game Enginge
         let starting_pos = {x: -140.98064874052415, y: 14.980766027134674, theta: -1006.8800071953033};
         let hudTimer = new HudTimer(this.gameEngine);
-	    let mainPlayer = new PlayerCar(starting_pos, img, this.gameEngine, hudTimer);
+	    let mainPlayer = new PlayerCar(starting_pos, img, hiddenImg, this.gameEngine, hudTimer);
         this.gameEngine.addEntity(mainPlayer);
         this.gameEngine.addEntity(new mode7(mainPlayer, img, mapCanvas, this.gameEngine, imgBG));
         // gameEngine.addEntity(new Enemy(gameEngine));
         this.gameEngine.addEntity(new FinishLine(this.gameEngine));
         this.gameEngine.addEntity(hudTimer);
+        var hud = document.getElementById("hud");
+            hud.style.display="flex";
     
         /**
          *	Adding the mode7 to the Game Engine's entity list will make it execute its update/draw

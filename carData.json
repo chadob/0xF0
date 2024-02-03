@@ -1,0 +1,12 @@
+[
+    {
+        "name": "Captain Falcon",
+        "id": 0,
+        "acceleration": ".005",
+        "max_velocity": 1,
+        "max_boost_velocity": 1.5,
+        "boost": 5,
+        "health": 100,
+        "sprite": "./lambo.png"
+    }
+]

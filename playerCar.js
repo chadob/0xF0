@@ -1,21 +1,25 @@
 class PlayerCar {
-    constructor(start_pos, image, game, hudTimer) {
+    constructor(start_pos, image, hiddenImage, game, hudTimer) {
         this.game = game;
 		this.direction = 0;
         this.animator = new Animator(ASSET_MANAGER.getAsset("./lambo.png"), 0, 0, 950, 600, 3, 0.5);
 		this.curLap = 0;
 		this.width = .5;
 		this.height = .5;
+		this.maxHealth = 100;
 		this.health = 100;
+		this.canBoost = true;
 		this.indestructible = false;
 		this.hudCurLap = document.getElementById('curLap');
 		this.position = new position(start_pos);
-        this.pixelMap = this.get_image(image);
+        this.pixelMap = this.get_image(hiddenImage);
 		this.hudTimer = hudTimer;
         this.velocity = 0,
+		this.turningSpeed = .25;
         this.accel = 0.005,	//0.01
         this.decel = 0.1,	//0.01
-        this.max_vel = 1;	//1
+        this.max_vel = 1;
+		this.maxBoostVelocity = 1.5	//1
 
     // // Paul likes these settings
         this.turn_velocity = 0,
@@ -77,14 +81,27 @@ class PlayerCar {
 		//win condition
 		
 		 	
-		if (this.health < 5 ) {
+		if (this.health <= 0 ) {
 			console.log("You lose");
 			sceneManager.playerDeath();
 			this.hudTimer.end();
 			document.querySelectorAll('.lapTime').forEach(e => e.remove());
 		}
 		if(this.game.up){
-			this.velocity = Math.min(this.velocity+this.accel, this.max_vel);
+			//checks if boost button is hit		
+			if (this.game.boosting) {
+				//checks current boost power
+				if (this.health > 1) {
+					this.health = Math.max(1, this.health-= (20* this.game.clockTick));
+					this.velocity = Math.min(this.maxBoostVelocity, this.velocity + this.game.clockTick * 60* this.accel);
+				}
+			} if (this.game.braking) {
+				this.velocity = Math.max(0, this.velocity -  this.game.clockTick * 5* this.decel);
+			} if (this.velocity > this.max_vel && !this.game.boosting) {
+				this.velocity -= this.decel * this.game.clockTick;
+			} if (this.velocity < this.max_vel) {
+				this.velocity = Math.min(this.velocity+this.accel * 60 * this.game.clockTick, this.max_vel);
+			}
 		} else if(this.game.down){
 			this.velocity = Math.max(this.velocity-this.accel, -this.max_vel);
 		} else if(this.velocity < 0) {
@@ -93,12 +110,14 @@ class PlayerCar {
 			this.velocity = Math.max(this.velocity-this.decel, 0);
 		}
 
-        this.move(this.velocity);
+        this.move(this.velocity, this.position.theta);
     
 		if(this.game.left){
 			this.turn_velocity = Math.min(this.turn_velocity+this.turn_accel, this.turn_max_vel);
+			this.velocity = Math.max(0, this.velocity - this.game.clockTick * this.turningSpeed);
 		} else if(this.game.right){
 		this.turn_velocity = Math.max(this.turn_velocity-this.turn_accel, -this.turn_max_vel);
+		this.velocity = Math.max(0, this.velocity - this.game.clockTick*this.turningSpeed);
 		} else if(this.turn_velocity < 0){
 			this.turn_velocity = Math.min(this.turn_velocity+this.turn_decel, 0);
 		} else {
@@ -106,19 +125,31 @@ class PlayerCar {
 		}
 
 		this.position.theta += this.turn_velocity;
+		//Powersliding
+		if (this.game.slideL) {
+			this.position.theta += .02;
+			this.move(.3, this.position.theta + Math.PI/2)
+		}
+		if (this.game.slideR) {
+			this.position.theta -= .02;
+			this.move(.3, this.position.theta - Math.PI/2)
+		}
+
     };
+		
 	//code to create lap time in hud
 	createLapTime() {
 		if (this.curLap > 1) {
 			const newDiv = document.createElement("div");
 			newDiv.classList.add("lapTime");
-			let text = document.createTextNode("Lap " + (this.curLap - 1) + ": ");
+			let text = document.createElement("SPAN");
+			text.innerHTML = ("Lap " + (this.curLap - 1) + ":&nbsp");
 			// and give it some content
 
 			// add the text node to the newly created div
 			newDiv.appendChild(text);
-			let hudMinutes = document.createTextNode(this.hudTimer.minute+ ":");
-			let hudSeconds = document.createTextNode(this.hudTimer.second+":");
+			let hudMinutes = document.createTextNode(this.hudTimer.minute+ "'");
+			let hudSeconds = document.createTextNode(this.hudTimer.second+"\"");
 			let hudMilliseconds = document.createTextNode(this.hudTimer.millisecond);
 
 			// add the newly created element and its content into the DOM
@@ -130,19 +161,19 @@ class PlayerCar {
 		}
 		
 	}
-    move(v) {
-        var possibleX = this.position.x + v * Math.sin(this.position.theta);
-        var possibleY = this.position.y + v * Math.cos(this.position.theta);
+    move(v, theta) {
+        var possibleX = this.position.x + v * Math.sin(theta);
+        var possibleY = this.position.y + v * Math.cos(theta);
         if (this.canMove(possibleX, possibleY)){
-            this.position.x += v * Math.sin(this.position.theta);
-            this.position.y += v * Math.cos(this.position.theta);
+            this.position.x += v * Math.sin(theta);
+            this.position.y += v * Math.cos(theta);
         } else if (this.canMove( this.position.x, possibleY)){
-            this.position.y += v * Math.cos(this.position.theta);
+            this.position.y += v * Math.cos(theta);
         } else if(this.canMove( this.position.x, possibleY)){
-            this.position.x += v * Math.sin(this.position.theta);
+            this.position.x += v * Math.sin(theta);
         }
     };
-
+	//Pixel color collision detection
     canMove( possibleX, possibleY) {
         const pos = (1024 * (Math.floor(possibleY)) + (0 - Math.floor(possibleX)))*4;
         const rgba1 = this.pixelMap.data[pos];
@@ -155,7 +186,19 @@ class PlayerCar {
 			setTimeout(()=> {
 				this.indestructible = false;
 			}, 250);
-			console.log(this.health)
+
+		//bright pink for boost
+		} else if (rgba1 == 255 && rgba2 == 23 && rgba3 == 240) {
+			this.health = Math.min(this.maxHealth, this.health + 40* this.game.clockTick);
+		} // lime green for ice 
+		else if (rgba1 == 100 && rgba2 == 255 && rgba3 == 113) {
+			this.turn_velocity = 0;
+		} // yellow for dirt
+		else if (rgba1 == 60 && rgba2 == 100 && rgba3 == 100) {
+			this.velocity = Math.max(0, this.velocity - this.game.clockTick * 5);
+		} // orange for lava
+		else if (rgba1 == 36 && rgba2 == 100 && rgba3 == 100) {
+			this.health = Math.max(0, this.health-= (20* this.game.clockTick));
 		}
         return rgba1+rgba2+rgba3 > 110;
     }
@@ -164,6 +207,34 @@ class PlayerCar {
 		ctx.save();
 		ctx.scale(0.25,0.25);
         this.animator.drawSelf(this.game.clockTick, ctx, 1500, 1500, this.direction)
+		ctx.restore();
+		//health bar
+		var ratio = this.health/this.maxHealth;
+		ctx.strokeStyle = "Black";
+		
+		ctx.save();
+		ctx.shadowColor = "black";
+		ctx.shadowOffsetX = 3;
+		ctx.shadowOffsetY = 3;
+		ctx.shadowBlur = 3;
+		ctx.strokeStyle = "White";
+		ctx.lineWidth = 4;
+		ctx.strokeRect(700, 15, 300, 25);
+		ctx.restore();
+		ctx.save();
+		ctx.fillStyle = ratio < .2 ? "Red" : ratio < .5 ? "rgba(255, 197, 0, 100)" : "rgba(0, 216, 0, 100)";
+		ctx.fillRect(702, 17, Math.max(0, ratio * 297), 22);
+		
+		ctx.restore();
+		
+		//Speed
+		ctx.save();
+		ctx.shadowColor = "black";
+		ctx.shadowOffsetX = 1;
+		ctx.shadowOffsetY = 1;
+		ctx.fillStyle = "White";
+		ctx.font = "24px serif"
+		ctx.fillText(Math.round(this.velocity * 1000) + " MPH", 900, 70)
 		ctx.restore();
 	};
 }
