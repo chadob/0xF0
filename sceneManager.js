@@ -4,7 +4,7 @@ class SceneManager {
     }
 
     loadMainMenu() {
-        
+        this.menu = new MainMenu();
     }
 
     playerDeath() {
@@ -28,7 +28,7 @@ class SceneManager {
         ASSET_MANAGER.queueDownload("Sprites/Tracks/whiteland_hidden.png");
         ASSET_MANAGER.queueDownload("Sprites/Menu/fzero_title.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/bg.png");
-        ASSET_MANAGER.downloadAll(() => {this.menu = new MainMenu();});
+        ASSET_MANAGER.downloadAll(() => {});
     }
     loadRace() {
         console.log("Loading race...");
