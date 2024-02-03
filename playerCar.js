@@ -13,6 +13,7 @@ class PlayerCar {
 		this.hudCurLap = document.getElementById('curLap');
 		this.position = new position(start_pos);
         this.pixelMap = this.get_image(hiddenImage);
+		//this.pixelMap = new mapKey(image);
 		this.hudTimer = hudTimer;
         this.velocity = 0,
 		this.turningSpeed = .25;
@@ -41,15 +42,9 @@ class PlayerCar {
 	  }
 
     update() {
-		if (this.game.left) {
-			this.direction = 0;
-		} else if (this.game.right) {
-			this.direction = 1800;
-		} else {
-			this.direction = 950;
-		}
-
+		this.directionOfSprite();
 		this.updateBB();
+
 		var that = this;
         this.game.entities.forEach(function (entity) {
             if (entity.BB && that.BB.collide(entity.BB)) {
@@ -87,55 +82,33 @@ class PlayerCar {
 			this.hudTimer.end();
 			document.querySelectorAll('.lapTime').forEach(e => e.remove());
 		}
-		if(this.game.up){
-			//checks if boost button is hit		
-			if (this.game.boosting) {
-				//checks current boost power
-				if (this.health > 1) {
-					this.health = Math.max(1, this.health-= (20* this.game.clockTick));
-					this.velocity = Math.min(this.maxBoostVelocity, this.velocity + this.game.clockTick * 60* this.accel);
-				}
-			} if (this.game.braking) {
-				this.velocity = Math.max(0, this.velocity -  this.game.clockTick * 5* this.decel);
-			} if (this.velocity > this.max_vel && !this.game.boosting) {
-				this.velocity -= this.decel * this.game.clockTick;
-			} if (this.velocity < this.max_vel) {
-				this.velocity = Math.min(this.velocity+this.accel * 60 * this.game.clockTick, this.max_vel);
-			}
-		} else if(this.game.down){
-			this.velocity = Math.max(this.velocity-this.accel, -this.max_vel);
-		} else if(this.velocity < 0) {
-			this.velocity = Math.min(this.velocity+this.decel, 0);
-		} else {
-			this.velocity = Math.max(this.velocity-this.decel, 0);
-		}
 
+		this.changeVelocityAxisY();
         this.move(this.velocity, this.position.theta);
-    
-		if(this.game.left){
-			this.turn_velocity = Math.min(this.turn_velocity+this.turn_accel, this.turn_max_vel);
-			this.velocity = Math.max(0, this.velocity - this.game.clockTick * this.turningSpeed);
-		} else if(this.game.right){
-		this.turn_velocity = Math.max(this.turn_velocity-this.turn_accel, -this.turn_max_vel);
-		this.velocity = Math.max(0, this.velocity - this.game.clockTick*this.turningSpeed);
-		} else if(this.turn_velocity < 0){
-			this.turn_velocity = Math.min(this.turn_velocity+this.turn_decel, 0);
-		} else {
-			this.turn_velocity = Math.max(this.turn_velocity-this.turn_decel, 0);
-		}
+		this.changeVelocityAxisX();
+
 
 		this.position.theta += this.turn_velocity;
-		//Powersliding
-		if (this.game.slideL) {
-			this.position.theta += .02;
-			this.move(.3, this.position.theta + Math.PI/2)
-		}
-		if (this.game.slideR) {
-			this.position.theta -= .02;
-			this.move(.3, this.position.theta - Math.PI/2)
-		}
+		this.checkForPowerSlide();
 
     };
+
+	checkboostOrBreak(){
+		//	checks if boost button is hit
+		if (this.game.boosting) {
+			//checks current boost power
+			if (this.health > 1) {
+				this.health = Math.max(1, this.health-= (20* this.game.clockTick));
+				this.velocity = Math.min(this.maxBoostVelocity, this.velocity + this.game.clockTick * 60* this.accel);
+			}
+		} if (this.game.braking) {
+			this.velocity = Math.max(0, this.velocity -  this.game.clockTick * 5* this.decel);
+		} if (this.velocity > this.max_vel && !this.game.boosting) {
+			this.velocity -= this.decel * this.game.clockTick;
+		} if (this.velocity < this.max_vel) {
+			this.velocity = Math.min(this.velocity+this.accel * 60 * this.game.clockTick, this.max_vel);
+		}
+	}
 		
 	//code to create lap time in hud
 	createLapTime() {
@@ -175,6 +148,33 @@ class PlayerCar {
             this.position.x += v * Math.sin(theta);
         }
     };
+
+	changeVelocityAxisX(){
+		// if up then velocity increase if down velocity decreases	// 1st equation of motion with t=1 
+		if(this.game.left){
+			this.turn_velocity = Math.min(this.turn_velocity + this.turn_accel, this.turn_max_vel);
+		} else if(this.game.right){
+			this.turn_velocity = Math.max(this.turn_velocity - this.turn_accel, -this.turn_max_vel);
+		} else if(this.turn_velocity < 0){
+			this.turn_velocity = Math.min(this.turn_velocity + this.turn_decel, 0);
+		} else {
+			this.turn_velocity = Math.max(this.turn_velocity - this.turn_decel, 0);
+		}
+	};
+
+	changeVelocityAxisY(){
+		//if up then velocity increase if down velocity decreases	// 1st equation of motion with t=1 
+		if(this.game.up){		
+			this.checkboostOrBreak();
+		} else if(this.game.down){
+			this.velocity = Math.max(this.velocity-this.accel, -this.max_vel);
+		} else if(this.velocity < 0) {
+			this.velocity = Math.min(this.velocity+this.decel, 0);
+		} else {
+			this.velocity = Math.max(this.velocity-this.decel, 0);
+		}
+	};
+
 	//Pixel color collision detection
     canMove( possibleX, possibleY) {
         const pos = (1024 * (Math.floor(possibleY)) + (0 - Math.floor(possibleX)))*4;
@@ -239,4 +239,48 @@ class PlayerCar {
 		ctx.fillText(Math.round(this.velocity * 1000) + " MPH", 900, 70)
 		ctx.restore();
 	};
+
+	checkForPowerSlide(){
+		//Powersliding
+		if (this.game.slideL) {
+			this.position.theta += .02;
+			this.move(.3, this.position.theta + Math.PI/2)
+		}
+		if (this.game.slideR) {
+			this.position.theta -= .02;
+			this.move(.3, this.position.theta - Math.PI/2)
+		}
+	};
+
+	directionOfSprite() {
+		if (this.game.left) {
+			this.direction = 0;
+		} else if (this.game.right) {
+			this.direction = 1800;
+		} else {
+			this.direction = 950;
+		}
+	};
 }
+		// if(this.game.up){
+			//checks if boost button is hit		
+			// if (this.game.boosting) {
+			// 	//checks current boost power
+			// 	if (this.health > 1) {
+			// 		this.health = Math.max(1, this.health-= (20* this.game.clockTick));
+			// 		this.velocity = Math.min(this.maxBoostVelocity, this.velocity + this.game.clockTick * 60* this.accel);
+			// 	}
+			// } if (this.game.braking) {
+			// 	this.velocity = Math.max(0, this.velocity -  this.game.clockTick * 5* this.decel);
+			// } if (this.velocity > this.max_vel && !this.game.boosting) {
+			// 	this.velocity -= this.decel * this.game.clockTick;
+			// } if (this.velocity < this.max_vel) {
+			// 	this.velocity = Math.min(this.velocity+this.accel * 60 * this.game.clockTick, this.max_vel);
+			// }
+		// } else if(this.game.down){
+		// 	this.velocity = Math.max(this.velocity-this.accel, -this.max_vel);
+		// } else if(this.velocity < 0) {
+		// 	this.velocity = Math.min(this.velocity+this.decel, 0);
+		// } else {
+		// 	this.velocity = Math.max(this.velocity-this.decel, 0);
+		//}
