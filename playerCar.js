@@ -12,8 +12,8 @@ class PlayerCar {
 		this.indestructible = false;
 		this.hudCurLap = document.getElementById('curLap');
 		this.position = new position(start_pos);
-        this.pixelMap = this.get_image(hiddenImage);
-		//this.pixelMap = new mapKey(image);
+        //this.pixelMap = this.get_image(hiddenImage);
+		this.pixelMap = new mapKey(image).terrianMap;
 		this.hudTimer = hudTimer;
         this.velocity = 0,
 		this.turningSpeed = .25;
@@ -175,34 +175,67 @@ class PlayerCar {
 		}
 	};
 
-	//Pixel color collision detection
-    canMove( possibleX, possibleY) {
-        const pos = (1024 * (Math.floor(possibleY)) + (0 - Math.floor(possibleX)))*4;
-        const rgba1 = this.pixelMap.data[pos];
-        const rgba2 = this.pixelMap.data[pos +1];
-        const rgba3 = this.pixelMap.data[pos+2];
-		//lose health on collision
-		if (rgba1+rgba2+rgba3 <= 110 && this.indestructible === false) {
+	//lose health on collision
+	updateHealth(terrian){
+		if (terrian == "Wall" && this.indestructible === false) {
 			this.health -= 5;
 			this.indestructible = true;
 			setTimeout(()=> {
 				this.indestructible = false;
 			}, 250);
+			console.log(this.health)
 
 		//bright pink for boost
-		} else if (rgba1 == 255 && rgba2 == 23 && rgba3 == 240) {
+		} else if (terrian == "Boost") {
 			this.health = Math.min(this.maxHealth, this.health + 40* this.game.clockTick);
 		} // lime green for ice 
-		else if (rgba1 == 100 && rgba2 == 255 && rgba3 == 113) {
+		else if (terrian ==  "Ice") {
 			this.turn_velocity = 0;
 		} // yellow for dirt
-		else if (rgba1 == 60 && rgba2 == 100 && rgba3 == 100) {
+		else if (terrian == "Dirt") {
 			this.velocity = Math.max(0, this.velocity - this.game.clockTick * 5);
 		} // orange for lava
-		else if (rgba1 == 36 && rgba2 == 100 && rgba3 == 100) {
+		else if (terrian == "Lava") {
 			this.health = Math.max(0, this.health-= (20* this.game.clockTick));
 		}
-        return rgba1+rgba2+rgba3 > 110;
+	};
+
+	//Pixel color collision detection
+    canMove( possibleX, possibleY) {
+        // const pos = (1024 * (Math.floor(possibleY)) + (0 - Math.floor(possibleX)))*4;
+        // const rgba1 = this.pixelMap.data[pos];
+        // const rgba2 = this.pixelMap.data[pos +1];
+        // const rgba3 = this.pixelMap.data[pos+2];
+
+		let x = -Math.floor(possibleX);
+		let y = Math.floor(possibleY);
+		let typeOfTerrain = this.pixelMap[x][y];
+		let canDrive = typeOfTerrain != 'Wall';
+		this.updateHealth(typeOfTerrain);
+		//console.log(typeOfTerrain);
+		return canDrive;
+		//lose health on collision
+		// if (rgba1+rgba2+rgba3 <= 110 && this.indestructible === false) {
+		// 	this.health -= 5;
+		// 	this.indestructible = true;
+		// 	setTimeout(()=> {
+		// 		this.indestructible = false;
+		// 	}, 250);
+
+		// //bright pink for boost
+		// } else if (rgba1 == 255 && rgba2 == 23 && rgba3 == 240) {
+		// 	this.health = Math.min(this.maxHealth, this.health + 40* this.game.clockTick);
+		// } // lime green for ice 
+		// else if (rgba1 == 100 && rgba2 == 255 && rgba3 == 113) {
+		// 	this.turn_velocity = 0;
+		// } // yellow for dirt
+		// else if (rgba1 == 60 && rgba2 == 100 && rgba3 == 100) {
+		// 	this.velocity = Math.max(0, this.velocity - this.game.clockTick * 5);
+		// } // orange for lava
+		// else if (rgba1 == 36 && rgba2 == 100 && rgba3 == 100) {
+		// 	this.health = Math.max(0, this.health-= (20* this.game.clockTick));
+		// }
+        // return rgba1+rgba2+rgba3 > 110;
     }
 
     draw(ctx) {
