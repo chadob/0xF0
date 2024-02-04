@@ -18,6 +18,10 @@ class GameEngine {
         this.right = false;
         this.up = false;
         this.down = false;
+        this.boosting = false;
+        this.braking = false;
+        this.slideL = false;
+        this.slideR = false;
         this.keys = {};
 
         // Options and the Details
@@ -51,6 +55,10 @@ class GameEngine {
         this.wheel = null;
         this.left = false;
         this.right = false;
+        this.boosting = false;
+        this.braking = false;
+        this.slideL = false;
+        this.slideR = false;
         this.up = false;
         this.down = false;
         this.keys = {};
@@ -111,6 +119,18 @@ class GameEngine {
                 case "KeyS":
                     this.down = true;
                     break;
+                case "KeyH":
+                    this.slideL = true;
+                    break;    
+                case "KeyJ":
+                    this.boosting = true;
+                    break;
+                case "KeyK":
+                    this.braking = true;
+                    break;
+                case "KeyL":
+                    this.slideR = true;
+                    break;  
             }
         }, false);
         this.ctx.canvas.addEventListener("keyup", e => {
@@ -123,8 +143,6 @@ class GameEngine {
                 case "KeyD":
                     this.right = false;
                     break;
-            } 
-            switch (e.code) {
                 case "ArrowUp":
                 case "KeyW":
                     this.up = false;
@@ -132,6 +150,18 @@ class GameEngine {
                 case "ArrowDown":
                 case "KeyS":
                     this.down = false;
+                    break;
+                case "KeyH":
+                    this.slideL = false;
+                    break;
+                case "KeyL":
+                    this.slideR = false;
+                    break;
+                case "KeyJ":
+                    this.boosting = false;
+                    break;
+                case "KeyK":
+                    this.braking = false;
                     break;
             }
         }, false);

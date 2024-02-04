@@ -63,8 +63,11 @@ class mode7 {
     this.bgCanv = document.getElementById("bgCanvas");
     this.bgCtx = this.bgCanv.getContext("2d");
     this.imgBG = imgBG;
-    this.imgBG.width=10*this.bgCanv.width;
-    this.imgBG.height = .6 *this.bgCanv.height;
+    this.imgBG.width=this.image.width;//10*this.bgCanv.width;
+    //this.imgBG.height = .6 *this.bgCanv.height;
+
+    //circumference of our image in a circle -> image_width = 2*PI*R)
+    this.r = this.image.width/(2 * Math.PI);
     
 
     /* Width of the original image */
@@ -116,14 +119,9 @@ class mode7 {
    * around the ground canvas.
    */
   update() {
-    // console.log(this.mainCar.x + " x " + this.mainCar.y);
-
-    // code for the horizon
-      for (let w = this.bgCanv.width*(this.mainCar.theta % (2*Math.PI)); w < this.bgCanv.width; w += this.imgBG.width) {
-        for (let h = 0; h < this.bgCanv.height; h += this.imgBG.height) {
-          this.bgCtx.drawImage(this.imgBG,  w, h, 10*this.bgCanv.width, .6*this.bgCanv.height);
-        }
-      }
+    let w = this.r * (this.mainCar.theta);
+    this.bgCtx.drawImage(this.imgBG,  w - (this.imgBG.width - 5), 5, this.imgBG.width, this.bgCanv.height);
+    this.bgCtx.drawImage(this.imgBG,  w, 5, this.imgBG.width, this.bgCanv.height);
 	}
 
   /**
