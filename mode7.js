@@ -159,12 +159,3 @@ class mode7 {
     });
   }
 }
-
-    // code for the horizon
-      // for (let w = this.bgCanv.width/(this.mainCar.theta); w < this.bgCanv.width; w += this.imgBG.width) {
-      //   for (let h = 0; h < this.bgCanv.height; h += this.imgBG.height) {
-      //     //console.log(w + " x " + h);
-      //     console.log(w + " x " + h + " and bgCanv" + this.bgCanv.width + " and imgBG" + this.imgBG.width);
-      //     this.bgCtx.drawImage(this.imgBG,  w, h, 10*this.bgCanv.width, .6*this.bgCanv.height);
-      //   }
-      // }
