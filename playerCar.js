@@ -15,6 +15,9 @@ class PlayerCar {
         //this.pixelMap = this.get_image(hiddenImage);
 		this.terrianMap = new mapKey(hiddenImage).terrianMap;
 		this.hudTimer = hudTimer;
+
+		this.bounce = false;
+
         this.velocity = 0,
 		this.turningSpeed = .25;
         this.accel = 0.005,	//0.01
@@ -86,6 +89,7 @@ class PlayerCar {
 		this.changeVelocityAxisY();
         this.move(this.velocity, this.position.theta);
 		this.changeVelocityAxisX();
+		this.position.updateMapDirection();
 
 
 		this.position.theta += this.turn_velocity;
@@ -139,15 +143,27 @@ class PlayerCar {
     move(v, theta) {
         var possibleX = this.position.x + v * Math.sin(theta);
         var possibleY = this.position.y + v * Math.cos(theta);
-        if (this.canMove(possibleX, possibleY)){
+		if (this.bounce){
+			possibleX = this.position.x + 0.3 * Math.sin(theta - Math.PI);
+			possibleY = this.position.y + 0.3 * Math.cos(theta - Math.PI);
+			if (this.canMove(possibleX, possibleY)) {
+				this.position.x += 0.3 * Math.sin(theta - Math.PI);
+				this.position.y += 0.3 * Math.cos(theta - Math.PI);
+			}
+		}
+        else if (this.canMove(possibleX, possibleY)){
             this.position.x += v * Math.sin(theta);
             this.position.y += v * Math.cos(theta);
-        } else if (this.canMove( this.position.x, possibleY)){
-            this.position.y += v * Math.cos(theta);
-        } else if(this.canMove( this.position.x, possibleY)){
-            this.position.x += v * Math.sin(theta);
-        }
+    	} else {
+			this.velocity = 0;
+			this.bounce = true;
+			setTimeout(()=> {
+				this.bounce = false;
+			}, 250);
+			this.move(.3, this.position.theta - Math.PI);
+		}
     };
+
 
 	changeVelocityAxisX(){
 		// if up then velocity increase if down velocity decreases	// 1st equation of motion with t=1 
@@ -183,7 +199,6 @@ class PlayerCar {
 			setTimeout(()=> {
 				this.indestructible = false;
 			}, 250);
-			console.log(this.health)
 
 		//bright pink for boost
 		} else if (terrian == "Boost") {
@@ -202,13 +217,11 @@ class PlayerCar {
 
 	//Pixel color collision detection
     canMove( possibleX, possibleY) {
-
 		let x = -Math.floor(possibleX);
 		let y = Math.floor(possibleY);
 		let typeOfTerrain = this.terrianMap[x][y];
 		let canDrive = typeOfTerrain != 'Wall';
 		this.updateHealthAndRoadCond(typeOfTerrain);
-		console.log(typeOfTerrain);
 		return canDrive;
     }
 

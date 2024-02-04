@@ -7,7 +7,7 @@ class position {
         }
 
         updateMapDirection(){
-            let t = this.theta;
+            let t = Math.abs(this.theta % (2 * Math.PI));
             if (t < 0){
                 this.theta += (2 * Math.PI);
             } else if (t > (2* Math.PI)) {
