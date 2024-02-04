@@ -119,9 +119,9 @@ class mode7 {
     // console.log(this.mainCar.x + " x " + this.mainCar.y);
 
     // code for the horizon
-      for (let w = this.bgCanv.width*(this.mainCar.theta % (2*Math.PI)); w < this.bgCanv.width; w += this.imgBG.width) {
+      for (let w = this.bgCanv.width*(this.mainCar.theta); w > this.bgCanv.width; w -= this.imgBG.width) {
         for (let h = 0; h < this.bgCanv.height; h += this.imgBG.height) {
-          this.bgCtx.drawImage(this.imgBG,  w, h, 10*this.bgCanv.width, .6*this.bgCanv.height);
+          this.bgCtx.drawImage(this.imgBG,  -w, h, 10*this.bgCanv.width, .6*this.bgCanv.height);
         }
       }
 	}

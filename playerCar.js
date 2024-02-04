@@ -75,7 +75,8 @@ class PlayerCar {
 				} 
             }
         });
-		// console.log(this.position.x, this.position.y)
+		console.log(this.position.theta);
+		console.log(this.position.direction);
 		//win condition
 		
 		 	

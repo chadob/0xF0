@@ -6,14 +6,14 @@ class position {
             this.direction = this.updateMapDirection;
         }
 
-        updateMapDirection(){
-            let t = Math.abs(this.theta % (2 * Math.PI));
-            if (t < 0){
+        updateMapDirection(){ 
+            //let t = Math.abs(this.theta % (2 * Math.PI));
+            if (this.theta < 0){
                 this.theta += (2 * Math.PI);
-            } else if (t > (2* Math.PI)) {
+            } else if (this.theta > (2* Math.PI)) {
                 this.theta -= (2 * Math.PI);
             }
-            t = this.theta;
+            let t = this.theta;
             if (t <= Math.PI/4) {
                 this.direction ='N'
             } else if (t <= (3 * Math.PI)/4) {
