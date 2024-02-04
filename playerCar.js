@@ -13,7 +13,7 @@ class PlayerCar {
 		this.hudCurLap = document.getElementById('curLap');
 		this.position = new position(start_pos);
         //this.pixelMap = this.get_image(hiddenImage);
-		this.pixelMap = new mapKey(hiddenImage).terrianMap;
+		this.terrianMap = new mapKey(hiddenImage).terrianMap;
 		this.hudTimer = hudTimer;
         this.velocity = 0,
 		this.turningSpeed = .25;
@@ -205,7 +205,7 @@ class PlayerCar {
 
 		let x = -Math.floor(possibleX);
 		let y = Math.floor(possibleY);
-		let typeOfTerrain = this.pixelMap[x][y];
+		let typeOfTerrain = this.terrianMap[x][y];
 		let canDrive = typeOfTerrain != 'Wall';
 		this.updateHealthAndRoadCond(typeOfTerrain);
 		console.log(typeOfTerrain);
