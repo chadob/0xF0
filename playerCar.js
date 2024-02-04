@@ -1,5 +1,5 @@
 class PlayerCar {
-    constructor(start_pos, image, hiddenImage, game, hudTimer) {
+    constructor(start_pos, hiddenImage, game, hudTimer) {
         this.game = game;
 		this.direction = 0;
         this.animator = new Animator(ASSET_MANAGER.getAsset("./lambo.png"), 0, 0, 950, 600, 3, 0.5);
@@ -13,7 +13,7 @@ class PlayerCar {
 		this.hudCurLap = document.getElementById('curLap');
 		this.position = new position(start_pos);
         //this.pixelMap = this.get_image(hiddenImage);
-		this.pixelMap = new mapKey(image).terrianMap;
+		this.pixelMap = new mapKey(hiddenImage).terrianMap;
 		this.hudTimer = hudTimer;
         this.velocity = 0,
 		this.turningSpeed = .25;
@@ -93,7 +93,7 @@ class PlayerCar {
 
     };
 
-	checkboostOrBreak(){
+	checkBoostOrBreak(){
 		//	checks if boost button is hit
 		if (this.game.boosting) {
 			//checks current boost power
@@ -165,7 +165,7 @@ class PlayerCar {
 	changeVelocityAxisY(){
 		//if up then velocity increase if down velocity decreases	// 1st equation of motion with t=1 
 		if(this.game.up){		
-			this.checkboostOrBreak();
+			this.checkBoostOrBreak();
 		} else if(this.game.down){
 			this.velocity = Math.max(this.velocity-this.accel, -this.max_vel);
 		} else if(this.velocity < 0) {
@@ -176,7 +176,7 @@ class PlayerCar {
 	};
 
 	//lose health on collision
-	updateHealth(terrian){
+	updateHealthAndRoadCond(terrian){
 		if (terrian == "Wall" && this.indestructible === false) {
 			this.health -= 5;
 			this.indestructible = true;
@@ -207,8 +207,8 @@ class PlayerCar {
 		let y = Math.floor(possibleY);
 		let typeOfTerrain = this.pixelMap[x][y];
 		let canDrive = typeOfTerrain != 'Wall';
-		this.updateHealth(typeOfTerrain);
-		//console.log(typeOfTerrain);
+		this.updateHealthAndRoadCond(typeOfTerrain);
+		console.log(typeOfTerrain);
 		return canDrive;
     }
 
