@@ -82,6 +82,12 @@ class PlayerCar {
 		 	
 		if (this.health <= 0 ) {
 			console.log("You lose");
+
+            // const explosion = new Explosion(this.game, this.position.x, this.position.y);
+            // this.game.addEntity(explosion);
+			// ADD CODE to remove player car image (while explosion loop plays)
+			// then go straight to death screen
+
 			sceneManager.playerDeath();
 			this.hudTimer.end();
 			document.querySelectorAll('.lapTime').forEach(e => e.remove());
