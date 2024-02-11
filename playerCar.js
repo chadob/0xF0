@@ -12,11 +12,13 @@ class PlayerCar {
 		this.indestructible = false;
 		this.hudCurLap = document.getElementById('curLap');
 		this.position = new position(start_pos);
-        //this.pixelMap = this.get_image(hiddenImage);
-		this.terrianMap = new mapKey(hiddenImage).terrianMap;
+		this.trackInfo = new mapKey(hiddenImage);
 		this.hudTimer = hudTimer;
 
 		this.bounce = false;
+		this.bounceTheta = 0;
+		this.AdjustNeg = false; 
+
 
         this.velocity = 0,
 		this.turningSpeed = .25;
@@ -75,8 +77,7 @@ class PlayerCar {
 				} 
             }
         });
-		//console.log(this.position.theta + "  " + this.position.direction);
-		//console.log(this.position.direction);
+		
 		//win condition
 		
 		 	
@@ -88,7 +89,13 @@ class PlayerCar {
 		}
 
 		this.changeVelocityAxisY();
-        this.move(this.velocity, this.position.theta);
+
+		if (this.bounce){
+			this.move(0.3, this.bounceTheta);
+		} else {
+			this.move(this.velocity, this.position.theta);
+		}
+
 		this.changeVelocityAxisX();
 		this.position.updateMapDirection();
 
@@ -144,24 +151,46 @@ class PlayerCar {
     move(v, theta) {
         var possibleX = this.position.x + v * Math.sin(theta);
         var possibleY = this.position.y + v * Math.cos(theta);
-		if (this.bounce){
-			possibleX = this.position.x + 0.3 * Math.sin(theta - Math.PI);
-			possibleY = this.position.y + 0.3 * Math.cos(theta - Math.PI);
-			if (this.canMove(possibleX, possibleY)) {
-				this.position.x += 0.3 * Math.sin(theta - Math.PI);
-				this.position.y += 0.3 * Math.cos(theta - Math.PI);
-			}
-		}
-        else if (this.canMove(possibleX, possibleY)){
-            this.position.x += v * Math.sin(theta);
+
+
+		if (this.canMove(possibleX, possibleY)){	
+			//console.log("1")
+			this.position.x += v * Math.sin(theta);
             this.position.y += v * Math.cos(theta);
-    	} else {
-			this.velocity = 0;
+		}
+		else {
+
+			let findWalls = this.trackInfo.whereIsWall[this.position.getIntX()][this.position.getIntY()];
+			let directionOfBounce = theta;
+
+			if(findWalls.length == 1) { 
+				//bounce in opposite direction in wall then add 
+				//console.log("3")
+				let directionOfWall = this.position.findTheta(findWalls); //E
+				if (directionOfWall == 0) {
+					directionOfWall = (theta < Math.PI) ? 0: 2*Math.PI;
+				}
+				let changeDirBy = theta - directionOfWall;
+				this.AdjustNeg = (theta - directionOfWall < 0);
+				console.log();
+				directionOfBounce = this.position.correctRangeOfTheta(directionOfWall + Math.PI - changeDirBy);
+		
+
+			} else {
+
+				this.velocity = 0;
+				directionOfBounce = this.position.correctRangeOfTheta(theta - Math.PI/2);
+			}
+
+			
+			
+			//console.log("5")
 			this.bounce = true;
+			this.bounceTheta = directionOfBounce;
 			setTimeout(()=> {
 				this.bounce = false;
-			}, 250);
-			this.move(.3, this.position.theta - Math.PI);
+			}, 450);					// update runs 27-28 times during timeout
+			this.move(.3, this.bounceTheta);
 		}
     };
 
@@ -200,7 +229,7 @@ class PlayerCar {
 			setTimeout(()=> {
 				this.indestructible = false;
 			}, 250);
-
+			console.log(terrian);
 		//bright pink for boost
 		} else if (terrian == "Boost") {
 			this.health = Math.min(this.maxHealth, this.health + 40* this.game.clockTick);
@@ -218,13 +247,30 @@ class PlayerCar {
 
 	//Pixel color collision detection
     canMove( possibleX, possibleY) {
-		let x = -Math.floor(possibleX);
+		let x = Math.floor(Math.abs(possibleX));
 		let y = Math.floor(possibleY);
-		let typeOfTerrain = this.terrianMap[x][y];
+		//let findWalls = this.trackInfo.whereIsWall[x][y];
+		let typeOfTerrain = this.trackInfo.terrianMap[x][y];
 		let canDrive = typeOfTerrain != 'Wall';
+
+		console.log(typeOfTerrain);
 		this.updateHealthAndRoadCond(typeOfTerrain);
 		return canDrive;
-    }
+    };
+
+	lookForDarkSide(theWalls, w, h){
+		
+		switch(theWalls) {
+			case 'SW':
+				return h > w;
+			case 'ES':
+				return h + w <= 0.9;
+			case 'NW':
+				return h + w > 0.9;
+			case 'NE':
+				return h <= w;
+		}
+	}
 
     draw(ctx) {
 		ctx.save();
@@ -283,53 +329,46 @@ class PlayerCar {
 		}
 	};
 };
-        // const pos = (1024 * (Math.floor(possibleY)) + (0 - Math.floor(possibleX)))*4;
-        // const rgba1 = this.pixelMap.data[pos];
-        // const rgba2 = this.pixelMap.data[pos +1];
-        // const rgba3 = this.pixelMap.data[pos+2];
-
-				//lose health on collision
-		// if (rgba1+rgba2+rgba3 <= 110 && this.indestructible === false) {
-		// 	this.health -= 5;
-		// 	this.indestructible = true;
-		// 	setTimeout(()=> {
-		// 		this.indestructible = false;
-		// 	}, 250);
-
-		// //bright pink for boost
-		// } else if (rgba1 == 255 && rgba2 == 23 && rgba3 == 240) {
-		// 	this.health = Math.min(this.maxHealth, this.health + 40* this.game.clockTick);
-		// } // lime green for ice 
-		// else if (rgba1 == 100 && rgba2 == 255 && rgba3 == 113) {
-		// 	this.turn_velocity = 0;
-		// } // yellow for dirt
-		// else if (rgba1 == 60 && rgba2 == 100 && rgba3 == 100) {
-		// 	this.velocity = Math.max(0, this.velocity - this.game.clockTick * 5);
-		// } // orange for lava
-		// else if (rgba1 == 36 && rgba2 == 100 && rgba3 == 100) {
-		// 	this.health = Math.max(0, this.health-= (20* this.game.clockTick));
+       
+					// if (findWalls.length == 2 && canDrive){
+		// 	console.log(findWalls + " " + x + " x "+ y);
+		// 	console.log("MY WALLS  " +  findWalls + " my desired pos "+possibleX +" x "+possibleY);
+			
+		// 		// w = .22 vs h = .12
+		// 	canDrive = this.lookForDarkSide(findWalls, -(possibleX + x), (possibleY - y));
 		// }
-        // return rgba1+rgba2+rgba3 > 110;
+		
+		
+		// console.log("SW\n");
+		// for (let w = 0; w < 10; w++){
+		// 	let string = " ";
+		// 	for (let h = 0; h < 10; h++){
+		// 		string += (" " + this.lookForDarkSide("SW", w/10, h/10));
+		// 	}
+		// 	console.log(string + " " +w/10);
+		// }
 
-		// if(this.game.up){
-			//checks if boost button is hit		
-			// if (this.game.boosting) {
-			// 	//checks current boost power
-			// 	if (this.health > 1) {
-			// 		this.health = Math.max(1, this.health-= (20* this.game.clockTick));
-			// 		this.velocity = Math.min(this.maxBoostVelocity, this.velocity + this.game.clockTick * 60* this.accel);
-			// 	}
-			// } if (this.game.braking) {
-			// 	this.velocity = Math.max(0, this.velocity -  this.game.clockTick * 5* this.decel);
-			// } if (this.velocity > this.max_vel && !this.game.boosting) {
-			// 	this.velocity -= this.decel * this.game.clockTick;
-			// } if (this.velocity < this.max_vel) {
-			// 	this.velocity = Math.min(this.velocity+this.accel * 60 * this.game.clockTick, this.max_vel);
-			// }
-		// } else if(this.game.down){
-		// 	this.velocity = Math.max(this.velocity-this.accel, -this.max_vel);
-		// } else if(this.velocity < 0) {
-		// 	this.velocity = Math.min(this.velocity+this.decel, 0);
-		// } else {
-		// 	this.velocity = Math.max(this.velocity-this.decel, 0);
-		//}
+		// console.log("NW\n");
+		// for (let w = 0; w < 10; w++){
+		// 	let string = " ";
+		// 	for (let h = 0; h < 10; h++){
+		// 		string += (" " + this.lookForDarkSide("NW", w/10, h/10));
+		// 	}
+		// 	console.log(string);
+		// }
+		// console.log("SE\n");
+		// for (let w = 0; w < 10; w++){
+		// 	let string = " ";
+		// 	for (let h = 0; h < 10; h++){
+		// 		string += (" " + this.lookForDarkSide("ES", w/10, h/10));
+		// 	}
+		// 	console.log(string);
+		// }
+		// console.log("NE\n");
+		// for (let w = 0; w < 10; w++){
+		// 	let string = " ";
+		// 	for (let h = 0; h < 10; h++){
+		// 		string += (" " + this.lookForDarkSide("NE", w/10, h/10));
+		// 	}
+		// 	console.log(string);
+		// }
