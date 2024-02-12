@@ -17,6 +17,7 @@ class PlayerCar {
 		this.hudTimer = hudTimer;
 
 		this.bounce = false;
+		this.inputEnabled = false;
 
         this.velocity = 0,
 		this.turningSpeed = .25;
@@ -61,7 +62,8 @@ class PlayerCar {
 							console.log("You win!");
 							that.hudTimer.end();
 							document.querySelectorAll('.lapTime').forEach(e => e.remove());
-							sceneManager.playerDeath();
+							that.inputEnabled=false;
+							sceneManager.finishedRaceAnimation(false);
 						}   
 						entity.passable = false;
 						setTimeout(() => {
@@ -82,19 +84,24 @@ class PlayerCar {
 		 	
 		if (this.health <= 0 ) {
 			console.log("You lose");
-			sceneManager.playerDeath();
 			this.hudTimer.end();
 			document.querySelectorAll('.lapTime').forEach(e => e.remove());
+			this.inputEnabled = false;
+			sceneManager.finishedRaceAnimation(true);
 		}
 
-		this.changeVelocityAxisY();
-        this.move(this.velocity, this.position.theta);
-		this.changeVelocityAxisX();
-		this.position.updateMapDirection();
+		
+		if(this.inputEnabled) {
+			this.changeVelocityAxisY();
+			this.move(this.velocity, this.position.theta);
+			this.changeVelocityAxisX();
+			this.position.updateMapDirection();
 
 
-		this.position.theta += this.turn_velocity;
-		this.checkForPowerSlide();
+			this.position.theta += this.turn_velocity;
+			this.checkForPowerSlide();
+		}
+		
 
     };
 
