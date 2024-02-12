@@ -1,9 +1,9 @@
 class PlayerCar {
-    constructor(start_pos, hiddenImage, game) {
+    constructor(start_pos, hiddenImage, game, hudTimer) {
         this.game = game;
 		this.direction = 0;
         this.animator = new Animator(ASSET_MANAGER.getAsset("./lambo.png"), 0, 0, 950, 600, 3, 0.5);
-		this.curLap = 1;
+		this.curLap = 0;
 		this.width = .5;
 		this.height = .5;
 		this.maxHealth = 100;
@@ -14,7 +14,8 @@ class PlayerCar {
 		this.position = new position(start_pos);
         //this.pixelMap = this.get_image(hiddenImage);
 		this.terrianMap = new mapKey(hiddenImage).terrianMap;
-		this.checkpoint = false;
+		this.hudTimer = hudTimer;
+
 		this.bounce = false;
 		this.inputEnabled = false;
 
@@ -51,25 +52,23 @@ class PlayerCar {
 		var that = this;
         this.game.entities.forEach(function (entity) {
             if (entity.BB && that.BB.collide(entity.BB)) {
-				if (entity instanceof Checkpoint) {
-					if (that.checkpoint == false) {
-						console.log("checkpoint")
-						that.checkpoint = true;
-					}
-				}
                 if (entity instanceof FinishLine) {
-					if (that.checkpoint == true) {
-						that.checkpoint = false;
+					if (entity.passable) {
 						that.curLap++;
 						that.hudCurLap.innerText = that.curLap + ": ";
 						that.createLapTime();
+						that.hudTimer.reset();
 						if (that.curLap === 4) {
 							console.log("You win!");
-							that.game.timer.end();
+							that.hudTimer.end();
 							document.querySelectorAll('.lapTime').forEach(e => e.remove());
 							that.inputEnabled=false;
 							sceneManager.finishedRaceAnimation(false);
 						}   
+						entity.passable = false;
+						setTimeout(() => {
+							entity.passable = true
+						}, 20000);
 					}
                     
                 }  else if (entity instanceof Enemy) {
@@ -85,8 +84,7 @@ class PlayerCar {
 		 	
 		if (this.health <= 0 ) {
 			console.log("You lose");
-			sceneManager.playerDeath();
-			this.game.timer.end();
+			this.hudTimer.end();
 			document.querySelectorAll('.lapTime').forEach(e => e.remove());
 			this.inputEnabled = false;
 			sceneManager.finishedRaceAnimation(true);
@@ -127,7 +125,26 @@ class PlayerCar {
 	//code to create lap time in hud
 	createLapTime() {
 		if (this.curLap > 1) {
-			this.game.timer.createLapTime(this.curLap);
+			const newDiv = document.createElement("div");
+			newDiv.classList.add("lapTime");
+			console.log("Lap " + (this.curLap -1) + ": " + this.hudTimer.minute + ":" + 
+				this.hudTimer.second + ":" + this.hudTimer.millisecond);
+			let text = document.createElement("SPAN");
+			text.innerHTML = ("Lap " + (this.curLap - 1) + ":&nbsp");
+			// and give it some content
+
+			// add the text node to the newly created div
+			newDiv.appendChild(text);
+			let hudMinutes = document.createTextNode(this.hudTimer.minute+ "'");
+			let hudSeconds = document.createTextNode(this.hudTimer.second+"\"");
+			let hudMilliseconds = document.createTextNode(this.hudTimer.millisecond);
+
+			// add the newly created element and its content into the DOM
+			let hud = document.getElementById("hud")
+			hud.appendChild(newDiv);
+			newDiv.appendChild(hudMinutes);
+			newDiv.appendChild(hudSeconds);
+			newDiv.appendChild(hudMilliseconds);
 		}
 		
 	}
@@ -159,11 +176,9 @@ class PlayerCar {
 	changeVelocityAxisX(){
 		// if up then velocity increase if down velocity decreases	// 1st equation of motion with t=1 
 		if(this.game.left){
-			this.turn_velocity = Math.min(this.turn_velocity + this.turn_accel * this.game.clockTick * 40, this.turn_max_vel);
-			this.velocity = Math.max(this.velocity- this.velocity * this.decel * this.game.clockTick * 8, 0);
+			this.turn_velocity = Math.min(this.turn_velocity + this.turn_accel, this.turn_max_vel);
 		} else if(this.game.right){
-			this.turn_velocity = Math.max(this.turn_velocity - this.turn_accel * this.game.clockTick * 40, -this.turn_max_vel);
-			this.velocity = Math.max(this.velocity-this.velocity *this.decel * this.game.clockTick * 8, 0);
+			this.turn_velocity = Math.max(this.turn_velocity - this.turn_accel, -this.turn_max_vel);
 		} else if(this.turn_velocity < 0){
 			this.turn_velocity = Math.min(this.turn_velocity + this.turn_decel, 0);
 		} else {
@@ -180,7 +195,7 @@ class PlayerCar {
 		} else if(this.velocity < 0) {
 			this.velocity = Math.min(this.velocity+this.decel, 0);
 		} else {
-			this.velocity = Math.max(this.velocity-this.decel * 1.5 *  this.game.clockTick * 4, 0);
+			this.velocity = Math.max(this.velocity-this.decel, 0);
 		}
 	};
 
