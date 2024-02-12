@@ -22,7 +22,6 @@ class SceneManager {
             this.gameEngine.clearEntities();
             this.gameEngine.clearInput();
             this.gameEngine = null;
-            // ASSET_MANAGER.clearEntities();
             var map = document.getElementById("mapCanvas");
             var hud = document.getElementById("hud");
             hud.style.display="none";
