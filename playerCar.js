@@ -17,6 +17,7 @@ class PlayerCar {
 		this.hudTimer = hudTimer;
 
 		this.bounce = false;
+		this.inputEnabled = false;
 
         this.velocity = 0,
 		this.turningSpeed = .25;
@@ -61,7 +62,8 @@ class PlayerCar {
 							console.log("You win!");
 							that.hudTimer.end();
 							document.querySelectorAll('.lapTime').forEach(e => e.remove());
-							sceneManager.playerDeath();
+							that.inputEnabled=false;
+							sceneManager.finishedRaceAnimation(false);
 						}   
 						entity.passable = false;
 						setTimeout(() => {
@@ -82,19 +84,24 @@ class PlayerCar {
 		 	
 		if (this.health <= 0 ) {
 			console.log("You lose");
-			sceneManager.playerDeath();
 			this.hudTimer.end();
 			document.querySelectorAll('.lapTime').forEach(e => e.remove());
+			this.inputEnabled = false;
+			sceneManager.finishedRaceAnimation(true);
 		}
 
-		this.changeVelocityAxisY();
-        this.move(this.velocity, this.position.theta);
-		this.changeVelocityAxisX();
-		this.position.updateMapDirection();
+		
+		if(this.inputEnabled) {
+			this.changeVelocityAxisY();
+			this.move(this.velocity, this.position.theta);
+			this.changeVelocityAxisX();
+			this.position.updateMapDirection();
 
 
-		this.position.theta += this.turn_velocity;
-		this.checkForPowerSlide();
+			this.position.theta += this.turn_velocity;
+			this.checkForPowerSlide();
+		}
+		
 
     };
 
@@ -283,53 +290,3 @@ class PlayerCar {
 		}
 	};
 };
-        // const pos = (1024 * (Math.floor(possibleY)) + (0 - Math.floor(possibleX)))*4;
-        // const rgba1 = this.pixelMap.data[pos];
-        // const rgba2 = this.pixelMap.data[pos +1];
-        // const rgba3 = this.pixelMap.data[pos+2];
-
-				//lose health on collision
-		// if (rgba1+rgba2+rgba3 <= 110 && this.indestructible === false) {
-		// 	this.health -= 5;
-		// 	this.indestructible = true;
-		// 	setTimeout(()=> {
-		// 		this.indestructible = false;
-		// 	}, 250);
-
-		// //bright pink for boost
-		// } else if (rgba1 == 255 && rgba2 == 23 && rgba3 == 240) {
-		// 	this.health = Math.min(this.maxHealth, this.health + 40* this.game.clockTick);
-		// } // lime green for ice 
-		// else if (rgba1 == 100 && rgba2 == 255 && rgba3 == 113) {
-		// 	this.turn_velocity = 0;
-		// } // yellow for dirt
-		// else if (rgba1 == 60 && rgba2 == 100 && rgba3 == 100) {
-		// 	this.velocity = Math.max(0, this.velocity - this.game.clockTick * 5);
-		// } // orange for lava
-		// else if (rgba1 == 36 && rgba2 == 100 && rgba3 == 100) {
-		// 	this.health = Math.max(0, this.health-= (20* this.game.clockTick));
-		// }
-        // return rgba1+rgba2+rgba3 > 110;
-
-		// if(this.game.up){
-			//checks if boost button is hit		
-			// if (this.game.boosting) {
-			// 	//checks current boost power
-			// 	if (this.health > 1) {
-			// 		this.health = Math.max(1, this.health-= (20* this.game.clockTick));
-			// 		this.velocity = Math.min(this.maxBoostVelocity, this.velocity + this.game.clockTick * 60* this.accel);
-			// 	}
-			// } if (this.game.braking) {
-			// 	this.velocity = Math.max(0, this.velocity -  this.game.clockTick * 5* this.decel);
-			// } if (this.velocity > this.max_vel && !this.game.boosting) {
-			// 	this.velocity -= this.decel * this.game.clockTick;
-			// } if (this.velocity < this.max_vel) {
-			// 	this.velocity = Math.min(this.velocity+this.accel * 60 * this.game.clockTick, this.max_vel);
-			// }
-		// } else if(this.game.down){
-		// 	this.velocity = Math.max(this.velocity-this.accel, -this.max_vel);
-		// } else if(this.velocity < 0) {
-		// 	this.velocity = Math.min(this.velocity+this.decel, 0);
-		// } else {
-		// 	this.velocity = Math.max(this.velocity-this.decel, 0);
-		//}
