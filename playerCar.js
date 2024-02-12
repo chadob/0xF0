@@ -202,7 +202,7 @@ class PlayerCar {
 	//lose health on collision
 	updateHealthAndRoadCond(terrian){
 		if (terrian == "Wall" && this.indestructible === false) {
-			this.health -= 5;
+			// this.health -= 5;
 			this.indestructible = true;
 			setTimeout(()=> {
 				this.indestructible = false;
@@ -230,7 +230,8 @@ class PlayerCar {
 		let typeOfTerrain = this.terrianMap[x][y];
 		let canDrive = typeOfTerrain != 'Wall';
 		this.updateHealthAndRoadCond(typeOfTerrain);
-		return canDrive;
+		// return canDrive;
+		return true;
     }
 
     draw(ctx) {

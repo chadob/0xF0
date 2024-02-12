@@ -41,6 +41,9 @@ class SceneManager {
         ASSET_MANAGER.queueDownload("Sprites/Tracks/sky.webp");
         ASSET_MANAGER.queueDownload("Sprites/Menu/fzero_title.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/bg.png");
+        ASSET_MANAGER.queueDownload("Sprites/Tracks/shrunk_hidden.png");
+        ASSET_MANAGER.queueDownload("Sprites/Tracks/track_shrunk.png");
+
         ASSET_MANAGER.downloadAll(() => {});
     }
     loadRace() {
@@ -72,8 +75,8 @@ class SceneManager {
         let mapCanvas = document.getElementById("mapCanvas");
         let gameCanvas = document.getElementById("gameworld");
         let ctx = gameCanvas.getContext("2d");
-        let img = ASSET_MANAGER.getAsset("Sprites/Tracks/edited track.png");
-        let hiddenImg = ASSET_MANAGER.getAsset("Sprites/Tracks/whiteland_hidden.png");
+        let img = ASSET_MANAGER.getAsset("Sprites/Tracks/track_shrunk.png");
+        let hiddenImg = ASSET_MANAGER.getAsset("Sprites/Tracks/shrunk_hidden.png");
         //const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/bg.png");
         const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/sky.webp");
     
