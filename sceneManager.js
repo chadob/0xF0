@@ -78,14 +78,13 @@ class SceneManager {
     
         // Add entities to Game Enginge
         let starting_pos = {x: -140.98064874052415, y: 14.980766027134674, theta: (3*Math.PI)/2};//-1006.8800071953033};
-        let hudTimer = new HudTimer(this.gameEngine);
-	    let mainPlayer = new PlayerCar(starting_pos, hiddenImg, this.gameEngine, hudTimer);
+	    let mainPlayer = new PlayerCar(starting_pos, hiddenImg, this.gameEngine);
         this.player = mainPlayer;
         this.gameEngine.addEntity(mainPlayer);
         this.gameEngine.addEntity(new mode7(mainPlayer, img, mapCanvas, this.gameEngine, imgBG));
         // gameEngine.addEntity(new Enemy(gameEngine));
         this.gameEngine.addEntity(new FinishLine(this.gameEngine));
-        this.gameEngine.addEntity(hudTimer);
+        this.gameEngine.addEntity(new Checkpoint(this.gameEngine));
         var hud = document.getElementById("hud");
             hud.style.display="flex";
     
