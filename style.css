@@ -1,8 +1,7 @@
-/* canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-} */
+@font-face {
+    font-family: FZERO_SNES;
+    src: url('Fonts\\SNES\\F-ZeroSNES.ttf') format('truetype');
+  }
 canvas{
     position: absolute;
     top: 50%;
@@ -28,9 +27,9 @@ canvas{
     left:50%;
     background: #b7a57a;
     transform: translate(-50%, -50%);
-
+    font-family: FZERO_SNES;
+    font-size: 14pt;
 }
-
 #titleImg {
     position: absolute;
     top:35%;
@@ -49,14 +48,107 @@ canvas{
     left: 50%;
     top: 50%;
     display: none;
-  justify-content: end;
-  align-items: start;   
-  font-size: 24px;
-  color: white;
-  text-shadow: 2px 2px #000000;
+    justify-content: end;
+    align-items: start;   
+    font-size: 24px;
+    color: white;
+    text-shadow: 2px 2px #000000;
 }
 .lapTime {
     display: flex;
     justify-content: center;
     padding-left: 10px;
+}
+
+/* The animation code */
+@keyframes countdownAnimation {
+    0%   {font-size: 1px;}
+    100% {}
+  }
+@keyframes next {
+    0% {content: "3"; font-size: 1px;}
+    12% {content: "3"; font-size: 120pt;}
+    37% {content: "2"; font-size: 120pt;}
+    62% {content: "1"; font-size: 120pt;}
+    87% {content: "GO"; font-size: 120pt;}
+    92% {content: "GO"; font-size: 120pt;}
+    100% {content:"GO"; font-size: 1px;}
+}
+/* #6A2963 */
+#countdown {
+    position: absolute;
+    justify-content: center;
+    text-align: center;
+    width: 1024px;
+    font-family: FZERO_SNES;
+    font-size: 120pt;
+    background-image: linear-gradient(180deg, #FF2B7C, #6A2963);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+#countdown::after {
+    content:"";
+    animation: next 4s;
+}
+#countdown_div {
+    position: absolute;
+    justify-content: center;
+    top: 50%;
+    left: 50%;
+    width: 1024px;
+    height: 522px;
+    transform: translate(-50%, -50%);
+    font-family: FZERO_SNES;
+    font-size: 60pt
+}
+
+/* The animation code */
+@keyframes finishAnimation {
+    0%   {font-size: 1px;}
+    100% {left:0px; top:0px;}
+  }
+/* #6A2963 */
+#finish {
+    position: absolute;
+    justify-content: center;
+    text-align: center;
+    width: 1024px;
+    font-family: FZERO_SNES;
+    font-size: 120pt;
+    background-image: linear-gradient(180deg, #FF2B7C, #6A2963);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation-name: finishAnimation;
+    animation-duration: 1s;
+}
+#finish_div {
+    position: absolute;
+    justify-content: center;
+    top: 50%;
+    left: 50%;
+    width: 1024px;
+    height: 522px;
+    transform: translate(-50%, -50%);
+    font-family: FZERO_SNES;
+    font-size: 60pt
+}
+#transitionContainer {
+    position: absolute;
+    justify-content: center;
+    top: 50%;
+    left: 50%;
+    width: 1024px;
+    height: 522px;
+    transform: translate(-50%, -50%);
+    font-family: FZERO_SNES;
+    font-size: 60pt
+}
+
+#audioControl {
+    position: absolute;
+    justify-content: center;
+    top: 90%;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    width: 1024px;
 }
