@@ -48,10 +48,10 @@ onmessage = (e)=>{
 
 function update(){
   if(running){
-    let out = new ImageData(1024, 522);
-
-    for(let i=4*1024*horizon;i<out.data.length;i+=4){ /* i is set to this value to avoid iterating over every pixel above the horizon */
-      let y = Math.floor(i/(4*1024));              /* y is the number of times x has wrapped -- out of order for performance reasons */
+    let out = new ImageData(image.width, image.height);
+    // console.log(theta + " x: " + x0 +  " y: " + y0);
+    for(let i=4*image.width*horizon;i<out.data.length;i+=4){ /* i is set to this value to avoid iterating over every pixel above the horizon */
+      let y = Math.floor(i/(4*image.width));              /* y is the number of times x has wrapped -- out of order for performance reasons */
       if(y >= horizon){                                   /* avoiding unnecessary computation leads to a noticeable speed increase */
         let x = Math.floor((i/4)%image.width)-half_w,     /* x wraps around every time i/4 crosses this.w, must be centered around this.w/2 rather than 0 */
             z = y/height,                                 /* z position depends upon y (closer=greater) */
@@ -63,9 +63,8 @@ function update(){
         let xprime = Math.floor((xtemp * cos_theta) - (ytemp * sin_theta) - x0), /* rotate perspective-transformed point */
             yprime = Math.floor((xtemp * sin_theta) + (ytemp * cos_theta) + y0); /* add camera point to properly translate view plane rather than skew it */
 
-        if(xprime >= 0 && xprime <= image.width &&
-            yprime >= 0 && yprime <= image.height){
-          let i_dest = ((yprime * image.height) + xprime) * 4; /* again for performance, this function has been inlined */
+        if(xprime >= 0 && xprime <= image.width && yprime >= 0 && yprime <= image.height) {
+          let i_dest = ((yprime * image.width) + xprime) * 4; /* again for performance, this function has been inlined */
           
           /* NOTE from @Paul: This is where the remaping of pixels happens.
              "out".data is the array of pixels. From i to i + 3 represents 
@@ -81,6 +80,11 @@ function update(){
           out.data[i+1] = image.data[i_dest+1];
           out.data[i+2] = image.data[i_dest+2];
           out.data[i+3] = image.data[i_dest+3];
+          // out.data[i+4] = image.data[i_dest+4];
+          // out.data[i+5] = image.data[i_dest+5];
+          // out.data[i+6] = image.data[i_dest+6];
+          // out.data[i+7] = image.data[i_dest+7];
+          
         }
       }
     }
@@ -92,10 +96,10 @@ function update(){
      * canvas. Note that this canvas is seperate from the one where
      * our car is being drawn at.
     */
-
+    
     createImageBitmap(out).then((bitmap)=>{
-      ctx.clearRect(0, 0, out.width, out.height);
-      ctx.drawImage(bitmap, 0, 0);
+      ctx.clearRect(0, 0, 1024, 522);
+      ctx.drawImage(bitmap, 0, 0, 1024, 522);
     });
   }
 

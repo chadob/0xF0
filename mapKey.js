@@ -2,6 +2,7 @@ class mapKey {
     constructor(img_tag) {
         this.terrianMap = [];
         this.arrayOfColorsMap = this.get_image(img_tag);
+        this.imgw = img_tag.width;
         //create map
         for (let w = 0; w < img_tag.width; w++) {
             this.terrianMap[w] = [];
@@ -37,7 +38,7 @@ class mapKey {
     };
 findTerrian(possibleX, possibleY){
     
-    const pos = (1024 * (Math.floor(possibleY)) + (Math.floor(possibleX)))*4;
+    const pos = (this.imgw * (Math.floor(possibleY)) + (Math.floor(possibleX)))*4;
     const rgba1 = this.arrayOfColorsMap.data[pos];
     const rgba2 = this.arrayOfColorsMap.data[pos +1];
     const rgba3 = this.arrayOfColorsMap.data[pos+2];

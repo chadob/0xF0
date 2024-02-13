@@ -230,8 +230,9 @@ class PlayerCar {
 		let typeOfTerrain = this.terrianMap[x][y];
 		let canDrive = typeOfTerrain != 'Wall';
 		this.updateHealthAndRoadCond(typeOfTerrain);
-		// return canDrive;
-		return true;
+		console.log(typeOfTerrain);
+		return canDrive;
+		// return true;
     }
 
     draw(ctx) {

@@ -63,7 +63,7 @@ class mode7 {
     this.bgCanv = document.getElementById("bgCanvas");
     this.bgCtx = this.bgCanv.getContext("2d");
     this.imgBG = imgBG;
-    this.imgBG.width=this.image.width;//10*this.bgCanv.width;
+    this.imgBG.width=1024;//10*this.bgCanv.width;
     //this.imgBG.height = .6 *this.bgCanv.height;
 
     //circumference of our image in a circle -> image_width = 2*PI*R)
