@@ -71,7 +71,7 @@ class mode7 {
     
 
     /* Width of the original image */
-    this.w = -this.image.width;
+    this.w = this.image.width;
 
     /* Height of the original image */
     this.h = this.image.height;
@@ -113,11 +113,7 @@ class mode7 {
     fake_context.drawImage(img_tag, 0, 0);
     return fake_context.getImageData(0, 0, img_tag.width, img_tag.height);
   }
-  /*
-   * The game engine is keeping track of which keys are being pressed.
-   * Use them here to simulate the car moving by "moving" the camera 
-   * around the ground canvas.
-   */
+  //draws background
   update() {
     let w = this.r * (this.mainCar.theta);
     this.bgCtx.drawImage(this.imgBG,  w - (this.imgBG.width - 5), 5, this.imgBG.width, this.bgCanv.height);
