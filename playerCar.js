@@ -1,9 +1,9 @@
 class PlayerCar {
-    constructor(start_pos, hiddenImage, game, hudTimer) {
+    constructor(start_pos, hiddenImage, game) {
         this.game = game;
 		this.direction = 0;
         this.animator = new Animator(ASSET_MANAGER.getAsset("./lambo.png"), 0, 0, 950, 600, 3, 0.5);
-		this.curLap = 0;
+		this.curLap = 1;
 		this.width = .5;
 		this.height = .5;
 		this.maxHealth = 100;
@@ -14,9 +14,9 @@ class PlayerCar {
 		this.position = new position(start_pos);
         //this.pixelMap = this.get_image(hiddenImage);
 		this.terrianMap = new mapKey(hiddenImage).terrianMap;
-		this.hudTimer = hudTimer;
-
+		this.checkpoint = false;
 		this.bounce = false;
+		this.inputEnabled = false;
 
         this.velocity = 0,
 		this.turningSpeed = .25;
@@ -51,22 +51,25 @@ class PlayerCar {
 		var that = this;
         this.game.entities.forEach(function (entity) {
             if (entity.BB && that.BB.collide(entity.BB)) {
+				if (entity instanceof Checkpoint) {
+					if (that.checkpoint == false) {
+						console.log("checkpoint")
+						that.checkpoint = true;
+					}
+				}
                 if (entity instanceof FinishLine) {
-					if (entity.passable) {
+					if (that.checkpoint == true) {
+						that.checkpoint = false;
 						that.curLap++;
 						that.hudCurLap.innerText = that.curLap + ": ";
 						that.createLapTime();
-						that.hudTimer.reset();
 						if (that.curLap === 4) {
 							console.log("You win!");
-							that.hudTimer.end();
+							that.game.timer.end();
 							document.querySelectorAll('.lapTime').forEach(e => e.remove());
-							sceneManager.playerDeath();
+							that.inputEnabled=false;
+							sceneManager.finishedRaceAnimation(false);
 						}   
-						entity.passable = false;
-						setTimeout(() => {
-							entity.passable = true
-						}, 20000);
 					}
                     
                 }  else if (entity instanceof Enemy) {
@@ -82,26 +85,29 @@ class PlayerCar {
 		 	
 		if (this.health <= 0 ) {
 			console.log("You lose");
-
+			this.game.timer.end();
 			// this.game.addEntity(new Explosion(this.game));
             const explosion = new Explosion(this.game);
             this.game.addEntity(explosion);
 			// ADD CODE to remove player car image (while explosion loop plays)
 			// then go straight to death screen
-
-			sceneManager.playerDeath();
-			this.hudTimer.end();
 			document.querySelectorAll('.lapTime').forEach(e => e.remove());
+			this.inputEnabled = false;
+			sceneManager.finishedRaceAnimation(true);
 		}
 
-		this.changeVelocityAxisY();
-        this.move(this.velocity, this.position.theta);
-		this.changeVelocityAxisX();
-		this.position.updateMapDirection();
+		
+		if(this.inputEnabled) {
+			this.changeVelocityAxisY();
+			this.move(this.velocity, this.position.theta);
+			this.changeVelocityAxisX();
+			this.position.updateMapDirection();
 
 
-		this.position.theta += this.turn_velocity;
-		this.checkForPowerSlide();
+			this.position.theta += this.turn_velocity;
+			this.checkForPowerSlide();
+		}
+		
 
     };
 
@@ -125,26 +131,7 @@ class PlayerCar {
 	//code to create lap time in hud
 	createLapTime() {
 		if (this.curLap > 1) {
-			const newDiv = document.createElement("div");
-			newDiv.classList.add("lapTime");
-			console.log("Lap " + (this.curLap -1) + ": " + this.hudTimer.minute + ":" + 
-				this.hudTimer.second + ":" + this.hudTimer.millisecond);
-			let text = document.createElement("SPAN");
-			text.innerHTML = ("Lap " + (this.curLap - 1) + ":&nbsp");
-			// and give it some content
-
-			// add the text node to the newly created div
-			newDiv.appendChild(text);
-			let hudMinutes = document.createTextNode(this.hudTimer.minute+ "'");
-			let hudSeconds = document.createTextNode(this.hudTimer.second+"\"");
-			let hudMilliseconds = document.createTextNode(this.hudTimer.millisecond);
-
-			// add the newly created element and its content into the DOM
-			let hud = document.getElementById("hud")
-			hud.appendChild(newDiv);
-			newDiv.appendChild(hudMinutes);
-			newDiv.appendChild(hudSeconds);
-			newDiv.appendChild(hudMilliseconds);
+			this.game.timer.createLapTime(this.curLap);
 		}
 		
 	}
@@ -176,9 +163,11 @@ class PlayerCar {
 	changeVelocityAxisX(){
 		// if up then velocity increase if down velocity decreases	// 1st equation of motion with t=1 
 		if(this.game.left){
-			this.turn_velocity = Math.min(this.turn_velocity + this.turn_accel, this.turn_max_vel);
+			this.turn_velocity = Math.min(this.turn_velocity + this.turn_accel * this.game.clockTick * 40, this.turn_max_vel);
+			this.velocity = Math.max(this.velocity- this.velocity * this.decel * this.game.clockTick * 8, 0);
 		} else if(this.game.right){
-			this.turn_velocity = Math.max(this.turn_velocity - this.turn_accel, -this.turn_max_vel);
+			this.turn_velocity = Math.max(this.turn_velocity - this.turn_accel * this.game.clockTick * 40, -this.turn_max_vel);
+			this.velocity = Math.max(this.velocity-this.velocity *this.decel * this.game.clockTick * 8, 0);
 		} else if(this.turn_velocity < 0){
 			this.turn_velocity = Math.min(this.turn_velocity + this.turn_decel, 0);
 		} else {
@@ -195,7 +184,7 @@ class PlayerCar {
 		} else if(this.velocity < 0) {
 			this.velocity = Math.min(this.velocity+this.decel, 0);
 		} else {
-			this.velocity = Math.max(this.velocity-this.decel, 0);
+			this.velocity = Math.max(this.velocity-this.decel * 1.5 *  this.game.clockTick * 4, 0);
 		}
 	};
 
@@ -291,53 +280,3 @@ class PlayerCar {
 		}
 	};
 };
-        // const pos = (1024 * (Math.floor(possibleY)) + (0 - Math.floor(possibleX)))*4;
-        // const rgba1 = this.pixelMap.data[pos];
-        // const rgba2 = this.pixelMap.data[pos +1];
-        // const rgba3 = this.pixelMap.data[pos+2];
-
-				//lose health on collision
-		// if (rgba1+rgba2+rgba3 <= 110 && this.indestructible === false) {
-		// 	this.health -= 5;
-		// 	this.indestructible = true;
-		// 	setTimeout(()=> {
-		// 		this.indestructible = false;
-		// 	}, 250);
-
-		// //bright pink for boost
-		// } else if (rgba1 == 255 && rgba2 == 23 && rgba3 == 240) {
-		// 	this.health = Math.min(this.maxHealth, this.health + 40* this.game.clockTick);
-		// } // lime green for ice 
-		// else if (rgba1 == 100 && rgba2 == 255 && rgba3 == 113) {
-		// 	this.turn_velocity = 0;
-		// } // yellow for dirt
-		// else if (rgba1 == 60 && rgba2 == 100 && rgba3 == 100) {
-		// 	this.velocity = Math.max(0, this.velocity - this.game.clockTick * 5);
-		// } // orange for lava
-		// else if (rgba1 == 36 && rgba2 == 100 && rgba3 == 100) {
-		// 	this.health = Math.max(0, this.health-= (20* this.game.clockTick));
-		// }
-        // return rgba1+rgba2+rgba3 > 110;
-
-		// if(this.game.up){
-			//checks if boost button is hit		
-			// if (this.game.boosting) {
-			// 	//checks current boost power
-			// 	if (this.health > 1) {
-			// 		this.health = Math.max(1, this.health-= (20* this.game.clockTick));
-			// 		this.velocity = Math.min(this.maxBoostVelocity, this.velocity + this.game.clockTick * 60* this.accel);
-			// 	}
-			// } if (this.game.braking) {
-			// 	this.velocity = Math.max(0, this.velocity -  this.game.clockTick * 5* this.decel);
-			// } if (this.velocity > this.max_vel && !this.game.boosting) {
-			// 	this.velocity -= this.decel * this.game.clockTick;
-			// } if (this.velocity < this.max_vel) {
-			// 	this.velocity = Math.min(this.velocity+this.accel * 60 * this.game.clockTick, this.max_vel);
-			// }
-		// } else if(this.game.down){
-		// 	this.velocity = Math.max(this.velocity-this.accel, -this.max_vel);
-		// } else if(this.velocity < 0) {
-		// 	this.velocity = Math.min(this.velocity+this.decel, 0);
-		// } else {
-		// 	this.velocity = Math.max(this.velocity-this.decel, 0);
-		//}

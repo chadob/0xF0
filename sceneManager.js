@@ -1,10 +1,20 @@
 class SceneManager {
     constructor() {
         this.loadAssets();
+        this.bgMusic = false;
+        this.loop = null;
     }
 
     loadMainMenu() {
         this.menu = new MainMenu();
+        this.muteButton = document.getElementById('mute');
+        this.muteButton.addEventListener("click", () => {
+            ASSET_MANAGER.muteAudio(this.muteButton.value);
+        });
+        this.volume = document.getElementById('volume');
+        this.volume.addEventListener("change", () => {
+            ASSET_MANAGER.adjustVolume(this.volume.value);
+        });
     }
 
     playerDeath() {
@@ -12,7 +22,6 @@ class SceneManager {
             this.gameEngine.clearEntities();
             this.gameEngine.clearInput();
             this.gameEngine = null;
-            // ASSET_MANAGER.clearEntities();
             var map = document.getElementById("mapCanvas");
             var hud = document.getElementById("hud");
             hud.style.display="none";
@@ -21,8 +30,10 @@ class SceneManager {
             gameCanvas.remove();
             this.menu.showMenu();
         });
+
     }
     loadAssets() {
+        ASSET_MANAGER.queueDownload("Sounds/8bit-bop2.wav");
         ASSET_MANAGER.queueDownload("./lambo.png");
         ASSET_MANAGER.queueDownload("./explosions.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/edited track.png");
@@ -68,15 +79,15 @@ class SceneManager {
     
         // Add entities to Game Engine
         let starting_pos = {x: -140.98064874052415, y: 14.980766027134674, theta: (3*Math.PI)/2};//-1006.8800071953033};
-        let hudTimer = new HudTimer(this.gameEngine);
-	    let mainPlayer = new PlayerCar(starting_pos, hiddenImg, this.gameEngine, hudTimer);
-        this.gameEngine.addEntity(new Explosion(this.gameEngine));
+	    let mainPlayer = new PlayerCar(starting_pos, hiddenImg, this.gameEngine);
+        //this.gameEngine.addEntity(new Explosion(this.gameEngine));
+        this.player = mainPlayer;
         this.gameEngine.addEntity(mainPlayer);
         this.gameEngine.addEntity(new mode7(mainPlayer, img, mapCanvas, this.gameEngine, imgBG));
 
         // gameEngine.addEntity(new Enemy(gameEngine));
         this.gameEngine.addEntity(new FinishLine(this.gameEngine));
-        this.gameEngine.addEntity(hudTimer);
+        this.gameEngine.addEntity(new Checkpoint(this.gameEngine));
         var hud = document.getElementById("hud");
             hud.style.display="flex";
     
@@ -95,5 +106,30 @@ class SceneManager {
     deLoadRace(callback) {
         setTimeout(callback, 100);
 
+    }
+    finishedRaceAnimation(dead) {
+        //Finish Animation
+        let container = document.getElementById("transitionContainer");
+        if(!document.getElementById('finish')) {
+            let raceEndText = document.createElement('h1');
+            raceEndText.id = "finish";
+            if(dead) {
+                raceEndText.innerHTML = "YOU LOST";
+            } else {
+                raceEndText.innerHTML = "FINISHED";
+            }
+            container.appendChild(raceEndText);
+            container.hidden = false;
+            setTimeout(() => {
+                
+                sceneManager.playerDeath();
+                raceEndText.remove();
+                container.hidden = true;
+            }, 4000);
+        }
+    }
+    enableInput() {
+        this.player.inputEnabled = true;
+        this.gameEngine.timer.hasStarted = true;
     }
 }
