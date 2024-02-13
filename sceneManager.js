@@ -24,6 +24,7 @@ class SceneManager {
     }
     loadAssets() {
         ASSET_MANAGER.queueDownload("./lambo.png");
+        ASSET_MANAGER.queueDownload("./explosions.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/edited track.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/whiteland_hidden.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/sky.webp");
@@ -65,12 +66,14 @@ class SceneManager {
         //const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/bg.png");
         const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/sky.webp");
     
-        // Add entities to Game Enginge
+        // Add entities to Game Engine
         let starting_pos = {x: -140.98064874052415, y: 14.980766027134674, theta: (3*Math.PI)/2};//-1006.8800071953033};
         let hudTimer = new HudTimer(this.gameEngine);
 	    let mainPlayer = new PlayerCar(starting_pos, hiddenImg, this.gameEngine, hudTimer);
+        this.gameEngine.addEntity(new Explosion(this.gameEngine));
         this.gameEngine.addEntity(mainPlayer);
         this.gameEngine.addEntity(new mode7(mainPlayer, img, mapCanvas, this.gameEngine, imgBG));
+
         // gameEngine.addEntity(new Enemy(gameEngine));
         this.gameEngine.addEntity(new FinishLine(this.gameEngine));
         this.gameEngine.addEntity(hudTimer);

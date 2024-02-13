@@ -83,8 +83,9 @@ class PlayerCar {
 		if (this.health <= 0 ) {
 			console.log("You lose");
 
-            // const explosion = new Explosion(this.game, this.position.x, this.position.y);
-            // this.game.addEntity(explosion);
+			// this.game.addEntity(new Explosion(this.game));
+            const explosion = new Explosion(this.game);
+            this.game.addEntity(explosion);
 			// ADD CODE to remove player car image (while explosion loop plays)
 			// then go straight to death screen
 
@@ -237,6 +238,7 @@ class PlayerCar {
 		ctx.scale(0.25,0.25);
         this.animator.drawSelf(this.game.clockTick, ctx, 1500, 1500, this.direction)
 		ctx.restore();
+		
 		//health bar
 		var ratio = this.health/this.maxHealth;
 		ctx.strokeStyle = "Black";
