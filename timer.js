@@ -8,6 +8,7 @@ class Timer {
         this.minute = 0;
         this.second = 0;
         this.millisecond = 0;
+        this.hasStarted = false;
     };
 
     tick() {
@@ -17,20 +18,21 @@ class Timer {
 
         const gameDelta = Math.min(delta, this.maxStep);
         this.gameTime += gameDelta;
-        
-        this.millisecond += delta*1000;
-
-        if (this.millisecond >= 1000) {
-            this.second++;
-            this.millisecond = 0;
+        if (this.hasStarted) {
+            this.millisecond += delta*1000;
+            if (this.millisecond >= 1000) {
+                this.second++;
+                this.millisecond = 0;
+            }
+            if (this.second >= 60) {
+                this.second = 0;
+                this.minute++;
+            }
+            document.getElementById('minute').innerText = this.returnData(this.minute);
+            document.getElementById('second').innerText = this.returnData(this.second);
+            document.getElementById('millisecond').innerText = this.returnData(this.millisecond);
         }
-        if (this.second >= 60) {
-            this.second = 0;
-            this.minute++;
-          }
-        document.getElementById('minute').innerText = this.returnData(this.minute);
-        document.getElementById('second').innerText = this.returnData(this.second);
-        document.getElementById('millisecond').innerText = this.returnData(this.millisecond);
+        
         return gameDelta;
     };
     reset() {
@@ -42,7 +44,9 @@ class Timer {
         document.getElementById('millisecond').innerText = '000';
     }
     end() {
+        document.getElementById('curLap').innerText = 1 + ": ";
         this.reset();
+        this.hasStarted=false;
     }
     returnData(input) {
         return input > 10 ? input : `0${input}`

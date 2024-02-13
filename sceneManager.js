@@ -127,5 +127,6 @@ class SceneManager {
     }
     enableInput() {
         this.player.inputEnabled = true;
+        this.gameEngine.timer.hasStarted = true;
     }
 }
