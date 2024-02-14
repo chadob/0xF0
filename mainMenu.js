@@ -7,6 +7,7 @@ class MainMenu {
             sceneManager.loadRace();
             this.hideMenu();
             this.playCountdown();
+            ASSET_MANAGER.muteAudio(true);
             ASSET_MANAGER.playAsset("Sounds/8bit-bop2.wav");
             
         });
