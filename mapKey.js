@@ -9,19 +9,15 @@ class mapKey {
             this.whereIsWall[w] = [];
             for (let h = 0; h < img_tag.height; h++) {
                 this.terrianMap[w][h] = this.findTerrian(w,h);
-                
-                if (w > 1 && h > 0 && h < img_tag.height - 1) {    
-                    let wallIsNorth = (this.terrianMap[w - 1][h + 1] == 'Wall') ? "S":""; //switched to S from N
-                    let wallIsEast = (this.terrianMap[w][h]== 'Wall') ? "E":"";
-                    let wallIsSouth = (this.terrianMap[w - 1][h - 1] == 'Wall') ? "N":""; // Same switch reversed
-                    let wallIsWest = (this.terrianMap[w - 2][h] == 'Wall') ? "W":"";
+       
 
-                    this.whereIsWall[w - 1][h] = wallIsNorth+wallIsEast+wallIsSouth+wallIsWest;
-                    if (this.whereIsWall[w - 1][h].length >= 3) {
-                        this.terrianMap[w - 1][h] = "Wall";
-                    } else if ((this.whereIsWall[w - 1][h] == "Wall") && (this.whereIsWall[w - 1][h].length <= 1)){
-                        this.terrianMap[w - 1][h] = "Road";
-                    }
+                if (w > 1 && h > 0 && h < img_tag.height - 1) {    
+                    let wallIsSouth = (this.terrianMap[w - 1][h + 1] == 'Wall') ? "S":""; //switched to S from N
+                    let wallIsEast = (this.terrianMap[w][h]== 'Wall') ? "E":"";
+                    let wallIsNorth = (this.terrianMap[w - 1][h - 1] == 'Wall') ? "N":""; // Same switch reversed
+                    let wallIsWest = (this.terrianMap[w - 2][h] == 'Wall') ? "W":"";
+        
+                    this.whereIsWall[w - 1][h] = wallIsNorth+wallIsSouth+wallIsWest+wallIsEast;
                 }  
             }
         }
@@ -49,11 +45,11 @@ findTerrian(possibleX, possibleY){
     else if (rgba1 == 36 && rgba2 == 100 && rgba3 == 100) {
         terrianType = "Lava";
     } 
-    else if (rgba1+rgba2+rgba3 < 110) {
+    else if (rgba1+rgba2+rgba3 <= 50) { //arbitrary val, have a few missed wall spots when its == 0
         terrianType = "Wall";
     }
     return terrianType;
-         //arbitrary val, I just noticed dark colors tend to have low values
+         
 };
 get_image(img_tag){
     let fake_canvas = document.createElement('canvas'),

@@ -35,19 +35,6 @@ class position {
             return newT;
         };
 
-        findRange0_90(theta){
-            let newT = theta;
-
-            if (newT >= 3 * (Math.PI/2)){
-                newT -= (3 * (Math.PI/2));
-            } else if (newT >= (Math.PI)) {
-                newT -= (Math.PI);
-            } else if (newT >= Math.PI/2) {
-                newT -= Math.PI/2;
-            }
-            return newT;
-        };
-
         getDegrees(radians){
             return radians * (180/Math.PI);
         };
@@ -69,13 +56,25 @@ class position {
         findTheta(direction){
             switch(direction) {
                 case 'S':
-                    return 0;
+                case 'SWE':
+                    return 0; // careful might be 360
+                case 'SE':
+                    return (7*Math.PI)/4;
                 case 'E':
+                case 'NSE':
                     return (3*Math.PI)/2;
+                case 'NE':
+                    return (5*Math.PI)/4;
                 case 'N':
+                case 'NWE':
                     return Math.PI;
+                case 'NW':
+                    return (3*Math.PI)/4;
                 case 'W':
+                case 'NSW':
                     return Math.PI/2;
+                case 'SW':
+                    return Math.PI/4;
             }
-        }
+        };
 };
