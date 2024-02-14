@@ -12,10 +12,16 @@ class PlayerCar {
 		this.indestructible = false;
 		this.hudCurLap = document.getElementById('curLap');
 		this.position = new position(start_pos);
-        //this.pixelMap = this.get_image(hiddenImage);
-		this.terrianMap = new mapKey(hiddenImage).terrianMap;
+		this.trackInfo = new mapKey(hiddenImage);
 		this.checkpoint = false;
-		this.bounce = false;
+
+		this.wallBounce = false;
+		this.cornerBackup = false;
+		this.wallBounceTheta = 0;
+		this.cornerBounceTheta = 0;
+
+		this.errorCount = 0;
+
 		this.inputEnabled = false;
 
         this.velocity = 0,
@@ -78,8 +84,7 @@ class PlayerCar {
 				} 
             }
         });
-		//console.log(this.position.theta + "  " + this.position.direction);
-		//console.log(this.position.direction);
+		
 		//win condition
 		
 		 	
@@ -91,10 +96,17 @@ class PlayerCar {
 			sceneManager.finishedRaceAnimation(true);
 		}
 
-		
 		if(this.inputEnabled) {
 			this.changeVelocityAxisY();
-			this.move(this.velocity, this.position.theta);
+
+			if (this.wallBounce && this.cornerBackup){
+				this.move(0.3, this.cornerBounceTheta);
+			} else if (this.wallBounce) {
+				this.move(0.3, this.wallBounceTheta);
+			} else {
+				this.move(this.velocity, this.position.theta);
+			}
+
 			this.changeVelocityAxisX();
 			this.position.updateMapDirection();
 
@@ -102,8 +114,6 @@ class PlayerCar {
 			this.position.theta += this.turn_velocity;
 			this.checkForPowerSlide();
 		}
-		
-
     };
 
 	checkBoostOrBreak(){
@@ -131,26 +141,80 @@ class PlayerCar {
 		
 	}
     move(v, theta) {
+		
         var possibleX = this.position.x + v * Math.sin(theta);
         var possibleY = this.position.y + v * Math.cos(theta);
-		if (this.bounce){
-			possibleX = this.position.x + 0.3 * Math.sin(theta - Math.PI);
-			possibleY = this.position.y + 0.3 * Math.cos(theta - Math.PI);
-			if (this.canMove(possibleX, possibleY)) {
-				this.position.x += 0.3 * Math.sin(theta - Math.PI);
-				this.position.y += 0.3 * Math.cos(theta - Math.PI);
-			}
-		}
-        else if (this.canMove(possibleX, possibleY)){
-            this.position.x += v * Math.sin(theta);
+
+
+		if (this.canMove(possibleX, possibleY)){	
+			this.position.x += v * Math.sin(theta);
             this.position.y += v * Math.cos(theta);
-    	} else {
-			this.velocity = 0;
-			this.bounce = true;
+			this.errorCount = 0;
+		}
+		else if (this.cornerBackup) {
+			while(!this.canMove(possibleX, possibleY)) {
+				this.errorCount++;
+				this.cornerBounceTheta += Math.PI/4;
+				possibleX = this.position.x + v * Math.sin(this.cornerBounceTheta);
+				possibleY = this.position.y + v * Math.cos(this.cornerBounceTheta);
+			}
+			this.position.x += v * Math.sin(this.cornerBounceTheta);
+            this.position.y += v * Math.cos(this.cornerBounceTheta);
+		} else {
+
+			this.errorCount++;
+
+
+			let currentWalls = this.trackInfo.whereIsWall[this.position.getIntX()][this.position.getIntY()];
+			let rejectMovesWalls = this.trackInfo.whereIsWall[this.position.convertIntX(possibleX)][this.position.convertIntY(possibleY)];
+			let rejectedTerrian = this.trackInfo.terrianMap[this.position.convertIntX(possibleX)][this.position.convertIntY(possibleY)];
+			let directionOfBounce = theta;
+			let time = 450;
+			
+			let directionOfWall = this.position.findTheta(currentWalls); //E
+			if (directionOfWall == "S" || directionOfBounce == "SWE") {
+				directionOfWall = (theta < Math.PI) ? 0: 2*Math.PI;
+			}
+
+			if(rejectedTerrian == "Wall" && currentWalls.length == "1") { 
+				//bounce in opposite direction in wall then change based on angle hit
+				let changeDirBy = theta - directionOfWall;		//higher changeDir means theta needs to be corrected less
+				//this.AdjustNeg = (theta - directionOfWall < 0);		//closer to 0 changeDir means theta needs to be corrected more
+				directionOfBounce = this.position.correctRangeOfTheta(directionOfWall + Math.PI - changeDirBy);
+		
+
+			} else if (rejectMovesWalls.length == "2" && !this.cornerBackup) {
+				directionOfWall = this.position.findTheta(rejectMovesWalls);
+				let changeDirBy = theta - directionOfWall;		//higher changeDir means theta needs to be corrected less
+					//closer to 0 changeDir means theta needs to be corrected more
+				directionOfBounce = this.position.correctRangeOfTheta(directionOfWall + Math.PI - changeDirBy);
+					this.cornerBackup = true;
+					this.cornerBounceTheta = this.position.correctRangeOfTheta(this.position.theta - Math.PI/2);
+				setTimeout(()=> {
+					this.cornerBackup = false;
+				}, 50);	
+
+			} else {
+				this.velocity = 0;
+				directionOfBounce = this.position.correctRangeOfTheta(theta - Math.PI/2);
+				time = 450
+			}
+
+			if (this.errorCount % 3 == 0){
+				console.log("5");
+				this.directionOfBounce += Math.PI/8;
+			}
+
+			
+			this.wallBounce = true;
+			this.wallBounceTheta = directionOfBounce;
 			setTimeout(()=> {
-				this.bounce = false;
-			}, 250);
-			this.move(.3, this.position.theta - Math.PI);
+				this.wallBounce = false;
+			}, time);					// update runs 27-28 times during timeout
+			if (!this.cornerBackup){
+				this.move(.3, this.wallBounceTheta);
+			}
+						
 		}
     };
 
@@ -191,7 +255,7 @@ class PlayerCar {
 			setTimeout(()=> {
 				this.indestructible = false;
 			}, 250);
-
+			console.log(terrian);
 		//bright pink for boost
 		} else if (terrian == "Boost") {
 			this.health = Math.min(this.maxHealth, this.health + 40* this.game.clockTick);
@@ -209,13 +273,48 @@ class PlayerCar {
 
 	//Pixel color collision detection
     canMove( possibleX, possibleY) {
-		let x = -Math.floor(possibleX);
+		let x = Math.floor(Math.abs(possibleX));
 		let y = Math.floor(possibleY);
-		let typeOfTerrain = this.terrianMap[x][y];
+	
+		let findWalls = this.trackInfo.whereIsWall[x][y];
+		let typeOfTerrain = this.trackInfo.terrianMap[x][y];
 		let canDrive = typeOfTerrain != 'Wall';
+		// h (y) decreases as we go N
+		// h (y) increases as we go S
+		// absolute val of w (x) decreases as we go west
+		// absolute val of w (x) increases as we go east 
+		if (findWalls.length == 2 && canDrive){
+			canDrive = this.lookForDarkSide(findWalls, -(possibleX + x), (possibleY - y));
+			
+		}
+
 		this.updateHealthAndRoadCond(typeOfTerrain);
 		return canDrive;
-    }
+    };
+
+
+	lookForDarkSide(theWalls, w, h){
+		if (theWalls.length <= 1){
+			return true;
+		} else if (theWalls >= 3) {
+			return false;
+		} else {
+			switch(theWalls) {		
+				case 'NE':			
+					return h > w;
+					break;
+				case 'SE':			
+					return h + w <= 0.9;
+					break;
+				case 'NW':			
+					return h + w > 0.9;
+					break;
+				case 'SW':			
+					return h <= w;
+					break;
+			}	
+		}
+	};
 
     draw(ctx) {
 		ctx.save();
