@@ -163,7 +163,7 @@ class PlayerCar {
 	// look at possible position to see where how far it is from the 
 
     move(v, theta) {
-		this.indestructible = true;
+		
         var possibleX = this.position.x + v * Math.sin(theta);
         var possibleY = this.position.y + v * Math.cos(theta);
 
