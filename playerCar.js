@@ -9,7 +9,7 @@ class PlayerCar {
 		this.maxHealth = 100;
 		this.health = 100;
 		this.canBoost = true;
-		this.indestructible = true;
+		this.indestructible = false;
 		this.hudCurLap = document.getElementById('curLap');
 		this.position = new position(start_pos);
 		this.trackInfo = new mapKey(hiddenImage);
