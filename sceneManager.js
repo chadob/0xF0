@@ -15,6 +15,15 @@ class SceneManager {
         this.volume.addEventListener("change", () => {
             ASSET_MANAGER.adjustVolume(this.volume.value);
         });
+        window.addEventListener("gamepadconnected", (e) => {
+            console.log(
+                "Gamepad connected at index %d: %s. %d buttons, %d axes.",
+                e.gamepad.index,
+                e.gamepad.id,
+                e.gamepad.buttons.length,
+                e.gamepad.axes.length,
+            );
+        });
     }
 
     playerDeath() {
@@ -33,6 +42,46 @@ class SceneManager {
 
     }
     loadAssets() {
+        const carSprites = [
+            "Sprites/Cars/wonderwasp.png",
+            "Sprites/Cars/wildgoose.png",
+            "Sprites/Cars/wildboar.png",
+            "Sprites/Cars/whitecat.png",
+            "Sprites/Cars/twinnoritta.png",
+            "Sprites/Cars/superpiranha.png",
+            "Sprites/Cars/spaceangler.png",
+            "Sprites/Cars/sonicphantom.png",
+            "Sprites/Cars/redgazelle.png",
+            "Sprites/Cars/queenmeteor.png",
+            "Sprites/Cars/panzeremerald.png",
+            "Sprites/Cars/nightthunder.png",
+            "Sprites/Cars/moonshadow.png",
+            "Sprites/Cars/mightytyphoon.png",
+            "Sprites/Cars/mightyhurricane.png",
+            "Sprites/Cars/madwolf.png",
+            "Sprites/Cars/littlewyvern.png",
+            "Sprites/Cars/lambo.png",
+            "Sprites/Cars/kingmeteor.png",
+            "Sprites/Cars/irontiger.png",
+            "Sprites/Cars/hyperspeeder.png",
+            "Sprites/Cars/greenpanther.png",
+            "Sprites/Cars/greatstar.png",
+            "Sprites/Cars/goldenfox.png",
+            "Sprites/Cars/firestingray.png",
+            "Sprites/Cars/eleganceliberty.png",
+            "Sprites/Cars/dragonbird.png",
+            "Sprites/Cars/deepclaw.png",
+            "Sprites/Cars/deathanchor.png",
+            "Sprites/Cars/crazybear.png",
+            "Sprites/Cars/bluefalcon.png",
+            "Sprites/Cars/astrorobin.png",
+            "Sprites/Cars/bigfang.png",
+            "Sprites/Cars/blackshadow.png",
+            "Sprites/Cars/bloodhawk.png"
+        ]
+        carSprites.forEach((spritesheet) => {
+            ASSET_MANAGER.queueDownload(spritesheet);
+        });
         ASSET_MANAGER.queueDownload("Sounds/8bit-bop2.wav");
         ASSET_MANAGER.queueDownload("./lambo.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/edited track.png");
@@ -74,11 +123,13 @@ class SceneManager {
         let img = ASSET_MANAGER.getAsset("Sprites/Tracks/edited track.png");
         let hiddenImg = ASSET_MANAGER.getAsset("Sprites/Tracks/whiteland_hidden.png");
         //const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/bg.png");
-        const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/sky.webp");
-    
+        const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/bg.png");
+        let carName = "Iron Tiger";
+        let carStats = carData[carName];
+        console.log(carStats);
         // Add entities to Game Enginge
         let starting_pos = {x: -140.98064874052415, y: 14.980766027134674, theta: (3*Math.PI)/2};//-1006.8800071953033};
-	    let mainPlayer = new PlayerCar(starting_pos, hiddenImg, this.gameEngine);
+	    let mainPlayer = new PlayerCar(starting_pos, hiddenImg, this.gameEngine, carStats);
         this.player = mainPlayer;
         this.gameEngine.addEntity(mainPlayer);
         this.gameEngine.addEntity(new mode7(mainPlayer, img, mapCanvas, this.gameEngine, imgBG));

@@ -1,13 +1,12 @@
 class PlayerCar {
-    constructor(start_pos, hiddenImage, game) {
+    constructor(start_pos, hiddenImage, game, carStats) {
         this.game = game;
 		this.direction = 0;
-        this.animator = new Animator(ASSET_MANAGER.getAsset("./lambo.png"), 0, 0, 950, 600, 3, 0.5);
+        this.animator = new Animator(ASSET_MANAGER.getAsset(carStats.sprite), 0, 0, 60, 50, 3, 0.5);
 		this.curLap = 1;
 		this.width = .5;
 		this.height = .5;
-		this.maxHealth = 100;
-		this.health = 100;
+		
 		this.canBoost = true;
 		this.indestructible = false;
 		this.hudCurLap = document.getElementById('curLap');
@@ -18,11 +17,20 @@ class PlayerCar {
 		this.bounce = false;
 		this.inputEnabled = false;
 
+		//these stats loaded from carData object
+		this.carName = carStats;
+		this.health = carStats.body;
+		this.maxHealth = carStats.body;
+		this.accel = carStats.acceleration;
+		this.turningSpeed = carStats.handling;
+		this.maxBoostVelocity = carStats.max_boost_velocity;
+		this.max_vel = carStats["top speed"];
+		this.boostCost = carStats.boost;
+
         this.velocity = 0,
-		this.turningSpeed = .25;
-        this.accel = 0.005,	//0.01
+		
         this.decel = 0.1,	//0.01
-        this.max_vel = 1;
+        
 		this.maxBoostVelocity = 1.5	//1
 
     // // Paul likes these settings
@@ -111,7 +119,7 @@ class PlayerCar {
 		if (this.game.boosting) {
 			//checks current boost power
 			if (this.health > 1) {
-				this.health = Math.max(1, this.health-= (20* this.game.clockTick));
+				this.health = Math.max(1, this.health-= (4*this.boostCost* this.game.clockTick));
 				this.velocity = Math.min(this.maxBoostVelocity, this.velocity + this.game.clockTick * 60* this.accel);
 			}
 		} if (this.game.braking) {
@@ -220,7 +228,7 @@ class PlayerCar {
     draw(ctx) {
 		ctx.save();
 		ctx.scale(0.25,0.25);
-        this.animator.drawSelf(this.game.clockTick, ctx, 1500, 1500, this.direction)
+        this.animator.drawSelf(this.game.tick, ctx, 1800, 1500, this.direction)
 		ctx.restore();
 		//health bar
 		var ratio = this.health/this.maxHealth;
@@ -256,21 +264,30 @@ class PlayerCar {
 		//Powersliding
 		if (this.game.slideL) {
 			this.position.theta += .02;
-			this.move(.3, this.position.theta + Math.PI/2)
+			this.move(.125, this.position.theta + Math.PI/2)
 		}
 		if (this.game.slideR) {
 			this.position.theta -= .02;
-			this.move(.3, this.position.theta - Math.PI/2)
+			this.move(.125, this.position.theta - Math.PI/2)
 		}
 	};
 
+	// directionOfSprite() {
+	// 	if (this.game.left) {
+	// 		this.direction = 0;
+	// 	} else if (this.game.right) {
+	// 		this.direction = 1800;
+	// 	} else {
+	// 		this.direction = 950;
+	// 	}
+	// };
 	directionOfSprite() {
 		if (this.game.left) {
 			this.direction = 0;
 		} else if (this.game.right) {
-			this.direction = 1800;
+			this.direction = 144;
 		} else {
-			this.direction = 950;
+			this.direction = 64;
 		}
 	};
 };
