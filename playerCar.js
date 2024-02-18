@@ -19,11 +19,11 @@ class PlayerCar {
 		this.cornerBackup = false;
 		this.directionOfBounce = 0;
 		this.cornerBounceTheta = 0;
-		this.correctCamera = Math.PI / 50;
-		this.correctCameraStepsLeft = 0;
+		this.stepToCamera = 0;
+		this.cameraStepsLeft = 0;
 
 
-		this.errorCount = 0;
+		this.easyMode = true;
 
 		this.inputEnabled = false;
 
@@ -103,13 +103,14 @@ class PlayerCar {
 			this.changeVelocityAxisY();
 
 			if (this.bounce && this.cornerBackup){
-				//console.log("A");
 				this.move(0.3, this.cornerBounceTheta);
 			} else if (this.bounce) {
-				//console.log("B " + this.directionOfBounce);
-				this.move(Math.max(0.2, this.velocity), this.directionOfBounce);
+				if (this.cameraStepsLeft >= 0){
+					this.position.theta += this.stepToCamera;
+					this.cameraStepsLeft--;
+				}
+				this.move(Math.max(0.1, this.velocity), this.directionOfBounce);
 			} else {
-				//console.log("C");
 				this.move(this.velocity, this.position.theta);
 			}
 
@@ -156,21 +157,17 @@ class PlayerCar {
 			this.position.x += v * Math.sin(theta);
             this.position.y += v * Math.cos(theta);
 			this.errorCount = 0;
-			//console.log("0");
+
 		}
 		else if (this.cornerBackup) {
 			while(!this.canMove(possibleX, possibleY)) {
-				this.errorCount++;
 				this.cornerBounceTheta += Math.PI/4;
 				possibleX = this.position.x + v * Math.sin(this.cornerBounceTheta);
 				possibleY = this.position.y + v * Math.cos(this.cornerBounceTheta);
 			}
-			console.log(" 1 " + this.errorCount);
 			this.position.x += v * Math.sin(this.cornerBounceTheta);
             this.position.y += v * Math.cos(this.cornerBounceTheta);
 		} else {
-			
-			this.errorCount++;
 		
 			let currentWalls = this.trackInfo.whereIsWall[this.position.getIntX()][this.position.getIntY()];
 			let rejectMovesWalls = this.trackInfo.whereIsWall[this.position.convertIntX(possibleX)][this.position.convertIntY(possibleY)];
@@ -181,38 +178,58 @@ class PlayerCar {
 			let directionOfWall = (rejectMovesWalls.length == 4 || hitFlatWall) ? this.position.findTheta(currentWalls) : this.position.findTheta(rejectMovesWalls);
 		
 
-			//if (directionOfWall == "S" || directionOfWall == "SWE") {
 			if (directionOfWall <= Math.PI/2) {
 				directionOfWall = (theta < Math.PI) ? directionOfWall: directionOfWall + 2*Math.PI;
 			}
 			if (theta <= Math.PI/2) {
 				directionOfWall = (directionOfWall < Math.PI) ? directionOfWall: directionOfWall - 2*Math.PI;
 			}
-			//bounce in opposite direction in wall then change based on angle hit
+			//bounce in opposite direction of wall then change based on angle hit
 			//higher changeDir means theta needs to be corrected less
 			let changeDirBy = theta - directionOfWall;
+			this.bounce = true;
+			this.directionOfBounce = this.position.correctRangeOfTheta(directionOfWall + Math.PI - changeDirBy);
 
 
 			let temp = Math.abs(changeDirBy) - Math.PI/4;
-			if (temp > 0){
+			if (temp > 0  && this.velocity > 0){
 				this.velocity = (temp * this.velocity)/(Math.PI/4);
 			} else {
 				this.velocity = 0;
 			}
 
 
+			if (this.velocity > 0 && this.easyMode) {
+				let neg = (changeDirBy < 0) ? -1: 1;
+				temp = (Math.PI/2 - Math.abs(changeDirBy))*neg;
+
+
+				if (Math.abs(changeDirBy) > 3*Math.PI/8){
+					this.cameraStepsLeft = 15;
+					this.stepToCamera = (temp)/15;
+					time = 300;
+				} else if (Math.abs(changeDirBy) > Math.PI/4){
+					this.cameraStepsLeft = 20;
+					this.stepToCamera = neg *(Math.PI/8)/20;
+					time = 300;
+				} else {
+
+					this.cameraStepsLeft = 0;
+				}
+			}
+
 
 			if(!hitFlatWall){
 				this.cornerBackup = true;
 				this.cornerBounceTheta = this.position.correctRangeOfTheta(this.position.theta - Math.PI);
+				time = 450;
 				setTimeout(()=> {
 					this.cornerBackup = false;
 				}, 50);	
 			}
 
 			
-			this.bounce = true;
-			this.directionOfBounce = this.position.correctRangeOfTheta(directionOfWall + Math.PI - changeDirBy);
+
 			setTimeout(()=> {
 				this.bounce = false;
 			}, time);					// update runs 27-28 times during timeout
