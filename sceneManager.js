@@ -9,7 +9,8 @@ class SceneManager {
         this.menu = new MainMenu();
         this.muteButton = document.getElementById('mute');
         this.muteButton.addEventListener("click", () => {
-            ASSET_MANAGER.muteAudio(this.muteButton.value);
+            console.log(this.muteButton.checked);
+            ASSET_MANAGER.muteAudio(this.muteButton.checked);
         });
         this.volume = document.getElementById('volume');
         this.volume.addEventListener("change", () => {

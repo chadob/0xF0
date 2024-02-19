@@ -7,8 +7,9 @@ class MainMenu {
             sceneManager.loadRace();
             this.hideMenu();
             this.playCountdown();
+            let muteButton = document.getElementById('mute');
             ASSET_MANAGER.playAsset("Sounds/8bit-bop2.wav");
-            
+            ASSET_MANAGER.muteAudio(muteButton.checked);
         });
         this.showMenu();
     }

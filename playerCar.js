@@ -8,13 +8,22 @@ class PlayerCar {
 		this.height = .5;
 		
 		this.canBoost = true;
-		this.indestructible = false;
+		this.indestructible = true;
 		this.hudCurLap = document.getElementById('curLap');
 		this.position = new position(start_pos);
-        //this.pixelMap = this.get_image(hiddenImage);
-		this.terrianMap = new mapKey(hiddenImage).terrianMap;
+		this.trackInfo = new mapKey(hiddenImage);
 		this.checkpoint = false;
+
 		this.bounce = false;
+		this.cornerBackup = false;
+		this.directionOfBounce = 0;
+		this.cornerBounceTheta = 0;
+		this.stepToCamera = 0;
+		this.cameraStepsLeft = 0;
+
+
+		this.easyMode = true;
+
 		this.inputEnabled = false;
 
 		//these stats loaded from carData object
@@ -86,8 +95,7 @@ class PlayerCar {
 				} 
             }
         });
-		//console.log(this.position.theta + "  " + this.position.direction);
-		//console.log(this.position.direction);
+		
 		//win condition
 		
 		 	
@@ -99,10 +107,21 @@ class PlayerCar {
 			sceneManager.finishedRaceAnimation(true);
 		}
 
-		
 		if(this.inputEnabled) {
 			this.changeVelocityAxisY();
-			this.move(this.velocity, this.position.theta);
+
+			if (this.bounce && this.cornerBackup){
+				this.move(0.3, this.cornerBounceTheta);
+			} else if (this.bounce) {
+				if (this.cameraStepsLeft >= 0){
+					this.position.theta += this.stepToCamera;
+					this.cameraStepsLeft--;
+				}
+				this.move(Math.max(0.1, this.velocity), this.directionOfBounce);
+			} else {
+				this.move(this.velocity, this.position.theta);
+			}
+
 			this.changeVelocityAxisX();
 			this.position.updateMapDirection();
 
@@ -110,8 +129,6 @@ class PlayerCar {
 			this.position.theta += this.turn_velocity;
 			this.checkForPowerSlide();
 		}
-		
-
     };
 
 	checkBoostOrBreak(){
@@ -139,26 +156,95 @@ class PlayerCar {
 		
 	}
     move(v, theta) {
+		
         var possibleX = this.position.x + v * Math.sin(theta);
         var possibleY = this.position.y + v * Math.cos(theta);
-		if (this.bounce){
-			possibleX = this.position.x + 0.3 * Math.sin(theta - Math.PI);
-			possibleY = this.position.y + 0.3 * Math.cos(theta - Math.PI);
-			if (this.canMove(possibleX, possibleY)) {
-				this.position.x += 0.3 * Math.sin(theta - Math.PI);
-				this.position.y += 0.3 * Math.cos(theta - Math.PI);
-			}
-		}
-        else if (this.canMove(possibleX, possibleY)){
-            this.position.x += v * Math.sin(theta);
+
+
+		if (this.canMove(possibleX, possibleY)){	
+			this.position.x += v * Math.sin(theta);
             this.position.y += v * Math.cos(theta);
-    	} else {
-			this.velocity = 0;
+			this.errorCount = 0;
+
+		}
+		else if (this.cornerBackup) {
+			while(!this.canMove(possibleX, possibleY)) {
+				this.cornerBounceTheta += Math.PI/4;
+				possibleX = this.position.x + v * Math.sin(this.cornerBounceTheta);
+				possibleY = this.position.y + v * Math.cos(this.cornerBounceTheta);
+			}
+			this.position.x += v * Math.sin(this.cornerBounceTheta);
+            this.position.y += v * Math.cos(this.cornerBounceTheta);
+		} else {
+		
+			let currentWalls = this.trackInfo.whereIsWall[this.position.getIntX()][this.position.getIntY()];
+			let rejectMovesWalls = this.trackInfo.whereIsWall[this.position.convertIntX(possibleX)][this.position.convertIntY(possibleY)];
+			let rejectedTerrian = this.trackInfo.terrianMap[this.position.convertIntX(possibleX)][this.position.convertIntY(possibleY)];
+			let hitFlatWall = (rejectedTerrian == "Wall" && currentWalls.length == "1" );
+			let time = (hitFlatWall) ? 450: 250;
+
+			let directionOfWall = (rejectMovesWalls.length == 4 || hitFlatWall) ? this.position.findTheta(currentWalls) : this.position.findTheta(rejectMovesWalls);
+		
+
+			if (directionOfWall <= Math.PI/2) {
+				directionOfWall = (theta < Math.PI) ? directionOfWall: directionOfWall + 2*Math.PI;
+			}
+			if (theta <= Math.PI/2) {
+				directionOfWall = (directionOfWall < Math.PI) ? directionOfWall: directionOfWall - 2*Math.PI;
+			}
+			//bounce in opposite direction of wall then change based on angle hit
+			//higher changeDir means theta needs to be corrected less
+			let changeDirBy = theta - directionOfWall;
 			this.bounce = true;
+			this.directionOfBounce = this.position.correctRangeOfTheta(directionOfWall + Math.PI - changeDirBy);
+
+
+			let temp = Math.abs(changeDirBy) - Math.PI/4;
+			if (temp > 0  && this.velocity > 0){
+				this.velocity = (temp * this.velocity)/(Math.PI/4);
+			} else {
+				this.velocity = 0;
+			}
+
+
+			if (this.velocity > 0 && this.easyMode) {
+				let neg = (changeDirBy < 0) ? -1: 1;
+				temp = (Math.PI/2 - Math.abs(changeDirBy))*neg;
+
+
+				if (Math.abs(changeDirBy) > 3*Math.PI/8){
+					this.cameraStepsLeft = 15;
+					this.stepToCamera = (temp)/15;
+					time = 300;
+				} else if (Math.abs(changeDirBy) > Math.PI/4){
+					this.cameraStepsLeft = 20;
+					this.stepToCamera = neg *(Math.PI/8)/20;
+					time = 300;
+				} else {
+
+					this.cameraStepsLeft = 0;
+				}
+			}
+
+
+			if(!hitFlatWall){
+				this.cornerBackup = true;
+				this.cornerBounceTheta = this.position.correctRangeOfTheta(this.position.theta - Math.PI);
+				time = 450;
+				setTimeout(()=> {
+					this.cornerBackup = false;
+				}, 50);	
+			}
+
+			
+
 			setTimeout(()=> {
 				this.bounce = false;
-			}, 250);
-			this.move(.3, this.position.theta - Math.PI);
+			}, time);					// update runs 27-28 times during timeout
+			if (!this.cornerBackup){
+				this.move(.3, this.directionOfBounce);
+			}
+						
 		}
     };
 
@@ -166,9 +252,11 @@ class PlayerCar {
 	changeVelocityAxisX(){
 		// if up then velocity increase if down velocity decreases	// 1st equation of motion with t=1 
 		if(this.game.left){
+			//this.turn_velocity = Math.min(this.turn_velocity + this.turn_accel, this.turn_max_vel);
 			this.turn_velocity = Math.min(this.turn_velocity + this.turn_accel * this.game.clockTick * 40, this.turn_max_vel);
 			this.velocity = Math.max(this.velocity- this.velocity * this.decel * this.game.clockTick * 8, 0);
 		} else if(this.game.right){
+			//this.turn_velocity = Math.max(this.turn_velocity - this.turn_accel, -this.turn_max_vel);
 			this.turn_velocity = Math.max(this.turn_velocity - this.turn_accel * this.game.clockTick * 40, -this.turn_max_vel);
 			this.velocity = Math.max(this.velocity-this.velocity *this.decel * this.game.clockTick * 8, 0);
 		} else if(this.turn_velocity < 0){
@@ -187,6 +275,7 @@ class PlayerCar {
 		} else if(this.velocity < 0) {
 			this.velocity = Math.min(this.velocity+this.decel, 0);
 		} else {
+			//this.velocity = Math.max(this.velocity-this.decel, 0);
 			this.velocity = Math.max(this.velocity-this.decel * 1.5 *  this.game.clockTick * 4, 0);
 		}
 	};
@@ -199,7 +288,7 @@ class PlayerCar {
 			setTimeout(()=> {
 				this.indestructible = false;
 			}, 250);
-
+			console.log(terrian);
 		//bright pink for boost
 		} else if (terrian == "Boost") {
 			this.health = Math.min(this.maxHealth, this.health + 40* this.game.clockTick);
@@ -217,13 +306,49 @@ class PlayerCar {
 
 	//Pixel color collision detection
     canMove( possibleX, possibleY) {
-		let x = -Math.floor(possibleX);
+		let x = Math.floor(Math.abs(possibleX));
 		let y = Math.floor(possibleY);
-		let typeOfTerrain = this.terrianMap[x][y];
+
+	
+		let findWalls = this.trackInfo.whereIsWall[x][y];
+		let typeOfTerrain = this.trackInfo.terrianMap[x][y];
 		let canDrive = typeOfTerrain != 'Wall';
+		// h (y) decreases as we go N
+		// h (y) increases as we go S
+		// absolute val of w (x) decreases as we go west
+		// absolute val of w (x) increases as we go east 
+		if (findWalls.length == 2 && canDrive){
+			canDrive = this.lookForDarkSide(findWalls, -(possibleX + x), (possibleY - y));
+			
+		}
+
 		this.updateHealthAndRoadCond(typeOfTerrain);
 		return canDrive;
-    }
+    };
+
+
+	lookForDarkSide(theWalls, w, h){
+		if (theWalls.length <= 1){
+			return true;
+		} else if (theWalls >= 3) {
+			return false;
+		} else {
+			switch(theWalls) {		
+				case 'NE':			
+					return h > w;
+					break;
+				case 'SE':			
+					return h + w <= 0.9;
+					break;
+				case 'NW':			
+					return h + w > 0.9;
+					break;
+				case 'SW':			
+					return h <= w;
+					break;
+			}	
+		}
+	};
 
     draw(ctx) {
 		ctx.save();
