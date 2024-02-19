@@ -1,5 +1,5 @@
 class PlayerCar {
-    constructor(start_pos, hiddenImage, game, carStats) {
+    constructor(start_pos, hiddenImage, game, carStats, targetLap, indestructible) {
         this.game = game;
 		this.direction = 0;
         this.animator = new Animator(ASSET_MANAGER.getAsset(carStats.sprite), 0, 0, 60, 50, 3, 0.5);
@@ -7,8 +7,10 @@ class PlayerCar {
 		this.width = .5;
 		this.height = .5;
 		
+		//race-related settings
+		this.targetLap = targetLap;
 		this.canBoost = true;
-		this.indestructible = false;
+		this.indestructible = indestructible;
 		this.hudCurLap = document.getElementById('curLap');
 		this.position = new position(start_pos);
 		this.trackInfo = new mapKey(hiddenImage);
@@ -79,7 +81,7 @@ class PlayerCar {
 						that.curLap++;
 						that.hudCurLap.innerText = that.curLap + ": ";
 						that.createLapTime();
-						if (that.curLap === 4) {
+						if (that.curLap > that.targetLap) {
 							console.log("You win!");
 							that.game.timer.end();
 							document.querySelectorAll('.lapTime').forEach(e => e.remove());
