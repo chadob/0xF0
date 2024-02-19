@@ -28,11 +28,101 @@
 </head>
 <body style="background-color: black">
     <canvas id="bgCanvas" width="1024" height="522" style="border: 1px solid black" tabindex="0"></canvas>
-    <div id="mainMenu">
+    <div class="menuDiv" id="mainMenu">
         <img id="titleImg" src="./Sprites/Menu/fzero_title.png">
-        <button id="startRaceButton" >
-            <h1 style="color: #4b2e83">START RACE</h1>
+        <div id="menuButtons">
+            <button class="menuButton" id="toRaceButton">
+                <h1 class="buttonText">START RACE</h1>
+            </button>
+            <br/>
+            <button class="menuButton" id="controlsButton" style="font-size: 13px;">
+                <h1 class="buttonText">CONTROLS</h1>
+            </button>
+            <button class="menuButton" id="creditsButton" style="font-size: 13px;">
+                <h1 class="buttonText">CREDITS</h1>
+            </button>
+        </div>
+    </div>
+    <div class="menuDiv" id="controlsMenu" hidden="true">
+        <div class="infoDiv">
+            <div class="bmDiv">
+                <h1>BASIC MOVEMENT</h1>
+                <img id="" src="./Sprites/Menu/wasd.png">
+                <h2>W/UP ARROW - FORWARD</h2>
+                <h2>A/LEFT ARROW - TURN LEFT</h2>
+                <H2>S/DOWN ARROW - REVERSE</H2>
+                <H2>D/RIGHT ARROW - TURN RIGHT</H2>
+            </div>
+            <div class="acDiv">
+                <h1>ADVANCED CONTROLS</h1>
+                <img style="margin-top: 10%;" src="./Sprites/Menu/hjkl.png">
+                <h2>H - POWERSLIDE LEFT</h2>
+                <h2>J - BOOST (DEPLETES HEALTH)</h2>
+                <H2>K - BRAKE</H2>
+                <H2>L - POWERSLIDE RIGHT</H2>
+            </div>
+        </div>
+        <button class="menuButton backButton">
+            BACK
         </button>
+    </div>
+    <div class="menuDiv" id="creditsMenu" hidden="true">
+        <div class="infoDiv">
+            <div style="text-align: center; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">
+                <h1>CREDITS</h1>
+                <h2>MARTHA EMERSON</h2>
+                <h2>CHAD OEHLSCHLAEGER-BROWNE</h2>
+                <h2>PAUL SCHMIDT</h2>
+                <h2>JENNA TIMM</h2>
+            </div>
+        </div>
+        <button class="menuButton backButton">
+            BACK
+        </button>
+    </div>
+    <div class="menuDiv" id="raceOptionsMenu" hidden="true">
+        <div class="infoDiv">
+            <div class="bmDiv">
+                <h1>MAP</h1>
+                <img src="./Sprites/Tracks/track shrunk.png" style="width:80%; border: 4px solid black; border-radius: 5px;">
+                <br /><br /><br />
+                <!-- <button class="menuButton leftArrow" style="border: none;"><h2>&#10147;</h2></button> -->
+                <span style="font-size: 30px;">WHITELAND</span>
+                <!-- <button class="menuButton" style="border: none;"><h2>&#10147;</h2></button> -->
+            </div>
+            <div class="bmDiv">
+                <h1>RACER SELECT</h1>
+                <div style="width:80%; height: 50%; border: 4px solid black; border-radius: 5px; left:10%; position: relative;">
+                    <canvas id="selectedCarImg" src="lambo.png" style="width: 100%; height: 100%;"></canvas>
+                </div>
+                <button id="decCarButton" class="menuButton leftArrow" style="border: none;"><h2>&#10147;</h2></button>
+                <span id="carName" style="font-size: 24px;">LAMBO</span>
+                <button id="incCarButton" class="menuButton" style="border: none;"><h2>&#10147;</h2></button>
+            </div>
+            <div class="acDiv">
+                <h1>RACE OPTIONS</h1>
+                <div style="width:80%; height: 70%; border: 4px solid black; border-radius: 5px; left:10%; position: relative;">
+                    <h2>LAPS</h2>
+                    <button id="decLaps" class="menuButton leftArrow" style="border: none;">&#10147;</button>
+                    <span id="numLaps" style="font-size: 24px;">3</span>
+                    <button id="incLaps" class="menuButton" style="border: none;">&#10147;</button>
+                    <!-- <h2>ENEMIES</h2>
+                    <button class="menuButton leftArrow" style="border: none;">&#10147;</button>
+                    <span style="font-size: 24px;">0</span>
+                    <button class="menuButton" style="border: none;">&#10147;</button> -->
+                    <h2>INDESTRUCTABLE</h2>
+                    <button class="menuButton leftArrow indButton" style="border: none;">&#10147;</button>
+                    <span id="indestructable" style="font-size: 24px;">FALSE</span>
+                    <button class="menuButton indButton" style="border: none;">&#10147;</button>
+                </div>
+                
+            </div>
+
+        </div>
+        <button class="menuButton backButton">
+            BACK
+        </button>
+        <button class="menuButton" id="startRaceButton">START RACE</button>
     </div>
     <div id="transitionContainer" focusable="false" hidden="true">
     </div>
@@ -43,8 +133,8 @@
         </text>
             <text id="minute">00</text>:<text id="second">00</text>:<text id="millisecond">000</text>
     </div>
+    <br />
     <div id="audioControl">
-        <br />
         <input type="checkbox" id="mute" checked> Mute <input type="range" id="volume" min="0" max="1" value="0.3" step="0.05"> Volume
     </div>
 </body>
