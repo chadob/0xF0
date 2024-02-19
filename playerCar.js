@@ -7,6 +7,7 @@ class PlayerCar {
 		this.width = .5;
 		this.height = .5;
 		
+		this.hidden = false; 
 		//race-related settings
 		this.targetLap = targetLap;
 		this.canBoost = true;
@@ -101,8 +102,11 @@ class PlayerCar {
 		
 		 	
 		if (this.health <= 0 ) {
+			
+			sceneManager.explodingDeadCarAnimation(true);
+
 			console.log("You lose");
-			this.game.timer.end();
+			this.game.timer.end();	
 			document.querySelectorAll('.lapTime').forEach(e => e.remove());
 			this.inputEnabled = false;
 			sceneManager.finishedRaceAnimation(true);
@@ -351,10 +355,15 @@ class PlayerCar {
 	};
 
     draw(ctx) {
+		if (this.hidden) {
+            return;
+        }
+
 		ctx.save();
 		ctx.scale(0.25,0.25);
         this.animator.drawSelf(this.game.tick, ctx, 1800, 1500, this.direction)
 		ctx.restore();
+		
 		//health bar
 		var ratio = this.health/this.maxHealth;
 		ctx.strokeStyle = "Black";
@@ -384,6 +393,10 @@ class PlayerCar {
 		ctx.fillText(Math.round(this.velocity * 1000) + " MPH", 900, 70)
 		ctx.restore();
 	};
+
+	hide() {
+		this.hidden = true;
+	}
 
 	checkForPowerSlide(){
 		//Powersliding

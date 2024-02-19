@@ -85,6 +85,7 @@ class SceneManager {
         });
         ASSET_MANAGER.queueDownload("Sounds/8bit-bop2.wav");
         ASSET_MANAGER.queueDownload("./lambo.png");
+        ASSET_MANAGER.queueDownload("./explosions.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/edited track.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/whiteland_hidden.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/sky.webp");
@@ -135,6 +136,7 @@ class SceneManager {
         this.player = mainPlayer;
         this.gameEngine.addEntity(mainPlayer);
         this.gameEngine.addEntity(new mode7(mainPlayer, img, mapCanvas, this.gameEngine, imgBG));
+
         // gameEngine.addEntity(new Enemy(gameEngine));
         this.gameEngine.addEntity(new FinishLine(this.gameEngine));
         this.gameEngine.addEntity(new Checkpoint(this.gameEngine));
@@ -154,10 +156,21 @@ class SceneManager {
         console.log("Race Loaded");
         console.log("WITH LAPS: " + targetLaps + " IND: " + indestructable + " RACER: " + carName);
     }
+    
     deLoadRace(callback) {
         setTimeout(callback, 100);
 
     }
+
+    explodingDeadCarAnimation(dead) {
+        if (dead) {
+            this.player.hide();
+
+            let explosion = new Explosion(this.gameEngine);
+            this.gameEngine.addEntity(explosion);
+        }
+    }
+
     finishedRaceAnimation(dead) {
         //Finish Animation
         let container = document.getElementById("transitionContainer");
