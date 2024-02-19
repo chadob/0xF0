@@ -124,7 +124,7 @@ class SceneManager {
         let hiddenImg = ASSET_MANAGER.getAsset("Sprites/Tracks/whiteland_hidden.png");
         //const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/bg.png");
         const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/bg.png");
-        let carName = "Iron Tiger";
+        let carName = "Blood Hawk";
         let carStats = carData[carName];
         console.log(carStats);
         // Add entities to Game Enginge
