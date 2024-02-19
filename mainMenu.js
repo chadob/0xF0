@@ -101,8 +101,8 @@ class MainMenu {
         this.numLaps += direction;
         if (this.numLaps < 1)
             this.numLaps = 1;
-        else if (this.numLaps > 3)
-            this.numLaps = 3;
+        else if (this.numLaps > 5)
+            this.numLaps = 5;
         document.getElementById("numLaps").innerText = this.numLaps;
     }
 
