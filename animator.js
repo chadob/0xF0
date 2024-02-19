@@ -11,9 +11,15 @@ class Animator {
             direction, this.yStart,
             this.width, this.height,
             x, y,
-            this.width, this.height);
+            600, 600);
     };
-
+    drawSprite(ctx, x, y, newWidth, newHeight) {
+        ctx.drawImage(this.spritesheet,
+            420, this.yStart,
+            this.width, this.height,
+            x, y,
+            newWidth, newHeight);
+    }
 
     drawFrame(tick, ctx, x, y, scale) {
         this.elapsedTime += tick;

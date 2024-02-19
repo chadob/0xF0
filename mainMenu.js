@@ -3,12 +3,12 @@ class MainMenu {
         this.menu = document.getElementById("mainMenu");
         this.startButton = document.getElementById("startRaceButton");
         this.startButton.addEventListener("click", e => {
-            console.log("CLICK");
             sceneManager.loadRace();
             this.hideMenu();
             this.playCountdown();
+            let muteButton = document.getElementById('mute');
             ASSET_MANAGER.playAsset("Sounds/8bit-bop2.wav");
-            
+            ASSET_MANAGER.muteAudio(muteButton.checked);
         });
         this.showMenu();
     }
