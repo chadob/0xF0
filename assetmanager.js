@@ -94,7 +94,6 @@ class AssetManager {
             let asset = this.cache[key];
             if (asset instanceof Audio) {
                 asset.muted = value;
-                console.log("asset" + asset.muted);
             }
         }
     };
