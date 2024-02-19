@@ -3,7 +3,6 @@ class MainMenu {
         this.menu = document.getElementById("mainMenu");
         this.startButton = document.getElementById("startRaceButton");
         this.startButton.addEventListener("click", e => {
-            console.log("CLICK");
             sceneManager.loadRace();
             this.hideMenu();
             this.playCountdown();

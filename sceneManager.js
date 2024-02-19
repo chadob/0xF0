@@ -123,11 +123,10 @@ class SceneManager {
         let ctx = gameCanvas.getContext("2d");
         let img = ASSET_MANAGER.getAsset("Sprites/Tracks/edited track.png");
         let hiddenImg = ASSET_MANAGER.getAsset("Sprites/Tracks/whiteland_hidden.png");
+        const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/sky.webp");
         //const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/bg.png");
-        const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/bg.png");
-        let carName = "Blood Hawk";
+        let carName = "Little Wyvern";
         let carStats = carData[carName];
-        console.log(carStats);
         // Add entities to Game Enginge
         let starting_pos = {x: -140.98064874052415, y: 14.980766027134674, theta: (3*Math.PI)/2};//-1006.8800071953033};
 	    let mainPlayer = new PlayerCar(starting_pos, hiddenImg, this.gameEngine, carStats);

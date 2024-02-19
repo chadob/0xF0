@@ -8,7 +8,7 @@ class PlayerCar {
 		this.height = .5;
 		
 		this.canBoost = true;
-		this.indestructible = true;
+		this.indestructible = false;
 		this.hudCurLap = document.getElementById('curLap');
 		this.position = new position(start_pos);
 		this.trackInfo = new mapKey(hiddenImage);
@@ -70,7 +70,6 @@ class PlayerCar {
             if (entity.BB && that.BB.collide(entity.BB)) {
 				if (entity instanceof Checkpoint) {
 					if (that.checkpoint == false) {
-						console.log("checkpoint")
 						that.checkpoint = true;
 					}
 				}
@@ -288,7 +287,6 @@ class PlayerCar {
 			setTimeout(()=> {
 				this.indestructible = false;
 			}, 250);
-			console.log(terrian);
 		//bright pink for boost
 		} else if (terrian == "Boost") {
 			this.health = Math.min(this.maxHealth, this.health + 40* this.game.clockTick);
