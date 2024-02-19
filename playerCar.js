@@ -8,6 +8,7 @@ class PlayerCar {
 		this.height = .5;
 		this.maxHealth = 100;
 		this.health = 100;
+		this.hidden = false; 
 		this.canBoost = true;
 		this.indestructible = false;
 		this.hudCurLap = document.getElementById('curLap');
@@ -84,13 +85,11 @@ class PlayerCar {
 		
 		 	
 		if (this.health <= 0 ) {
+			
+			sceneManager.explodingDeadCarAnimation(true);
+
 			console.log("You lose");
-			this.game.timer.end();
-			// this.game.addEntity(new Explosion(this.game));
-            const explosion = new Explosion(this.game);
-            this.game.addEntity(explosion);
-			// ADD CODE to remove player car image (while explosion loop plays)
-			// then go straight to death screen
+			this.game.timer.end();	
 			document.querySelectorAll('.lapTime').forEach(e => e.remove());
 			this.inputEnabled = false;
 			sceneManager.finishedRaceAnimation(true);
@@ -223,6 +222,10 @@ class PlayerCar {
     }
 
     draw(ctx) {
+		if (this.hidden) {
+            return;
+        }
+
 		ctx.save();
 		ctx.scale(0.25,0.25);
         this.animator.drawSelf(this.game.clockTick, ctx, 1500, 1500, this.direction)
@@ -257,6 +260,10 @@ class PlayerCar {
 		ctx.fillText(Math.round(this.velocity * 1000) + " MPH", 900, 70)
 		ctx.restore();
 	};
+
+	hide() {
+		this.hidden = true;
+	}
 
 	checkForPowerSlide(){
 		//Powersliding

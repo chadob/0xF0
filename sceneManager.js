@@ -103,10 +103,21 @@ class SceneManager {
         this.gameEngine.start();
         console.log("Race Loaded");
     }
+    
     deLoadRace(callback) {
         setTimeout(callback, 100);
 
     }
+
+    explodingDeadCarAnimation(dead) {
+        if (dead) {
+            this.player.hide();
+
+            let explosion = new Explosion(this.gameEngine);
+            this.gameEngine.addEntity(explosion);
+        }
+    }
+
     finishedRaceAnimation(dead) {
         //Finish Animation
         let container = document.getElementById("transitionContainer");

@@ -6,7 +6,7 @@ class Explosion {
             ASSET_MANAGER.getAsset("./explosions.png"), 
             /* xStart */        0,
             /* yStart */        0,
-            /* width */         90, // adjust all these if needed
+            /* width */         90,
             /* height */        90,
             /* frameCount */    10,
             /* frameDuration */ 0.15,
@@ -14,9 +14,6 @@ class Explosion {
 
         this.x = 360;
         this.y = 310;
-
-        // this.count = 0;
-        // this.done = false;
     }
 
     update() {
