@@ -1,41 +1,29 @@
 class mapKey {
     constructor(img_tag) {
         this.terrianMap = [];
+        this.whereIsWall = [];
         this.arrayOfColorsMap = this.get_image(img_tag);
         this.imgw = img_tag.width;
         //create map
         for (let w = 0; w < img_tag.width; w++) {
             this.terrianMap[w] = [];
+            this.whereIsWall[w] = [];
             for (let h = 0; h < img_tag.height; h++) {
                 this.terrianMap[w][h] = this.findTerrian(w,h);
-                
-                // if (this.isRoad(-w, h)) {
-                //     map[w][h] = 'Road';
-                // } else {
-                //     map[w][h] = 'Wall';
-                // }
-                // if (w > 1 && h > 0 && h < img_tag.height - 1 && map[w - 1][h] == 'Road') {
-                //     let roadNorth = map[w - 2][h] == 'Wall';
-                //     let roadSouth = map[w][h] == 'Wall';
-                //     let roadWest = map[w - 1][h - 1] == 'Wall';
-                //     let roadEast = map[w - 1][h + 1] == 'Wall';
-                //     if(roadEast+roadNorth+roadSouth+roadWest >= 3) {
-                //         map[w - 1][h] = 'Wall'
-                //     } else {
-                //     if (roadNorth && roadWest) {	// cant drive in NW corner
-                //         map[w - 1][h] = 'NW';
-                //     } else if (roadNorth && roadEast) {
-                //         map[w - 1][h] = 'NE';
-                //     } else if (roadSouth && roadWest) {
-                //         map[w - 1][h] = 'SW';
-                //     } else if (roadSouth && roadEast) {
-                //         map[w - 1][h] = 'SE';
-                //     }
-                //}
-                
+       
+
+                if (w > 1 && h > 0 && h < img_tag.height - 1) {    
+                    let wallIsSouth = (this.terrianMap[w - 1][h + 1] == 'Wall') ? "S":""; //switched to S from N
+                    let wallIsEast = (this.terrianMap[w][h]== 'Wall') ? "E":"";
+                    let wallIsNorth = (this.terrianMap[w - 1][h - 1] == 'Wall') ? "N":""; // Same switch reversed
+                    let wallIsWest = (this.terrianMap[w - 2][h] == 'Wall') ? "W":"";
+        
+                    this.whereIsWall[w - 1][h] = wallIsNorth+wallIsSouth+wallIsWest+wallIsEast;
+                }  
             }
         }
     };
+
 findTerrian(possibleX, possibleY){
     
     const pos = (this.imgw * (Math.floor(possibleY)) + (Math.floor(possibleX)))*4;
@@ -58,11 +46,11 @@ findTerrian(possibleX, possibleY){
     else if (rgba1 == 36 && rgba2 == 100 && rgba3 == 100) {
         terrianType = "Lava";
     } 
-    else if (rgba1+rgba2+rgba3 < 110) {
+    else if (rgba1+rgba2+rgba3 <= 50) { //arbitrary val, have a few missed wall spots when its == 0
         terrianType = "Wall";
     }
     return terrianType;
-         //arbitrary val, I just noticed dark colors tend to have low values
+         
 };
 get_image(img_tag){
     let fake_canvas = document.createElement('canvas'),
