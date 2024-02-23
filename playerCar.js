@@ -82,6 +82,7 @@ class PlayerCar {
 						that.curLap++;
 						that.hudCurLap.innerText = that.curLap + ": ";
 						that.createLapTime();
+						sceneManager.displayAvgFPS();
 						if (that.curLap > that.targetLap) {
 							console.log("You win!");
 							that.game.timer.end();
@@ -327,7 +328,7 @@ class PlayerCar {
 		}
 
 		this.updateHealthAndRoadCond(typeOfTerrain);
-		console.log(typeOfTerrain);
+		// console.log(typeOfTerrain);
 		return canDrive;
     };
 

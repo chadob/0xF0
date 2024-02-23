@@ -23,7 +23,6 @@ onmessage = (e)=>{
     case 'init':
       ctx = e.data.canv.getContext('2d');
       image = e.data.image;
-
       half_w = image.width / 2;
       half_h = image.height / 2;
       break;
@@ -100,9 +99,11 @@ function update(){
     createImageBitmap(out).then((bitmap)=>{
       ctx.clearRect(0, 0, 1024, 522);
       ctx.drawImage(bitmap, 0, 0, 1024, 522);
+      postMessage(true);
     });
+    
   }
-
+  
   requestAnimationFrame(update);
 }
 update();

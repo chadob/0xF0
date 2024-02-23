@@ -107,6 +107,20 @@ canvas{
     color: white;
     text-shadow: 2px 2px #000000;
 }
+#debug{
+    pointer-events: none;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 980px;
+    height: 370px;
+    left: 50%;
+    top: 50%;
+    justify-content: start;
+    align-items: start;   
+    font-size: 24px;
+    color: white;
+    text-shadow: 2px 2px #000000;
+}
 .lapTime {
     display: flex;
     justify-content: center;

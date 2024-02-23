@@ -94,7 +94,9 @@ class mode7 {
     this.worker.postMessage({
       cmd: 'start'
     });
-
+    this.worker.onmessage = (e) => {
+      sceneManager.updateFPS();
+    };
 
     this.height = 1,
     this.horizon = this.h/2, //a change in the magitude of 1 x 10^-15 to make canvas gone,

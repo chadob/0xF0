@@ -3,6 +3,9 @@ class SceneManager {
         this.loadAssets();
         this.bgMusic = false;
         this.loop = null;
+        this.debug = true;
+        this.fpsTimer = new FPSTimer();
+        this.lapFPS = [];
     }
 
     loadMainMenu() {
@@ -93,6 +96,10 @@ class SceneManager {
         ASSET_MANAGER.queueDownload("Sprites/Tracks/bg.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/shrunk_hidden.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/track_shrunk.png");
+        ASSET_MANAGER.queueDownload("Sprites/Tracks/shrunk hidden_ex.png");
+        ASSET_MANAGER.queueDownload("Sprites/Tracks/track shrunk_ex2.png");
+
+        ASSET_MANAGER.queueDownload("Sprites/Tracks/track shrunk_ex.png");
 
         ASSET_MANAGER.downloadAll(() => {});
     }
@@ -125,8 +132,8 @@ class SceneManager {
         let mapCanvas = document.getElementById("mapCanvas");
         let gameCanvas = document.getElementById("gameworld");
         let ctx = gameCanvas.getContext("2d");
-        let img = ASSET_MANAGER.getAsset("Sprites/Tracks/edited track.png");
-        let hiddenImg = ASSET_MANAGER.getAsset("Sprites/Tracks/whiteland_hidden.png");
+        let img = ASSET_MANAGER.getAsset("Sprites/Tracks/track shrunk_ex2.png");
+        let hiddenImg = ASSET_MANAGER.getAsset("Sprites/Tracks/track shrunk_ex2.png");
         const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/sky.webp");
         //const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/bg.png");
         let carName = this.menu.getSelectedCarName();
@@ -139,7 +146,13 @@ class SceneManager {
         this.player = mainPlayer;
         this.gameEngine.addEntity(mainPlayer);
         this.gameEngine.addEntity(new mode7(mainPlayer, img, mapCanvas, this.gameEngine, imgBG));
-
+        if (this.debug) {
+            this.dc = document.createElement("h1");
+            this.dc.id = "debug";
+            this.dc.hidden="";
+            document.body.appendChild(this.dc);
+            console.log("CREATED Debug");
+        }
         // gameEngine.addEntity(new Enemy(gameEngine));
         this.gameEngine.addEntity(new FinishLine(this.gameEngine));
         this.gameEngine.addEntity(new Checkpoint(this.gameEngine));
@@ -198,5 +211,31 @@ class SceneManager {
     enableInput() {
         this.player.inputEnabled = true;
         this.gameEngine.timer.hasStarted = true;
+    }
+    draw() {
+        
+    }
+    updateFPS(value) {
+        if(this.debug) {
+            this.fpsTimer.tick();
+            this.dc.innerText = `\nFPS ${this.fpsTimer.ticks.length}`;
+            this.lapFPS.push(this.fpsTimer.ticks.length);
+        }
+    }
+    displayAvgFPS(){
+        if(this.debug) {
+            let sum = 0;
+            for(let i = 0; i < this.lapFPS.length; i++) {
+                sum += this.lapFPS[i];
+            }
+            let avg = sum/this.lapFPS.length;
+            console.log(sum);
+            console.log(this.lapFPS);
+            console.log("LAP AVG FPS: " + avg);
+            this.lapFPS = [];
+        }
+    }
+    update() {
+
     }
 }

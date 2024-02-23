@@ -10,7 +10,7 @@ class AssetManager {
         this.downloadQueue = [];
     }
     queueDownload(path) {
-        console.log("Queueing " + path);
+        // console.log("Queueing " + path);
         this.downloadQueue.push(path);
     };
 
@@ -32,13 +32,13 @@ class AssetManager {
                 case 'ebp':
                     var img = new Image();
                     img.addEventListener("load", function () {
-                        console.log("Loaded " + this.src);
+                        // console.log("Loaded " + this.src);
                         that.successCount++;
                         if (that.isDone()) callback();
                     });
 
                     img.addEventListener("error", function () {
-                        console.log("Error loading " + this.src);
+                        // console.log("Error loading " + this.src);
                         that.errorCount++;
                         if (that.isDone()) callback();
                     });
@@ -51,13 +51,13 @@ class AssetManager {
                 case 'mp4':
                     var aud = new Audio();
                     aud.addEventListener("loadeddata", function () {
-                        console.log("Loaded " + this.src);
+                        // console.log("Loaded " + this.src);
                         that.successCount++;
                         if (that.isDone()) callback();
                     });
 
                     aud.addEventListener("error", function () {
-                        console.log("Error loading " + this.src);
+                        // console.log("Error loading " + this.src);
                         that.errorCount++;
                         if (that.isDone()) callback();
                     });
