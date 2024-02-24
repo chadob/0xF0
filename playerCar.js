@@ -301,7 +301,7 @@ class PlayerCar {
 			this.turn_velocity = 0;
 		} // yellow for dirt
 		else if (terrian == "Dirt") {
-			this.velocity = Math.max(0, this.velocity - this.game.clockTick * 5);
+			this.velocity = Math.max(0.2, this.velocity - this.game.clockTick * 5);
 		} // orange for lava
 		else if (terrian == "Lava") {
 			this.health = Math.max(0, this.health-= (20* this.game.clockTick));
@@ -327,6 +327,7 @@ class PlayerCar {
 		}
 
 		this.updateHealthAndRoadCond(typeOfTerrain);
+		// console.log(typeOfTerrain);
 		return canDrive;
     };
 

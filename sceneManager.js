@@ -88,6 +88,9 @@ class SceneManager {
         ASSET_MANAGER.queueDownload("./explosions.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/edited track.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/whiteland_hidden.png");
+        ASSET_MANAGER.queueDownload("Sprites/Tracks/hidden_rainbow.png");
+        ASSET_MANAGER.queueDownload("Sprites/Tracks/rainbow.png");
+        ASSET_MANAGER.queueDownload("Sprites/Tracks/stars.webp");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/sky.webp");
         ASSET_MANAGER.queueDownload("Sprites/Menu/fzero_title.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/bg.png");
@@ -122,9 +125,9 @@ class SceneManager {
         let mapCanvas = document.getElementById("mapCanvas");
         let gameCanvas = document.getElementById("gameworld");
         let ctx = gameCanvas.getContext("2d");
-        let img = ASSET_MANAGER.getAsset("Sprites/Tracks/edited track.png");
-        let hiddenImg = ASSET_MANAGER.getAsset("Sprites/Tracks/whiteland_hidden.png");
-        const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/sky.webp");
+        let img = ASSET_MANAGER.getAsset("Sprites/Tracks/rainbow.png");
+        let hiddenImg = ASSET_MANAGER.getAsset("Sprites/Tracks/hidden_rainbow.png");
+        const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/stars.webp");
         //const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/bg.png");
         let carName = this.menu.getSelectedCarName();
         let carStats = carData[carName];
