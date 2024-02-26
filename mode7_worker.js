@@ -10,7 +10,10 @@ let x0,
     height,
     horizon,
     theta,
-    image;
+    image,
+    max_x,
+    max_y,
+    sample;
 
 let sin_theta,
     cos_theta;
@@ -25,14 +28,21 @@ onmessage = (e)=>{
       image = e.data.image;
       half_w = image.width / 2;
       half_h = image.height / 2;
+      sample = e.data.sample;
+      max_x = e.data.max_x;
+      max_y = e.data.max_y;
+      console.log("hw: %d hh: %d mx: %d my: %d", half_w, half_h, max_x, max_y);
       break;
     case 'set_params':
-      x0 = e.data.x0;
-      y0 = e.data.y0;
+      // x0 = e.data.x0;
+      // y0 = e.data.y0;
+      x0 = e.data.sample.width/2;
+      y0 = e.data.sample.height/2;
       height = e.data.height;
-      horizon = e.data.horizon;
+      // horizon = e.data.horizon;
+      horizon = 522/2;
       theta = e.data.theta;
-
+      image = e.data.sample;
       sin_theta = Math.sin(theta);
       cos_theta = Math.cos(theta);
       break;
@@ -59,10 +69,24 @@ function update(){
         let xtemp = (x/(z*view_angle))*half_w,   /* perspective transform: the closer an object is (i.e. the smaller is z value), the larger it will be to the camera */
             ytemp = (height/view_angle)*half_h;  /* simplified form of y/(z*view_angle) -- 1/z describes perspective: larger values closer to camera, smaller farther */
 
-        let xprime = Math.floor((xtemp * cos_theta) - (ytemp * sin_theta) - x0), /* rotate perspective-transformed point */
-            yprime = Math.floor((xtemp * sin_theta) + (ytemp * cos_theta) + y0); /* add camera point to properly translate view plane rather than skew it */
+        let xprime = (xtemp * cos_theta) - (ytemp * sin_theta) - x0, /* rotate perspective-transformed point */
+            yprime = (xtemp * sin_theta) + (ytemp * cos_theta) + y0; /* add camera point to properly translate view plane rather than skew it */
+        // let xrem = xprime%1;
+        // let yrem = yprime%1;
+        // if (xrem > .5) {
+        //   xprime = Math.ceil(xprime);
+        // } else {
+          xprime = Math.floor(xprime);
+        // }
+        // if (yrem > .5) {
+        //   yprime = Math.ceil(yprime);
+        // } else {
+          yprime = Math.floor(yprime);
+        // }
 
-        if(xprime >= 0 && xprime <= image.width && yprime >= 0 && yprime <= image.height) {
+        // if(xprime >= 0 && xprime <= max_x && yprime >= 0 && yprime <= max_y) {
+        // if(xprime >= 0 && xprime <= image.width && yprime >= 0 && yprime <= image.height) {
+
           let i_dest = ((yprime * image.width) + xprime) * 4; /* again for performance, this function has been inlined */
           
           /* NOTE from @Paul: This is where the remaping of pixels happens.
@@ -84,7 +108,7 @@ function update(){
           // out.data[i+6] = image.data[i_dest+6];
           // out.data[i+7] = image.data[i_dest+7];
           
-        }
+        // }
       }
     }
 

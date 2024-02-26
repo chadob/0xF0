@@ -310,28 +310,30 @@ class PlayerCar {
 	};
 
 	//Pixel color collision detection
-    canMove( possibleX, possibleY) {
-		let x = Math.floor(Math.abs(possibleX));
-		let y = Math.floor(possibleY);
+    // canMove( possibleX, possibleY) {
+	// 	let x = Math.floor(Math.abs(possibleX));
+	// 	let y = Math.floor(possibleY);
 
 	
-		let findWalls = this.trackInfo.whereIsWall[x][y];
-		let typeOfTerrain = this.trackInfo.terrianMap[x][y];
-		let canDrive = typeOfTerrain != 'Wall';
-		// h (y) decreases as we go N
-		// h (y) increases as we go S
-		// absolute val of w (x) decreases as we go west
-		// absolute val of w (x) increases as we go east 
-		if (findWalls.length == 2 && canDrive){
-			canDrive = this.lookForDarkSide(findWalls, -(possibleX + x), (possibleY - y));
+	// 	let findWalls = this.trackInfo.whereIsWall[x][y];
+	// 	let typeOfTerrain = this.trackInfo.terrianMap[x][y];
+	// 	let canDrive = typeOfTerrain != 'Wall';
+	// 	// h (y) decreases as we go N
+	// 	// h (y) increases as we go S
+	// 	// absolute val of w (x) decreases as we go west
+	// 	// absolute val of w (x) increases as we go east 
+	// 	if (findWalls.length == 2 && canDrive){
+	// 		canDrive = this.lookForDarkSide(findWalls, -(possibleX + x), (possibleY - y));
 			
-		}
+	// 	}
 
-		this.updateHealthAndRoadCond(typeOfTerrain);
-		// console.log(typeOfTerrain);
-		return canDrive;
-    };
-
+	// 	this.updateHealthAndRoadCond(typeOfTerrain);
+	// 	// console.log(typeOfTerrain);
+	// 	return canDrive;
+    // };
+	canMove(x, y) {
+		return true;
+	}
 
 	lookForDarkSide(theWalls, w, h){
 		if (theWalls.length <= 1){

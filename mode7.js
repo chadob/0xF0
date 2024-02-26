@@ -55,7 +55,6 @@ class mode7 {
 
     /* Original Image to sample from */ 
     this.image = this.get_image(img_tag);
-
     /* Canvas html element that we are drawing the ground on */
     this.canv = canvas;
 
@@ -68,7 +67,7 @@ class mode7 {
 
     //circumference of our image in a circle -> image_width = 2*PI*R)
     this.r = this.image.width/(2 * Math.PI);
-    
+    this.fake_canvas =null;
 
     /* Width of the original image */
     this.w = this.image.width;
@@ -77,6 +76,7 @@ class mode7 {
     this.h = this.image.height;
 
     this.mainCar = car.position;
+    this.sample = this.get_sample();
 
 
     /* Only one JavaScript Object can hold onto and interact with
@@ -89,7 +89,9 @@ class mode7 {
     this.worker.postMessage({
       cmd: 'init',
       canv: this.ofscr,
-      image: this.image,
+      image: this.sample,
+      max_x: this.image.width,
+      max_y: this.image.height
     }, [this.ofscr]);
     this.worker.postMessage({
       cmd: 'start'
@@ -98,7 +100,7 @@ class mode7 {
       sceneManager.updateFPS();
     };
 
-    this.height = 1,
+    this.height = 5,
     this.horizon = this.h/2, //a change in the magitude of 1 x 10^-15 to make canvas gone,
     this.theta = this.mainCar.theta;
 
@@ -108,18 +110,29 @@ class mode7 {
    * appropriate ImageData() for transformation
    */
   get_image(img_tag){
-    let fake_canvas = document.createElement('canvas'),
-        fake_context = fake_canvas.getContext('2d');
-    fake_canvas.width = img_tag.width;
-    fake_canvas.height = img_tag.height;
-    fake_context.drawImage(img_tag, 0, 0);
-    return fake_context.getImageData(0, 0, img_tag.width, img_tag.height);
+    this.fake_canvas = document.createElement('canvas'),
+        this.fake_context = this.fake_canvas.getContext('2d');
+        this.fake_context.getContextAttributes().willReadFrequently = true;
+    this.fake_canvas.width = img_tag.width;
+    this.fake_canvas.height = img_tag.height;
+    this.fake_context.drawImage(img_tag, 0, 0);
+    return this.fake_context.getImageData(0, 0, img_tag.width, img_tag.height);
+  }
+
+  get_sample() {
+    // let xcord = -1 * this.mainCar.x - 250;
+    // let ycord = this.mainCar.y - 250;
+    let xcord = Math.max(-1 * this.mainCar.x - 250);
+    let ycord = Math.max(this.mainCar.y - 250);
+    // console.log(xcord + " " + ycord);
+    return this.fake_context.getImageData(xcord, ycord, 500, 500);
+    ;
   }
   //draws background
   update() {
     let w = this.r * (this.mainCar.theta);
-    this.bgCtx.drawImage(this.imgBG,  w - (this.imgBG.width - 5), 5, this.imgBG.width, this.bgCanv.height);
-    this.bgCtx.drawImage(this.imgBG,  w, 5, this.imgBG.width, this.bgCanv.height);
+    // this.bgCtx.drawImage(this.imgBG,  w - (this.imgBG.width - 5), 5, this.imgBG.width, this.bgCanv.height);
+    // this.bgCtx.drawImage(this.imgBG,  w, 5, this.imgBG.width, this.bgCanv.height);
 	}
 
   /**
@@ -128,14 +141,19 @@ class mode7 {
    * This method was added to comply with the update/draw loop of the Game Engine
    */
   draw() {
-    this.update_worker(this.mainCar.x, this.mainCar.y, this.height, this.horizon, this.mainCar.theta);
+    let sample = this.get_sample();
+    createImageBitmap(sample).then((bitmap)=>{
+      this.bgCtx.clearRect(0, 0, 1024, 522);
+      this.bgCtx.drawImage(bitmap, 0, 0);
+    });
+    this.update_worker(this.mainCar.x, this.mainCar.y, this.height, this.horizon, this.mainCar.theta, sample);
   }
   /*
   * Passes a camera position, height, horizon level, and rotation to the worker.
   * The worker will then do the actual drawing of the ground canvas.
   * (Refer to mode7_worker.js)
   */
-  update_worker(x0, y0, height, horizon, theta){
+  update_worker(x0, y0, height, horizon, theta, sample){
     this.worker.postMessage({
       cmd: 'set_params',
 
@@ -143,7 +161,8 @@ class mode7 {
       y0,
       height,
       horizon,
-      theta
+      theta,
+      sample
     });
   }
   start(){

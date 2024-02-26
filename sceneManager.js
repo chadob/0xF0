@@ -98,6 +98,8 @@ class SceneManager {
         ASSET_MANAGER.queueDownload("Sprites/Tracks/track_shrunk.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/shrunk hidden_ex.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/track shrunk_ex2.png");
+        ASSET_MANAGER.queueDownload("Sprites/Tracks/whiteland_full.png");
+        ASSET_MANAGER.queueDownload("Sprites/Tracks/whiteland_full copy.png");
 
         ASSET_MANAGER.queueDownload("Sprites/Tracks/track shrunk_ex.png");
 
@@ -132,8 +134,8 @@ class SceneManager {
         let mapCanvas = document.getElementById("mapCanvas");
         let gameCanvas = document.getElementById("gameworld");
         let ctx = gameCanvas.getContext("2d");
-        let img = ASSET_MANAGER.getAsset("Sprites/Tracks/track shrunk_ex2.png");
-        let hiddenImg = ASSET_MANAGER.getAsset("Sprites/Tracks/track shrunk_ex2.png");
+        let img = ASSET_MANAGER.getAsset("Sprites/Tracks/whiteland_full.png");
+        let hiddenImg = ASSET_MANAGER.getAsset("Sprites/Tracks/shrunk_hidden.png");
         const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/sky.webp");
         //const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/bg.png");
         let carName = this.menu.getSelectedCarName();
@@ -141,6 +143,7 @@ class SceneManager {
         let targetLaps = this.menu.getLaps();
         let indestructable = this.menu.getIndestructable();
         // Add entities to Game Enginge
+        // let starting_pos = {x: -1000.98064874052415, y: 1000.980766027134674, theta: (3*Math.PI)/2};//-1006.8800071953033};
         let starting_pos = {x: -140.98064874052415, y: 14.980766027134674, theta: (3*Math.PI)/2};//-1006.8800071953033};
 	    let mainPlayer = new PlayerCar(starting_pos, hiddenImg, this.gameEngine, carStats, targetLaps, indestructable);
         this.player = mainPlayer;
@@ -160,13 +163,13 @@ class SceneManager {
             hud.style.display="flex";
     
         /**
-         *	Adding the mode7 to the Game Engine's entity list will make it execute its update/draw
-            *  loop in time with the rest of the game. This could have some benifits later, including 
-            *  making this section of code a lot easier to read, but can be undone if needed. This should
-            *  not delay or affect the performance of the rest of entities from being drawn since the
-            *  Worker created by the mode7 class will be responsible for doing the actual calculations
-            *  and drawing of the ground/map.
-            */
+        *	Adding the mode7 to the Game Engine's entity list will make it execute its update/draw
+        *  loop in time with the rest of the game. This could have some benifits later, including 
+        *  making this section of code a lot easier to read, but can be undone if needed. This should
+        *  not delay or affect the performance of the rest of entities from being drawn since the
+        *  Worker created by the mode7 class will be responsible for doing the actual calculations
+        *  and drawing of the ground/map.
+        */
         this.gameEngine.init(ctx);
         this.gameEngine.start();
         console.log("Race Loaded");
