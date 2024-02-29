@@ -83,15 +83,34 @@ class SceneManager {
         carSprites.forEach((spritesheet) => {
             ASSET_MANAGER.queueDownload(spritesheet);
         });
+
+        const trackSelection = [
+            "Sprites/Tracks/whiteland_hidden.png",
+            "Sprites/Tracks/rainbow.png"
+        ]
+        trackSelection.forEach((spritesheet) => {
+            ASSET_MANAGER.queueDownload(spritesheet);
+        });
+
+        const skySelection = [
+            "Sprites/Tracks/sky.webp",
+            "Sprites/Tracks/stars.webp"
+
+        ]
+        skySelection.forEach((spritesheet) => {
+            ASSET_MANAGER.queueDownload(spritesheet);
+        });
+
         ASSET_MANAGER.queueDownload("Sounds/8bit-bop2.wav");
         ASSET_MANAGER.queueDownload("./lambo.png");
         ASSET_MANAGER.queueDownload("./explosions.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/edited track.png");
-        ASSET_MANAGER.queueDownload("Sprites/Tracks/whiteland_hidden.png");
+        ASSET_MANAGER.queueDownload("Sprites/Tracks/track shrunk.png");
+       // ASSET_MANAGER.queueDownload("Sprites/Tracks/whiteland_hidden.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/hidden_rainbow.png");
-        ASSET_MANAGER.queueDownload("Sprites/Tracks/rainbow.png");
-        ASSET_MANAGER.queueDownload("Sprites/Tracks/stars.webp");
-        ASSET_MANAGER.queueDownload("Sprites/Tracks/sky.webp");
+        //ASSET_MANAGER.queueDownload("Sprites/Tracks/rainbow.png");
+       // ASSET_MANAGER.queueDownload("Sprites/Tracks/stars.webp");
+        //ASSET_MANAGER.queueDownload("Sprites/Tracks/sky.webp");
         ASSET_MANAGER.queueDownload("Sprites/Menu/fzero_title.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/bg.png");
         ASSET_MANAGER.downloadAll(() => {});
@@ -125,16 +144,24 @@ class SceneManager {
         let mapCanvas = document.getElementById("mapCanvas");
         let gameCanvas = document.getElementById("gameworld");
         let ctx = gameCanvas.getContext("2d");
-        let img = ASSET_MANAGER.getAsset("Sprites/Tracks/rainbow.png");
-        let hiddenImg = ASSET_MANAGER.getAsset("Sprites/Tracks/hidden_rainbow.png");
-        const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/stars.webp");
+
+        let trackStats = trackData[this.menu.getSelectedTrackName()];
+        let img = ASSET_MANAGER.getAsset(trackStats.trackSprite);
+        let hiddenImg = ASSET_MANAGER.getAsset(trackStats.hiddenTrackSprite);
+        const imgBG = ASSET_MANAGER.getAsset(trackStats.skySprite);
+        // let img = ASSET_MANAGER.getAsset("Sprites/Tracks/rainbow.png");
+        // let hiddenImg = ASSET_MANAGER.getAsset("Sprites/Tracks/hidden_rainbow.png");
+        // const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/stars.webp");
         //const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/bg.png");
+        
+    
+        
         let carName = this.menu.getSelectedCarName();
         let carStats = carData[carName];
         let targetLaps = this.menu.getLaps();
         let indestructable = this.menu.getIndestructable();
         // Add entities to Game Enginge
-        let starting_pos = {x: -140.98064874052415, y: 14.980766027134674, theta: (3*Math.PI)/2};//-1006.8800071953033};
+        let starting_pos = {x: trackStats.starting_x, y: trackStats.starting_y, theta: (3*Math.PI)/2};//-1006.8800071953033};
 	    let mainPlayer = new PlayerCar(starting_pos, hiddenImg, this.gameEngine, carStats, targetLaps, indestructable);
         this.player = mainPlayer;
         this.gameEngine.addEntity(mainPlayer);
