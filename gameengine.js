@@ -9,6 +9,7 @@ class GameEngine {
 
         // Everything that will be updated and drawn each frame
         this.entities = [];
+        this.vfxEntities = [];
 
         // Information on the input
         this.click = null;
@@ -145,6 +146,7 @@ class GameEngine {
                     break;
                 case "ArrowUp":
                 case "KeyW":
+                    ASSET_MANAGER.pauseAsset("Sounds/engine.mp3");
                     this.up = false;
                     break;
                 case "ArrowDown":
@@ -153,12 +155,20 @@ class GameEngine {
                     break;
                 case "KeyH":
                     this.slideL = false;
+                    ASSET_MANAGER.pauseAsset("Sounds/powerslide.mp3");
                     break;
                 case "KeyL":
                     this.slideR = false;
+                    ASSET_MANAGER.pauseAsset("Sounds/powerslide.mp3");
                     break;
                 case "KeyJ":
                     this.boosting = false;
+                    ASSET_MANAGER.pauseAsset("Sounds/useBoost.mp3");
+                    this.vfxEntities.forEach(function(entity) {
+                        if (entity instanceof Boost || entity instanceof Wind) {
+                            entity.removeFromWorld = true;
+                        }
+                    })
                     break;
                 case "KeyK":
                     this.braking = false;
@@ -167,12 +177,17 @@ class GameEngine {
         }, false);
     };
 
-    addEntity(entity) {
-        this.entities.push(entity);
+    addEntity(entity, category) {
+        if (category == "vfx") {
+            this.vfxEntities.push(entity)
+        } else {
+            this.entities.push(entity);
+        }       
     };
 
     clearEntities() {
         this.entities = [];
+        this.vfxEntites = [];
     }
     draw() {
         // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
@@ -181,6 +196,9 @@ class GameEngine {
         // Draw latest things first
         for (let i = this.entities.length - 1; i >= 0; i--) {
             this.entities[i].draw(this.ctx, this);
+        }
+        for (let i = this.vfxEntities.length - 1; i >= 0; i--) {
+            this.vfxEntities[i].draw(this.ctx, this);
         }
     };
 
@@ -198,6 +216,21 @@ class GameEngine {
         for (let i = this.entities.length - 1; i >= 0; --i) {
             if (this.entities[i].removeFromWorld) {
                 this.entities.splice(i, 1);
+            }
+        }
+        let vfxEntitiesCount = this.vfxEntities.length;
+
+        for (let i = 0; i < vfxEntitiesCount; i++) {
+            let entity = this.vfxEntities[i];
+
+            if (!entity.removeFromWorld) {
+                entity.update();
+            }
+        }
+
+        for (let i = this.vfxEntities.length - 1; i >= 0; --i) {
+            if (this.vfxEntities[i].removeFromWorld) {
+                this.vfxEntities.splice(i, 1);
             }
         }
     };
