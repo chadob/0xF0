@@ -84,8 +84,19 @@ class SceneManager {
             ASSET_MANAGER.queueDownload(spritesheet);
         });
         ASSET_MANAGER.queueDownload("Sounds/8bit-bop2.wav");
+        ASSET_MANAGER.queueDownload("Sounds/useBoost.mp3");
+        ASSET_MANAGER.queueDownload("Sounds/hurt.mp3");
+        ASSET_MANAGER.queueDownload("Sounds/laugh.mp3");
+        ASSET_MANAGER.queueDownload("Sounds/countdown.mp3");
+        ASSET_MANAGER.queueDownload("Sounds/explosion.mp3");
+        ASSET_MANAGER.queueDownload("Sounds/dirt.mp3");
+        ASSET_MANAGER.queueDownload("Sounds/onBoost.mp3");
+        ASSET_MANAGER.queueDownload("Sounds/engine.mp3");
+        ASSET_MANAGER.queueDownload("Sounds/powerslide.mp3");
         ASSET_MANAGER.queueDownload("./lambo.png");
         ASSET_MANAGER.queueDownload("./explosions.png");
+        ASSET_MANAGER.queueDownload("Sprites/boost_spritesheet.png");
+        ASSET_MANAGER.queueDownload("Sprites/slipstream_spritesheet.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/edited track.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/whiteland_hidden.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/sky.webp");
@@ -119,6 +130,7 @@ class SceneManager {
             document.body.appendChild(gc);
             console.log("CREATED GAMEWORLD");
         }
+
         let mapCanvas = document.getElementById("mapCanvas");
         let gameCanvas = document.getElementById("gameworld");
         let ctx = gameCanvas.getContext("2d");
@@ -134,12 +146,12 @@ class SceneManager {
         let starting_pos = {x: -140.98064874052415, y: 14.980766027134674, theta: (3*Math.PI)/2};//-1006.8800071953033};
 	    let mainPlayer = new PlayerCar(starting_pos, hiddenImg, this.gameEngine, carStats, targetLaps, indestructable);
         this.player = mainPlayer;
-        this.gameEngine.addEntity(mainPlayer);
-        this.gameEngine.addEntity(new mode7(mainPlayer, img, mapCanvas, this.gameEngine, imgBG));
+        this.gameEngine.addEntity(mainPlayer, "unit");
+        this.gameEngine.addEntity(new mode7(mainPlayer, img, mapCanvas, this.gameEngine, imgBG), "unit");
 
         // gameEngine.addEntity(new Enemy(gameEngine));
-        this.gameEngine.addEntity(new FinishLine(this.gameEngine));
-        this.gameEngine.addEntity(new Checkpoint(this.gameEngine));
+        this.gameEngine.addEntity(new FinishLine(this.gameEngine), "unit");
+        this.gameEngine.addEntity(new Checkpoint(this.gameEngine), "unit");
         var hud = document.getElementById("hud");
             hud.style.display="flex";
     
@@ -167,7 +179,7 @@ class SceneManager {
             this.player.hide();
 
             let explosion = new Explosion(this.gameEngine);
-            this.gameEngine.addEntity(explosion);
+            this.gameEngine.addEntity(explosion, "vfx");
         }
     }
 
@@ -179,13 +191,16 @@ class SceneManager {
             raceEndText.id = "finish";
             if(dead) {
                 raceEndText.innerHTML = "YOU LOST";
+                ASSET_MANAGER.playAsset("Sounds/explosion.mp3");
+                setTimeout(()=> {
+                    ASSET_MANAGER.playAsset("Sounds/laugh.mp3");
+                }, 3000);
             } else {
                 raceEndText.innerHTML = "FINISHED";
             }
             container.appendChild(raceEndText);
             container.hidden = false;
             setTimeout(() => {
-                
                 sceneManager.playerDeath();
                 raceEndText.remove();
                 container.hidden = true;

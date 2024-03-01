@@ -5,7 +5,7 @@ const carData = {
         "acceleration": ".005",
         "top speed": 1.034,
         "max_boost_velocity": 1.551,
-        "handling": .25,
+        "handling": 40,
         "boost": 4,
         "body": 80,
         "sprite": "Sprites/Cars/bluefalcon.png"
@@ -16,7 +16,7 @@ const carData = {
         "acceleration": ".008",
         "top speed": 1.025,
         "max_boost_velocity": 1.5375,
-        "handling": .15,
+        "handling": 30,
         "boost": 4,
         "body": 80,
         "sprite": "Sprites/Cars/astrorobin.png"
@@ -27,7 +27,7 @@ const carData = {
         "acceleration": ".003",
         "top speed": 1.106,
         "max_boost_velocity": 1.659,
-        "handling": .15,
+        "handling": 30,
         "boost": 7.5,
         "body": 80,
         "sprite": "Sprites/Cars/bigfang.png",
@@ -41,7 +41,7 @@ const carData = {
         "acceleration": ".003",
         "top speed": 1.129,
         "max_boost_velocity": 1.6935,
-        "handling": .2,
+        "handling": 35,
         "boost": 6,
         "body": 85,
         "sprite": "Sprites/Cars/blackshadow.png"
@@ -52,7 +52,7 @@ const carData = {
         "acceleration": ".006",
         "top speed": 1.008,
         "max_boost_velocity": 1.512,
-        "handling": .1,
+        "handling": 25,
         "boost": 4,
         "body": 80,
         "sprite": "Sprites/Cars/bloodhawk.png"
@@ -63,7 +63,7 @@ const carData = {
         "acceleration": ".007",
         "top speed": 1.014,
         "max_boost_velocity": 1.521,
-        "handling": .1,
+        "handling": 25,
         "boost": 3,
         "body": 107,
         "sprite": "Sprites/Cars/crazybear.png"
@@ -74,7 +74,7 @@ const carData = {
         "acceleration": ".004",
         "top speed": 1.118,
         "max_boost_velocity": 1.677,
-        "handling": .1,
+        "handling": 25,
         "boost": 3,
         "body": 75,
         "sprite": "Sprites/Cars/deathanchor.png"
@@ -85,7 +85,7 @@ const carData = {
         "acceleration": ".004",
         "top speed": 1.035,
         "max_boost_velocity": 1.5525,
-        "handling": .2,
+        "handling": 35,
         "boost": 6,
         "body": 80,
         "sprite": "Sprites/Cars/deepclaw.png"
@@ -96,7 +96,7 @@ const carData = {
         "acceleration": ".005",
         "top speed": 1.059,
         "max_boost_velocity": 1.5885,
-        "handling": .2,
+        "handling": 35,
         "boost": 6,
         "body": 80,
         "sprite": "Sprites/Cars/dragonbird.png"
@@ -107,7 +107,7 @@ const carData = {
         "acceleration": ".003",
         "top speed": 1.051,
         "max_boost_velocity": 1.5765,
-        "handling": .2,
+        "handling": 35,
         "boost": 6,
         "body": 75,
         "sprite": "Sprites/Cars/eleganceliberty.png"
@@ -118,7 +118,7 @@ const carData = {
         "acceleration": ".003",
         "top speed": 1.096,
         "max_boost_velocity": 1.644,
-        "handling": .25,
+        "handling": 40,
         "boost": 6,
         "body": 85,
         "sprite": "Sprites/Cars/firestingray.png"
@@ -129,7 +129,7 @@ const carData = {
         "acceleration": ".004",
         "top speed": 1.017,
         "max_boost_velocity": 1.5255,
-        "handling": .15,
+        "handling": 30,
         "boost": 4,
         "body": 75,
         "sprite": "Sprites/Cars/goldenfox.png"
@@ -140,7 +140,7 @@ const carData = {
         "acceleration": ".007",
         "top speed": 1.018,
         "max_boost_velocity": 1.527,
-        "handling": .1,
+        "handling": 25,
         "boost": 3,
         "body": 75,
         "sprite": "Sprites/Cars/greatstar.png"
@@ -151,7 +151,7 @@ const carData = {
         "acceleration": ".007",
         "top speed": 1.021,
         "max_boost_velocity": 1.5315,
-        "handling": .1,
+        "handling": 25,
         "boost": 4,
         "body": 120,
         "sprite": "Sprites/Cars/greenpanther.png"
@@ -162,7 +162,7 @@ const carData = {
         "acceleration": ".003",
         "top speed": 1.111,
         "max_boost_velocity": 1.6665,
-        "handling": .25,
+        "handling": 40,
         "boost": 4,
         "body": 80,
         "sprite": "Sprites/Cars/hyperspeeder.png"
@@ -173,7 +173,7 @@ const carData = {
         "acceleration": ".004",
         "top speed": 1.052,
         "max_boost_velocity": 1.578,
-        "handling": .2,
+        "handling": 35,
         "boost": 5,
         "body": 85,
         "sprite": "Sprites/Cars/irontiger.png"
@@ -184,7 +184,7 @@ const carData = {
         "acceleration": ".005",
         "top speed": 1.022,
         "max_boost_velocity": 1.533,
-        "handling": .1,
+        "handling": 25,
         "boost": 4,
         "body": 75,
         "sprite": "Sprites/Cars/kingmeteor.png"
@@ -195,7 +195,7 @@ const carData = {
         "acceleration": ".005",
         "top speed": 1.034,
         "max_boost_velocity": 1.551,
-        "handling": .25,
+        "handling": 40,
         "boost": 4,
         "body": 80,
         "sprite": "Sprites/Cars/lambo.png"
@@ -206,7 +206,7 @@ const carData = {
         "acceleration": ".005",
         "top speed": 1.044,
         "max_boost_velocity": 1.566,
-        "handling": .15,
+        "handling": 30,
         "boost": 5,
         "body": 75,
         "sprite": "Sprites/Cars/littlewyvern.png"
@@ -217,7 +217,7 @@ const carData = {
         "acceleration": ".005",
         "top speed": 1.054,
         "max_boost_velocity": 1.581,
-        "handling": .05,
+        "handling": 20,
         "boost": 5,
         "body": 85,
         "sprite": "Sprites/Cars/madwolf.png"
@@ -228,7 +228,7 @@ const carData = {
         "acceleration": ".006",
         "top speed": 1.057,
         "max_boost_velocity": 1.5855,
-        "handling": .2,
+        "handling": 35,
         "boost": 5,
         "body": 75,
         "sprite": "Sprites/Cars/mightyhurricane.png"
@@ -239,7 +239,7 @@ const carData = {
         "acceleration": ".006",
         "top speed": 1.039,
         "max_boost_velocity": 1.5585,
-        "handling": .25,
+        "handling": 40,
         "boost": 6,
         "body": 75,
         "sprite": "Sprites/Cars/mightytyphoon.png"
@@ -250,7 +250,7 @@ const carData = {
         "acceleration": ".005",
         "top speed": 1.024,
         "max_boost_velocity": 1.536,
-        "handling": .2,
+        "handling": 35,
         "boost": 5,
         "body": 80,
         "sprite": "Sprites/Cars/moonshadow.png"
@@ -261,7 +261,7 @@ const carData = {
         "acceleration": ".007",
         "top speed": 1.016,
         "max_boost_velocity": 1.524,
-        "handling": .05,
+        "handling": 20,
         "boost": 3,
         "body": 75,
         "sprite": "Sprites/Cars/nightthunder.png"
@@ -272,7 +272,7 @@ const carData = {
         "acceleration": ".003",
         "top speed": 1.025,
         "max_boost_velocity": 1.5375,
-        "handling": .2,
+        "handling": 35,
         "boost": 5,
         "body": 80,
         "sprite": "Sprites/Cars/panzeremerald.png"
@@ -283,7 +283,7 @@ const carData = {
         "acceleration": ".006",
         "top speed": 1.038,
         "max_boost_velocity": 1.557,
-        "handling": .1,
+        "handling": 25,
         "boost": 4,
         "body": 75,
         "sprite": "Sprites/Cars/queenmeteor.png"
@@ -294,7 +294,7 @@ const carData = {
         "acceleration": ".004",
         "top speed": 1.038,
         "max_boost_velocity": 1.557,
-        "handling": .2,
+        "handling": 35,
         "boost": 3,
         "body": 75,
         "sprite": "Sprites/Cars/redgazelle.png"
@@ -305,7 +305,7 @@ const carData = {
         "acceleration": ".005",
         "top speed": 1.106,
         "max_boost_velocity": 1.659,
-        "handling": .2,
+        "handling": 35,
         "boost": 3,
         "body": 75,
         "sprite": "Sprites/Cars/sonicphantom.png"
@@ -316,7 +316,7 @@ const carData = {
         "acceleration": ".003",
         "top speed": 1.051,
         "max_boost_velocity": 1.5765,
-        "handling": .2,
+        "handling": 35,
         "boost": 6,
         "body": 75,
         "sprite": "Sprites/Cars/spaceangler.png"
@@ -327,7 +327,7 @@ const carData = {
         "acceleration": ".005",
         "top speed": 1.024,
         "max_boost_velocity": 1.536,
-        "handling": .1,
+        "handling": 25,
         "boost": 5,
         "body": 80,
         "sprite": "Sprites/Cars/superpiranha.png"
@@ -338,7 +338,7 @@ const carData = {
         "acceleration": ".007",
         "top speed": 1.017,
         "max_boost_velocity": 1.5255,
-        "handling": .15,
+        "handling": 30,
         "boost": 3,
         "body": 75,
         "sprite": "Sprites/Cars/twinnoritta.png"
@@ -349,7 +349,7 @@ const carData = {
         "acceleration": ".005",
         "top speed": 1.042,
         "max_boost_velocity": 1.563,
-        "handling": .1,
+        "handling": 25,
         "boost": 4,
         "body": 75,
         "sprite": "Sprites/Cars/whitecat.png"
@@ -360,7 +360,7 @@ const carData = {
         "acceleration": ".003",
         "top speed": 1.112,
         "max_boost_velocity": 1.668,
-        "handling": .15,
+        "handling": 30,
         "boost": 5,
         "body": 85,
         "sprite": "Sprites/Cars/wildboar.png"
@@ -371,7 +371,7 @@ const carData = {
         "acceleration": ".004",
         "top speed": 1.048,
         "max_boost_velocity": 1.572,
-        "handling": .05,
+        "handling": 20,
         "boost": 8,
         "body": 160,
         "sprite": "Sprites/Cars/wildgoose.png"
@@ -382,7 +382,7 @@ const carData = {
         "acceleration": ".006",
         "top speed": 1.034,
         "max_boost_velocity": 1.551,
-        "handling": .2,
+        "handling": 35,
         "boost": 5,
         "body": 75,
         "sprite": "Sprites/Cars/wonderwasp.png"
