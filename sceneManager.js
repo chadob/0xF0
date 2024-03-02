@@ -189,6 +189,12 @@ class SceneManager {
         if(!document.getElementById('finish')) {
             let raceEndText = document.createElement('h1');
             raceEndText.id = "finish";
+            if (ASSET_MANAGER.cache["Sounds/engine.mp3"]) {
+                ASSET_MANAGER.pauseAsset("Sounds/engine.mp3");
+            }
+            if (ASSET_MANAGER.cache["Sounds/useBoost.mp3"]) {
+                ASSET_MANAGER.pauseAsset("Sounds/useBoost.mp3");
+            }
             if(dead) {
                 raceEndText.innerHTML = "YOU LOST";
                 ASSET_MANAGER.playAsset("Sounds/explosion.mp3");
