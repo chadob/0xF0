@@ -80,6 +80,14 @@ class AssetManager {
         return this.cache[path];
     };
 
+    playAssetTime(path, time) {
+        let audio = this.cache[path];
+        if (audio instanceof Audio) {
+            audio.currentTime = time;
+            audio.volume = document.getElementById('volume').value;
+            audio.play();
+        }
+    }
     playAsset(path) {
         let audio = this.cache[path];
         if (audio instanceof Audio) {
@@ -106,7 +114,9 @@ class AssetManager {
             }
         }
     };
-
+    pauseAsset(asset) {
+        this.cache[asset].pause();
+    }
     pauseBackgroundMusic() {
         for (var key in this.cache) {
             let asset = this.cache[key];
@@ -121,6 +131,13 @@ class AssetManager {
         var aud = this.cache[path];
         aud.addEventListener("ended", function () {
             aud.play();
+        });
+    };
+    startAtAutoRepeatTime(path, first, time) {
+        var aud = this.cache[path];
+        ASSET_MANAGER.playAssetTime(path, first);
+        aud.addEventListener("ended", function () {
+            ASSET_MANAGER.playAssetTime(path, time);
         });
     };
 };

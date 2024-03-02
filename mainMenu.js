@@ -99,7 +99,7 @@ class MainMenu {
         carAccElem.innerText = carData[this.currentCar].acceleration * 1000;
         var src = carData[this.currentCar].sprite;
         this.racerSelectCTX.reset();
-        this.racerSelectCTX.drawImage(ASSET_MANAGER.getAsset(src), 64, 0, 64, 64, 32, 32, this.racerSelectCanvas.width, this.racerSelectCanvas.height);
+        this.racerSelectCTX.drawImage(ASSET_MANAGER.getAsset(src), 64, 0, 64, 64, 0, 32, this.racerSelectCanvas.width, this.racerSelectCanvas.height);
     }
 
     setLaps(direction) {
@@ -149,6 +149,7 @@ class MainMenu {
             countdownElem.id = "countdown";
             container.appendChild(countdownElem);
             container.hidden = false;
+            ASSET_MANAGER.playAsset("Sounds/countdown.mp3");
             setTimeout(() => {
                 sceneManager.enableInput();
             }, 2700);
