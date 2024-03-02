@@ -7,14 +7,23 @@ class SceneManager {
 
     loadMainMenu() {
         this.menu = new MainMenu();
-        this.muteButton = document.getElementById('mute');
-        this.muteButton.addEventListener("click", () => {
-            console.log(this.muteButton.checked);
-            ASSET_MANAGER.muteAudio(this.muteButton.checked);
+        this.muteButtonbg = document.getElementById('mutebg');
+        this.muteButtonbg.addEventListener("click", () => {
+            console.log(this.muteButtonbg.checked);
+            ASSET_MANAGER.muteAudio(this.muteButtonbg.checked, 'bgm');
         });
-        this.volume = document.getElementById('volume');
-        this.volume.addEventListener("change", () => {
-            ASSET_MANAGER.adjustVolume(this.volume.value);
+        this.volumebg = document.getElementById('volumebg');
+        this.volumebg.addEventListener("change", () => {
+            ASSET_MANAGER.adjustVolume(this.volumebg.value, 'bgm');
+        });
+        this.muteButtonsfx = document.getElementById('mutesfx');
+        this.muteButtonsfx.addEventListener("click", () => {
+            console.log(this.muteButtonsfx.checked);
+            ASSET_MANAGER.muteAudio(this.muteButtonsfx.checked, 'sfx');
+        });
+        this.volumesfx = document.getElementById('volumesfx');
+        this.volumesfx.addEventListener("change", () => {
+            ASSET_MANAGER.adjustVolume(this.volumesfx.value, 'sfx');
         });
         window.addEventListener("gamepadconnected", (e) => {
             console.log(
@@ -83,16 +92,16 @@ class SceneManager {
         carSprites.forEach((spritesheet) => {
             ASSET_MANAGER.queueDownload(spritesheet);
         });
-        ASSET_MANAGER.queueDownload("Sounds/8bit-bop2.wav");
-        ASSET_MANAGER.queueDownload("Sounds/useBoost.mp3");
-        ASSET_MANAGER.queueDownload("Sounds/hurt.mp3");
-        ASSET_MANAGER.queueDownload("Sounds/laugh.mp3");
-        ASSET_MANAGER.queueDownload("Sounds/countdown.mp3");
-        ASSET_MANAGER.queueDownload("Sounds/explosion.mp3");
-        ASSET_MANAGER.queueDownload("Sounds/dirt.mp3");
-        ASSET_MANAGER.queueDownload("Sounds/onBoost.mp3");
-        ASSET_MANAGER.queueDownload("Sounds/engine.mp3");
-        ASSET_MANAGER.queueDownload("Sounds/powerslide.mp3");
+        ASSET_MANAGER.queueBGMDownload("Sounds/8bit-bop2.wav");
+        ASSET_MANAGER.queueSFXDownload("Sounds/useBoost.mp3");
+        ASSET_MANAGER.queueSFXDownload("Sounds/hurt.mp3");
+        ASSET_MANAGER.queueSFXDownload("Sounds/laugh.mp3");
+        ASSET_MANAGER.queueSFXDownload("Sounds/countdown.mp3");
+        ASSET_MANAGER.queueSFXDownload("Sounds/explosion.mp3");
+        ASSET_MANAGER.queueSFXDownload("Sounds/dirt.mp3");
+        ASSET_MANAGER.queueSFXDownload("Sounds/onBoost.mp3");
+        ASSET_MANAGER.queueSFXDownload("Sounds/engine.mp3");
+        ASSET_MANAGER.queueSFXDownload("Sounds/powerslide.mp3");
         ASSET_MANAGER.queueDownload("./lambo.png");
         ASSET_MANAGER.queueDownload("./explosions.png");
         ASSET_MANAGER.queueDownload("Sprites/boost_spritesheet.png");
@@ -103,7 +112,9 @@ class SceneManager {
         ASSET_MANAGER.queueDownload("Sprites/Menu/fzero_title.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/bg.png");
         ASSET_MANAGER.downloadAll(() => {});
-        ASSET_MANAGER.autoRepeat("Sounds/8bit-bop2.wav");
+        ASSET_MANAGER.downloadBGM();
+        ASSET_MANAGER.downloadSFX();
+        ASSET_MANAGER.autoRepeat("Sounds/8bit-bop2.wav", 'bgm');
     }
     loadRace() {
         console.log("Loading race...");
@@ -190,17 +201,17 @@ class SceneManager {
         if(!document.getElementById('finish')) {
             let raceEndText = document.createElement('h1');
             raceEndText.id = "finish";
-            if (ASSET_MANAGER.cache["Sounds/engine.mp3"]) {
-                ASSET_MANAGER.pauseAsset("Sounds/engine.mp3");
+            if (ASSET_MANAGER.sfxCache["Sounds/engine.mp3"]) {
+                ASSET_MANAGER.pauseAsset("Sounds/engine.mp3", 'sfx');
             }
-            if (ASSET_MANAGER.cache["Sounds/useBoost.mp3"]) {
-                ASSET_MANAGER.pauseAsset("Sounds/useBoost.mp3");
+            if (ASSET_MANAGER.sfxCache["Sounds/useBoost.mp3"]) {
+                ASSET_MANAGER.pauseAsset("Sounds/useBoost.mp3", 'sfx');
             }
             if(dead) {
                 raceEndText.innerHTML = "YOU LOST";
-                ASSET_MANAGER.playAsset("Sounds/explosion.mp3");
+                ASSET_MANAGER.playAsset("Sounds/explosion.mp3", 'sfx');
                 setTimeout(()=> {
-                    ASSET_MANAGER.playAsset("Sounds/laugh.mp3");
+                    ASSET_MANAGER.playAsset("Sounds/laugh.mp3", 'sfx');
                 }, 3000);
             } else {
                 raceEndText.innerHTML = "FINISHED";
@@ -211,9 +222,7 @@ class SceneManager {
                 sceneManager.playerDeath();
                 raceEndText.remove();
                 container.hidden = true;
-                let bgmusic = ASSET_MANAGER.getAsset("Sounds/8bit-bop2.wav");
-                bgmusic.pause();
-                bgmusic.currentTime = 0;
+                ASSET_MANAGER.pauseBackgroundMusic();
             }, 4000);
         }
     }

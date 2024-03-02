@@ -146,7 +146,7 @@ class GameEngine {
                     break;
                 case "ArrowUp":
                 case "KeyW":
-                    ASSET_MANAGER.pauseAsset("Sounds/engine.mp3");
+                    ASSET_MANAGER.pauseAsset("Sounds/engine.mp3", 'sfx');
                     this.up = false;
                     break;
                 case "ArrowDown":
@@ -155,15 +155,15 @@ class GameEngine {
                     break;
                 case "KeyH":
                     this.slideL = false;
-                    ASSET_MANAGER.pauseAsset("Sounds/powerslide.mp3");
+                    ASSET_MANAGER.pauseAsset("Sounds/powerslide.mp3", 'sfx');
                     break;
                 case "KeyL":
                     this.slideR = false;
-                    ASSET_MANAGER.pauseAsset("Sounds/powerslide.mp3");
+                    ASSET_MANAGER.pauseAsset("Sounds/powerslide.mp3", 'sfx');
                     break;
                 case "KeyJ":
                     this.boosting = false;
-                    ASSET_MANAGER.pauseAsset("Sounds/useBoost.mp3");
+                    ASSET_MANAGER.pauseAsset("Sounds/useBoost.mp3", 'sfx');
                     this.vfxEntities.forEach(function(entity) {
                         if (entity instanceof Boost || entity instanceof Wind) {
                             entity.removeFromWorld = true;
