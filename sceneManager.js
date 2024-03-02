@@ -92,6 +92,7 @@ class SceneManager {
         ASSET_MANAGER.queueDownload("Sprites/Menu/fzero_title.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/bg.png");
         ASSET_MANAGER.downloadAll(() => {});
+        ASSET_MANAGER.autoRepeat("Sounds/8bit-bop2.wav");
     }
     loadRace() {
         console.log("Loading race...");
@@ -189,6 +190,9 @@ class SceneManager {
                 sceneManager.playerDeath();
                 raceEndText.remove();
                 container.hidden = true;
+                let bgmusic = ASSET_MANAGER.getAsset("Sounds/8bit-bop2.wav");
+                bgmusic.pause();
+                bgmusic.currentTime = 0;
             }, 4000);
         }
     }

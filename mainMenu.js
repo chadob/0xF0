@@ -91,7 +91,12 @@ class MainMenu {
         carNameElem.innerText=this.currentCar;
         let carPicElem = document.getElementById("selectedCarImg");
         carPicElem.src = carData[this.currentCar].sprite;
-
+        let carHPElem = document.getElementById("carHP");
+        carHPElem.innerText = carData[this.currentCar].body;
+        let carVELElem = document.getElementById("carVel");
+        carVELElem.innerText = Math.ceil(carData[this.currentCar]["top speed"] * 1000);
+        let carAccElem = document.getElementById("carAcc");
+        carAccElem.innerText = carData[this.currentCar].acceleration * 1000;
         var src = carData[this.currentCar].sprite;
         this.racerSelectCTX.reset();
         this.racerSelectCTX.drawImage(ASSET_MANAGER.getAsset(src), 64, 0, 64, 64, 32, 32, this.racerSelectCanvas.width, this.racerSelectCanvas.height);
