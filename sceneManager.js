@@ -86,7 +86,16 @@ class SceneManager {
 
         const trackSelection = [
             "Sprites/Tracks/whiteland_hidden.png",
-            "Sprites/Tracks/rainbow.png"
+            "Sprites/Tracks/edited track.png",
+            "Sprites/Tracks/track shrunk.png",
+            "Sprites/Tracks/rainbow.png",
+            "Sprites/Tracks/hidden_rainbow.png",
+            "Sprites/Tracks/sandocean.png",
+            "Sprites/Tracks/sandocean_hidden.png",
+            "Sprites/Tracks/sandocean_shrunk.png",
+            "Sprites/Tracks/redLava.png",
+            "Sprites/Tracks/redLava_hidden.png",
+            "Sprites/Tracks/redLava_shrunk.png"
         ]
         trackSelection.forEach((spritesheet) => {
             ASSET_MANAGER.queueDownload(spritesheet);
@@ -94,7 +103,9 @@ class SceneManager {
 
         const skySelection = [
             "Sprites/Tracks/sky.webp",
-            "Sprites/Tracks/stars.webp"
+            "Sprites/Tracks/stars.webp",
+            "Sprites/Tracks/hotSky.webp",
+            "Sprites/Tracks/underwater.png"
 
         ]
         skySelection.forEach((spritesheet) => {
@@ -104,17 +115,6 @@ class SceneManager {
         ASSET_MANAGER.queueDownload("Sounds/8bit-bop2.wav");
         ASSET_MANAGER.queueDownload("./lambo.png");
         ASSET_MANAGER.queueDownload("./explosions.png");
-        ASSET_MANAGER.queueDownload("Sprites/Tracks/edited track.png");
-        ASSET_MANAGER.queueDownload("Sprites/Tracks/track shrunk.png");
-        ASSET_MANAGER.queueDownload("Sprites/Tracks/sandocean.png");
-        ASSET_MANAGER.queueDownload("Sprites/Tracks/redLava.png");
-        ASSET_MANAGER.queueDownload("Sprites/Tracks/hotSky.webp");
-        ASSET_MANAGER.queueDownload("Sprites/Tracks/redLava_hidden.png");
-        ASSET_MANAGER.queueDownload("Sprites/Tracks/sandocean_hidden.png");
-        ASSET_MANAGER.queueDownload("Sprites/Tracks/sandocean_shrunk.png");
-        ASSET_MANAGER.queueDownload("Sprites/Tracks/redLava_shrunk.png");
-        ASSET_MANAGER.queueDownload("Sprites/Tracks/underwater.png");
-        ASSET_MANAGER.queueDownload("Sprites/Tracks/hidden_rainbow.png");
         ASSET_MANAGER.queueDownload("Sprites/Menu/fzero_title.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/bg.png");
         ASSET_MANAGER.downloadAll(() => {});
@@ -238,3 +238,14 @@ class SceneManager {
         // let hiddenImg = ASSET_MANAGER.getAsset("Sprites/Tracks/hidden_rainbow.png");
         // const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/stars.webp");
         //const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/bg.png");
+                //ASSET_MANAGER.queueDownload("Sprites/Tracks/edited track.png");
+        //ASSET_MANAGER.queueDownload("Sprites/Tracks/track shrunk.png");
+        //ASSET_MANAGER.queueDownload("Sprites/Tracks/sandocean.png");
+        //ASSET_MANAGER.queueDownload("Sprites/Tracks/redLava.png");
+        // ASSET_MANAGER.queueDownload("Sprites/Tracks/hotSky.webp");
+        //ASSET_MANAGER.queueDownload("Sprites/Tracks/redLava_hidden.png");
+        //ASSET_MANAGER.queueDownload("Sprites/Tracks/sandocean_hidden.png");
+        //ASSET_MANAGER.queueDownload("Sprites/Tracks/sandocean_shrunk.png");
+        //ASSET_MANAGER.queueDownload("Sprites/Tracks/redLava_shrunk.png");
+        //ASSET_MANAGER.queueDownload("Sprites/Tracks/underwater.png");
+        //ASSET_MANAGER.queueDownload("Sprites/Tracks/hidden_rainbow.png");
