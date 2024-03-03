@@ -46,5 +46,21 @@ const trackData = {
         "skySprite": "Sprites/Tracks/underwater.png",
         "hiddenTrackSprite": "Sprites/Tracks/sandocean_hidden.png",
         "shrunkSprite" : "Sprites/Tracks/sandocean_shrunk.png"
+    },
+    "Lava": {
+        "name": "Lava",
+        "starting_x": 280,
+        "starting_y": 80,
+        "theta": (3 * Math.PI)/2,
+        "cp_x": 663,
+        "cp_y": 306,
+        "cp_w": 2,
+        "cp_h": 23,
+        "finish_x": 281,
+        "finish_y": 69,
+        "trackSprite": "Sprites/Tracks/redLava.png",
+        "skySprite": "Sprites/Tracks/hotSky.webp",
+        "hiddenTrackSprite": "Sprites/Tracks/redLava_hidden.png",
+        "shrunkSprite" : "Sprites/Tracks/redLava_shrunk.png"
     }
 }

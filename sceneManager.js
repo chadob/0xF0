@@ -107,8 +107,12 @@ class SceneManager {
         ASSET_MANAGER.queueDownload("Sprites/Tracks/edited track.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/track shrunk.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/sandocean.png");
-        ASSET_MANAGER.queueDownload("Sprites/Tracks/sandocean_shrunk.png");
+        ASSET_MANAGER.queueDownload("Sprites/Tracks/redLava.png");
+        ASSET_MANAGER.queueDownload("Sprites/Tracks/hotSky.webp");
+        ASSET_MANAGER.queueDownload("Sprites/Tracks/redLava_hidden.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/sandocean_hidden.png");
+        ASSET_MANAGER.queueDownload("Sprites/Tracks/sandocean_shrunk.png");
+        ASSET_MANAGER.queueDownload("Sprites/Tracks/redLava_shrunk.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/underwater.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/hidden_rainbow.png");
         ASSET_MANAGER.queueDownload("Sprites/Menu/fzero_title.png");
