@@ -90,18 +90,91 @@ class MainMenu {
         }
         this.currentCar = this.carNames.at(this.currentCarIndex);
         let carNameElem = document.getElementById("carName");
-        carNameElem.innerText=this.currentCar;
+        carNameElem.innerHTML=this.currentCar;
         let carPicElem = document.getElementById("selectedCarImg");
         carPicElem.src = carData[this.currentCar].sprite;
         let carHPElem = document.getElementById("carHP");
-        carHPElem.innerText = carData[this.currentCar].body;
+        carHPElem.innerHTML = carData[this.currentCar].body;
         let carVELElem = document.getElementById("carVel");
-        carVELElem.innerText = Math.ceil(carData[this.currentCar]["top speed"] * 1000);
+        carVELElem.innerHTML = Math.ceil(carData[this.currentCar]["top speed"] * 1000);
         let carAccElem = document.getElementById("carAcc");
-        carAccElem.innerText = carData[this.currentCar].acceleration * 1000;
+        carAccElem.innerHTML = this.getLetterGradeAcc(carData[this.currentCar].acceleration * 1000);
+        let carBoostElem = document.getElementById("carBoost");
+        carBoostElem.innerHTML = this.getLetterGradeBoost(carData[this.currentCar].boost);
+        let carTurnElem = document.getElementById("carHandling");
+        carTurnElem.innerHTML = this.getLetterGradeTurning(carData[this.currentCar].handling);
         var src = carData[this.currentCar].sprite;
         this.racerSelectCTX.reset();
         this.racerSelectCTX.drawImage(ASSET_MANAGER.getAsset(src), 64, 0, 64, 64, 0, 32, this.racerSelectCanvas.width, this.racerSelectCanvas.height);
+    }
+    getLetterGradeAcc(val) {
+        let result;
+        switch(val) { //A, B, C, D, E, F, 8, 7, 6, 5, 4, 3
+            case 8:
+                result = '&#9733;&#9733;&#9733;&#9733;&#9733;&#9733;';
+                break;
+            case 7:
+                result = '&#9733;&#9733;&#9733;&#9733;&#9733;';
+                break;
+            case 6:
+                result = '&#9733;&#9733;&#9733;&#9733;';
+                break;
+            case 5:
+                result = '&#9733;&#9733;&#9733;';
+                break;
+            case 4:
+                result = '&#9733;&#9733;';
+                break;
+            case 3:
+                result = '&#9733;';
+                break;
+        }
+        return result;
+    }
+    getLetterGradeBoost(val) {
+        let result;
+        switch(val) { //A, B, C, D, E, F, 8, 7, 6, 5, 4, 3
+            case 8:
+                result = '&#9733;';
+                break;
+            case 7, 7.5:
+                result = '&#9733;&#9733;';
+                break;
+            case 6:
+                result = '&#9733;&#9733;&#9733;';
+                break;
+            case 5:
+                result = '&#9733;&#9733;&#9733;&#9733;';
+                break;
+            case 4:
+                result = '&#9733;&#9733;&#9733;&#9733;&#9733;';
+                break;
+            case 3:
+                result = '&#9733;&#9733;&#9733;&#9733;&#9733;&#9733;';
+                break;
+        }
+        return result;
+    }
+    getLetterGradeTurning(val) {
+        let result;
+        switch(val) { //A, B, C, D, E, 40, 35, 30, 25, 20
+            case 40:
+                result = '&#9733;&#9733;&#9733;&#9733;&#9733;&#9733;';
+                break;
+            case 35:
+                result = '&#9733;&#9733;&#9733;&#9733;&#9733;';
+                break;
+            case 30:
+                result = '&#9733;&#9733;&#9733;&#9733;';
+                break;
+            case 25:
+                result = '&#9733;&#9733;&#9733;';
+                break;
+            case 20:
+                result = '&#9733;&#9733;';
+                break;
+        }
+        return result;
     }
 
     setLaps(direction) {

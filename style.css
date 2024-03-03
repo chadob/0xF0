@@ -198,20 +198,10 @@ canvas{
 }
 
 #audioControl {
-    position: absolute;
     justify-content: center;
-    top: 80%;
-    left: 50%;
-    transform: translate(-50%, 0%);
-    width: 1024px;
     color: white;
 }
 #audioControlsfx {
-    position: absolute;
     justify-content: center;
-    top: 80%;
-    left: 85%;
-    transform: translate(-50%, 0%);
-    width: 1024px;
     color: white;
 }
