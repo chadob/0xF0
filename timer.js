@@ -48,14 +48,17 @@ class Timer {
         this.reset();
         this.hasStarted=false;
     }
+   
     returnData(input) {
-        return input > 10 ? input : `0${input}`
+        return input >= 10 ? input.toString() : `0${input}`;
     }
+
     //code to create lap time in hud
 	createLapTime(curLap) {
 		if (curLap > 1) {
 			const newDiv = document.createElement("div");
 			newDiv.classList.add("lapTime");
+            console.log("Lap " + (curLap - 1) + ": " + this.formatTime(this.bestLapTime)); // best lap time
 			console.log("Lap " + (curLap -1) + ": " + this.minute + ":" + 
 				this.second + ":" + this.millisecond);
 			let text = document.createElement("SPAN");
@@ -66,7 +69,7 @@ class Timer {
 			newDiv.appendChild(text);
 			let hudMinutes = document.createTextNode(this.minute+ "'");
 			let hudSeconds = document.createTextNode(this.second+"\"");
-			let hudMilliseconds = document.createTextNode(this.millisecond);
+			let hudMilliseconds = document.createTextNode(this.returnData(this.millisecond));
 
 			// add the newly created element and its content into the DOM
 			let hud = document.getElementById("hud")
@@ -74,8 +77,31 @@ class Timer {
 			newDiv.appendChild(hudMinutes);
 			newDiv.appendChild(hudSeconds);
 			newDiv.appendChild(hudMilliseconds);
+
+            let bestLapDiv = document.createElement("div");
+            bestLapDiv.classList.add("lapTime");
+            bestLapDiv.innerHTML = "Best Lap: " + this.formatTime(this.bestLapTime); // Display best lap time
+            document.getElementById("hud").appendChild(newDiv);
+            document.getElementById("hud").appendChild(bestLapDiv);
+
             this.reset();
 		}
 		
 	}
+
+    updateBestLapTime() {
+        if (this.hasStarted) {
+            const lapTime = this.minute * 60 + this.second + this.millisecond / 1000;
+            if (lapTime < this.bestLapTime) {
+                this.bestLapTime = lapTime;
+            }
+        }
+    }
+
+    formatTime(time) {
+        const minutes = Math.floor(time / 60);
+        const seconds = Math.floor(time % 60);
+        const milliseconds = Math.floor((time - Math.floor(time)) * 1000);
+        return `${this.returnData(minutes)}:${this.returnData(seconds)}:${this.returnData(milliseconds)}`;
+    }
 };
