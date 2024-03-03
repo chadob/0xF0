@@ -53,6 +53,7 @@ class position {
             return Math.floor(y);
         };
 
+        //maybe change these to have values, not calculations
         findTheta(direction){
             switch(direction) {
                 case 'S':

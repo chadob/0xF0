@@ -150,15 +150,19 @@ class SceneManager {
         let hiddenImg = ASSET_MANAGER.getAsset("Sprites/Tracks/whiteland_hidden.png");
         const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/sky.webp");
         //const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/bg.png");
+        let mapName = "whiteland";
         let carName = this.menu.getSelectedCarName();
         let carStats = carData[carName];
         let targetLaps = this.menu.getLaps();
         let indestructable = this.menu.getIndestructable();
         // Add entities to Game Enginge
+        //These are going to depend on each
         let starting_pos = {x: -140.98064874052415, y: 14.980766027134674, theta: (3*Math.PI)/2};//-1006.8800071953033};
 	    let mainPlayer = new PlayerCar(starting_pos, hiddenImg, this.gameEngine, carStats, targetLaps, indestructable);
         this.player = mainPlayer;
         this.gameEngine.addEntity(mainPlayer, "unit");
+
+        this.gameEngine.addEntity(new Enemy(this.gameEngine, mapName, carStats));
         this.gameEngine.addEntity(new mode7(mainPlayer, img, mapCanvas, this.gameEngine, imgBG), "unit");
 
         // gameEngine.addEntity(new Enemy(gameEngine));
@@ -229,5 +233,6 @@ class SceneManager {
     enableInput() {
         this.player.inputEnabled = true;
         this.gameEngine.timer.hasStarted = true;
+        //this.player.startRecordingPositions();
     }
 }

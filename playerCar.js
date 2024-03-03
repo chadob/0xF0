@@ -28,6 +28,8 @@ class PlayerCar {
 		this.stepToCamera = 0;
 		this.cameraStepsLeft = 0;
 
+		this.positionArray = [];
+
 
 		this.easyMode = true;
 
@@ -137,6 +139,13 @@ class PlayerCar {
 		}
     };
 
+	startRecordingPositions() {
+		setInterval(() => {
+			this.positionArray.push({x: this.position.x, y: this.position.y});
+			console.log(this.positionArray)
+		}, 500);
+	}
+	
 	checkBoostOrBreak(){
 		//	checks if boost button is hit
 		if (this.game.boosting) {
