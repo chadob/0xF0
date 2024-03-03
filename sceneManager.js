@@ -106,11 +106,7 @@ class SceneManager {
         ASSET_MANAGER.queueDownload("./explosions.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/edited track.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/track shrunk.png");
-       // ASSET_MANAGER.queueDownload("Sprites/Tracks/whiteland_hidden.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/hidden_rainbow.png");
-        //ASSET_MANAGER.queueDownload("Sprites/Tracks/rainbow.png");
-       // ASSET_MANAGER.queueDownload("Sprites/Tracks/stars.webp");
-        //ASSET_MANAGER.queueDownload("Sprites/Tracks/sky.webp");
         ASSET_MANAGER.queueDownload("Sprites/Menu/fzero_title.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/bg.png");
         ASSET_MANAGER.downloadAll(() => {});
@@ -149,10 +145,6 @@ class SceneManager {
         let img = ASSET_MANAGER.getAsset(trackStats.trackSprite);
         let hiddenImg = ASSET_MANAGER.getAsset(trackStats.hiddenTrackSprite);
         const imgBG = ASSET_MANAGER.getAsset(trackStats.skySprite);
-        // let img = ASSET_MANAGER.getAsset("Sprites/Tracks/rainbow.png");
-        // let hiddenImg = ASSET_MANAGER.getAsset("Sprites/Tracks/hidden_rainbow.png");
-        // const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/stars.webp");
-        //const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/bg.png");
         
     
         
@@ -161,7 +153,10 @@ class SceneManager {
         let targetLaps = this.menu.getLaps();
         let indestructable = this.menu.getIndestructable();
         // Add entities to Game Enginge
-        let starting_pos = {x: trackStats.starting_x, y: trackStats.starting_y, theta: (3*Math.PI)/2};//-1006.8800071953033};
+
+
+        
+        let starting_pos = {x: trackStats.starting_x, y: trackStats.starting_y, theta: trackStats.theta};//theta: (3*Math.PI)/2};
 	    let mainPlayer = new PlayerCar(starting_pos, hiddenImg, this.gameEngine, carStats, targetLaps, indestructable);
         this.player = mainPlayer;
         this.gameEngine.addEntity(mainPlayer);
@@ -169,7 +164,7 @@ class SceneManager {
 
         // gameEngine.addEntity(new Enemy(gameEngine));
         this.gameEngine.addEntity(new FinishLine(this.gameEngine));
-        this.gameEngine.addEntity(new Checkpoint(this.gameEngine));
+        this.gameEngine.addEntity(new Checkpoint(this.gameEngine, trackStats.cp_x, trackStats.cp_y, trackStats.cp_w, trackStats.cp_h));
         var hud = document.getElementById("hud");
             hud.style.display="flex";
     
@@ -227,3 +222,11 @@ class SceneManager {
         this.gameEngine.timer.hasStarted = true;
     }
 }
+       // ASSET_MANAGER.queueDownload("Sprites/Tracks/whiteland_hidden.png");
+        //ASSET_MANAGER.queueDownload("Sprites/Tracks/rainbow.png");
+       // ASSET_MANAGER.queueDownload("Sprites/Tracks/stars.webp");
+        //ASSET_MANAGER.queueDownload("Sprites/Tracks/sky.webp");
+        // let img = ASSET_MANAGER.getAsset("Sprites/Tracks/rainbow.png");
+        // let hiddenImg = ASSET_MANAGER.getAsset("Sprites/Tracks/hidden_rainbow.png");
+        // const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/stars.webp");
+        //const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/bg.png");
