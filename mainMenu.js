@@ -20,7 +20,7 @@ class MainMenu {
         //For looping through tracks
         this.trackNames = Object.keys(trackData);
         this.trackNamesLength = this.trackNames.length;
-        this.currentTrackIndex = this.trackNames.indexOf("Whiteland");
+        this.currentTrackIndex = this.trackNames.indexOf("Digital Violet");
         this.currentTrack = this.trackNames.at(this.currentTrackIndex);
 
         //For other settings
