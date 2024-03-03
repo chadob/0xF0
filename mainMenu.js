@@ -37,9 +37,11 @@ class MainMenu {
             this.currentMenu.hidden = "true";
             this.hideMenu();
             this.playCountdown();
-            let muteButton = document.getElementById('mute');
-            ASSET_MANAGER.playAsset("Sounds/8bit-bop2.wav");
-            ASSET_MANAGER.muteAudio(muteButton.checked);
+            let muteButtonbg = document.getElementById('mutebg');
+            ASSET_MANAGER.playAsset("Sounds/8bit-bop2.wav", 'bgm');
+            ASSET_MANAGER.muteAudio(muteButtonbg.checked, 'bgm');
+            let muteButtonsfx = document.getElementById('mutesfx');
+            ASSET_MANAGER.muteAudio(muteButtonsfx.checked, 'sfx');
         });
         this.controlsButton = document.getElementById("controlsButton");
         this.controlsButton.addEventListener("click", e => {
@@ -118,10 +120,15 @@ class MainMenu {
         carNameElem.innerText=this.currentCar;
         let carPicElem = document.getElementById("selectedCarImg");
         carPicElem.src = carData[this.currentCar].sprite;
-
+        let carHPElem = document.getElementById("carHP");
+        carHPElem.innerText = carData[this.currentCar].body;
+        let carVELElem = document.getElementById("carVel");
+        carVELElem.innerText = Math.ceil(carData[this.currentCar]["top speed"] * 1000);
+        let carAccElem = document.getElementById("carAcc");
+        carAccElem.innerText = carData[this.currentCar].acceleration * 1000;
         var src = carData[this.currentCar].sprite;
         this.racerSelectCTX.reset();
-        this.racerSelectCTX.drawImage(ASSET_MANAGER.getAsset(src), 64, 0, 64, 64, 32, 32, this.racerSelectCanvas.width, this.racerSelectCanvas.height);
+        this.racerSelectCTX.drawImage(ASSET_MANAGER.getAsset(src), 64, 0, 64, 64, 0, 32, this.racerSelectCanvas.width, this.racerSelectCanvas.height);
     }
 
     selectNextTrack(direction) {
@@ -194,6 +201,7 @@ class MainMenu {
             countdownElem.id = "countdown";
             container.appendChild(countdownElem);
             container.hidden = false;
+            ASSET_MANAGER.playAsset("Sounds/countdown.mp3", 'sfx');
             setTimeout(() => {
                 sceneManager.enableInput();
             }, 2700);

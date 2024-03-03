@@ -2,11 +2,15 @@ class PlayerCar {
     constructor(start_pos, hiddenImage, game, carStats, targetLap, indestructible) {
         this.game = game;
 		this.direction = 0;
-        this.animator = new Animator(ASSET_MANAGER.getAsset(carStats.sprite), 0, 0, 60, 50, 3, 0.5);
+        this.animator = new Animator(ASSET_MANAGER.getAsset(carStats.sprite), 0, 0, 63, 50, 3, 0.5);
+		//entire sound file for boosting
+		this.boostSound = ASSET_MANAGER.getAudioAsset("Sounds/boosting up.wav", 'sfx');
 		this.curLap = 1;
 		this.width = .5;
 		this.height = .5;
-		
+
+		this.boostEntity = new Boost(this.game);
+		this.windEntity = new Wind(this.game);
 		this.hidden = false; 
 		//race-related settings
 		this.targetLap = targetLap;
@@ -34,7 +38,7 @@ class PlayerCar {
 		this.health = carStats.body;
 		this.maxHealth = carStats.body;
 		this.accel = carStats.acceleration;
-		this.turningSpeed = carStats.handling;
+		this.handling = carStats.handling;
 		this.maxBoostVelocity = carStats.max_boost_velocity;
 		this.max_vel = carStats["top speed"];
 		this.boostCost = carStats.boost;
@@ -42,8 +46,6 @@ class PlayerCar {
         this.velocity = 0,
 		
         this.decel = 0.1,	//0.01
-        
-		this.maxBoostVelocity = 1.5	//1
 
     // // Paul likes these settings
         this.turn_velocity = 0,
@@ -102,9 +104,8 @@ class PlayerCar {
 		
 		 	
 		if (this.health <= 0 ) {
-			
 			sceneManager.explodingDeadCarAnimation(true);
-
+			
 			console.log("You lose");
 			this.game.timer.end();	
 			document.querySelectorAll('.lapTime').forEach(e => e.remove());
@@ -141,8 +142,37 @@ class PlayerCar {
 		if (this.game.boosting) {
 			//checks current boost power
 			if (this.health > 1) {
+				let boostExists = false;
+				this.game.vfxEntities.forEach(function(entity) {
+					if (entity instanceof Boost) {
+						boostExists = true;
+					}
+				});
+				if (boostExists == false) {
+					this.boostEntity.removeFromWorld = false;
+					this.game.addEntity(this.boostEntity, "vfx");
+					this.windEntity.removeFromWorld = false;
+					this.game.addEntity(this.windEntity, "vfx");
+				}
+		
 				this.health = Math.max(1, this.health-= (4*this.boostCost* this.game.clockTick));
-				this.velocity = Math.min(this.maxBoostVelocity, this.velocity + this.game.clockTick * 60* this.accel);
+				if (this.velocity >= this.maxBoostVelocity && this.velocity<= this.maxBoostVelocity + .2) {
+					this.velocity += .05;
+				} else {
+					this.velocity = Math.min(this.maxBoostVelocity, this.velocity + this.game.clockTick * 60* this.accel);
+				}
+				
+				if (ASSET_MANAGER.getAudioAsset("Sounds/useBoost.mp3", 'sfx').paused) {				
+					ASSET_MANAGER.startAtAutoRepeatTime("Sounds/useBoost.mp3",0,6, 'sfx');
+				}		
+				// Maybe speed up car to new max if at max?
+				// if (this.velocity >= this.maxBoostVelocity) {
+					
+				// }
+			} else {
+				this.boostEntity.removeFromWorld = true;
+				this.windEntity.removeFromWorld = true;
+				ASSET_MANAGER.pauseAsset("Sounds/useBoost.mp3", 'sfx');
 			}
 		} if (this.game.braking) {
 			this.velocity = Math.max(0, this.velocity -  this.game.clockTick * 5* this.decel);
@@ -258,11 +288,11 @@ class PlayerCar {
 		// if up then velocity increase if down velocity decreases	// 1st equation of motion with t=1 
 		if(this.game.left){
 			//this.turn_velocity = Math.min(this.turn_velocity + this.turn_accel, this.turn_max_vel);
-			this.turn_velocity = Math.min(this.turn_velocity + this.turn_accel * this.game.clockTick * 40, this.turn_max_vel);
+			this.turn_velocity = Math.min(this.turn_velocity + this.turn_accel * this.game.clockTick * this.handling, this.turn_max_vel);
 			this.velocity = Math.max(this.velocity- this.velocity * this.decel * this.game.clockTick * 8, 0);
 		} else if(this.game.right){
 			//this.turn_velocity = Math.max(this.turn_velocity - this.turn_accel, -this.turn_max_vel);
-			this.turn_velocity = Math.max(this.turn_velocity - this.turn_accel * this.game.clockTick * 40, -this.turn_max_vel);
+			this.turn_velocity = Math.max(this.turn_velocity - this.turn_accel * this.game.clockTick * this.handling, -this.turn_max_vel);
 			this.velocity = Math.max(this.velocity-this.velocity *this.decel * this.game.clockTick * 8, 0);
 		} else if(this.turn_velocity < 0){
 			this.turn_velocity = Math.min(this.turn_velocity + this.turn_decel, 0);
@@ -275,6 +305,9 @@ class PlayerCar {
 		//if up then velocity increase if down velocity decreases	// 1st equation of motion with t=1 
 		if(this.game.up){		
 			this.checkBoostOrBreak();
+			if (ASSET_MANAGER.getAudioAsset("Sounds/engine.mp3", 'sfx').paused) {
+				ASSET_MANAGER.startAtAutoRepeatTime("Sounds/engine.mp3", this.velocity/this.max_vel * 5, 10, 'sfx');
+			}
 		} else if(this.game.down){
 			this.velocity = Math.max(this.velocity-this.accel, -this.max_vel);
 		} else if(this.velocity < 0) {
@@ -289,12 +322,19 @@ class PlayerCar {
 	updateHealthAndRoadCond(terrian){
 		if (terrian == "Wall" && this.indestructible === false) {
 			this.health -= 5;
+			ASSET_MANAGER.playAsset("Sounds/hurt.mp3", 'sfx');
 			this.indestructible = true;
 			setTimeout(()=> {
 				this.indestructible = false;
 			}, 250);
+			ASSET_MANAGER.pauseAsset("Sounds/engine.mp3", 'sfx');			
+			ASSET_MANAGER.startAtAutoRepeatTime("Sounds/engine.mp3",this.velocity/this.max_vel * 5,6, 'sfx');
+
 		//bright pink for boost
 		} else if (terrian == "Boost") {
+			if (ASSET_MANAGER.getAudioAsset("Sounds/onBoost.mp3", 'sfx').paused) {
+				ASSET_MANAGER.startAtAutoRepeatTime("Sounds/onBoost.mp3",0,0, 'sfx');
+			}
 			this.health = Math.min(this.maxHealth, this.health + 40* this.game.clockTick);
 		} // lime green for ice 
 		else if (terrian ==  "Ice") {
@@ -305,6 +345,11 @@ class PlayerCar {
 		} // orange for lava
 		else if (terrian == "Lava") {
 			this.health = Math.max(0, this.health-= (20* this.game.clockTick));
+		} else {
+			let onBoostSound = ASSET_MANAGER.getAudioAsset("Sounds/onBoost.mp3", 'sfx');
+			if (onBoostSound.paused == false) {
+				onBoostSound.pause();
+			}
 		}
 	};
 
@@ -354,12 +399,23 @@ class PlayerCar {
 			}	
 		}
 	};
+	//code for drawing shadow under player
+	drawShadow(ctx) {
+		const centerX = 525;
+		const centerY = 457;
+		ctx.beginPath();
+		ctx.ellipse(centerX, centerY, 90, 50, 0, 2 * Math.PI, false);
+		ctx.fillStyle = "rgba(0, 0, 0, 0.35)";
+		ctx.fill();
 
+	}
     draw(ctx) {
 		if (this.hidden) {
             return;
         }
-
+		ctx.save();
+		this.drawShadow(ctx);
+		ctx.restore;
 		ctx.save();
 		ctx.scale(0.25,0.25);
         this.animator.drawSelf(this.game.tick, ctx, 1800, 1500, this.direction)
@@ -402,13 +458,22 @@ class PlayerCar {
 	checkForPowerSlide(){
 		//Powersliding
 		if (this.game.slideL) {
+			this.direction = 0;
 			this.position.theta += .02;
 			this.move(.125, this.position.theta + Math.PI/2)
+			if (ASSET_MANAGER.getAudioAsset("Sounds/powerslide.mp3", 'sfx').paused) {
+				ASSET_MANAGER.startAtAutoRepeatTime("Sounds/powerslide.mp3",0,0, 'sfx');
+			}
 		}
 		if (this.game.slideR) {
+			this.direction = 144;
 			this.position.theta -= .02;
 			this.move(.125, this.position.theta - Math.PI/2)
+			if (ASSET_MANAGER.getAudioAsset("Sounds/powerslide.mp3", 'sfx').paused) {
+				ASSET_MANAGER.startAtAutoRepeatTime("Sounds/powerslide.mp3",0,0, 'sfx');
+			}
 		}
+		
 	};
 
 	// directionOfSprite() {
@@ -422,9 +487,9 @@ class PlayerCar {
 	// };
 	directionOfSprite() {
 		if (this.game.left) {
-			this.direction = 0;
+			
 		} else if (this.game.right) {
-			this.direction = 144;
+			
 		} else {
 			this.direction = 64;
 		}
