@@ -92,6 +92,35 @@ class SceneManager {
         carSprites.forEach((spritesheet) => {
             ASSET_MANAGER.queueDownload(spritesheet);
         });
+
+        const trackSelection = [
+            "Sprites/Tracks/whiteland_hidden.png",
+            "Sprites/Tracks/edited track.png",
+            "Sprites/Tracks/track shrunk.png",
+            "Sprites/Tracks/rainbow.png",
+            "Sprites/Tracks/hidden_rainbow.png",
+            "Sprites/Tracks/sandocean.png",
+            "Sprites/Tracks/sandocean_hidden.png",
+            "Sprites/Tracks/sandocean_shrunk.png",
+            "Sprites/Tracks/redLava.png",
+            "Sprites/Tracks/redLava_hidden.png",
+            "Sprites/Tracks/redLava_shrunk.png"
+        ]
+        trackSelection.forEach((spritesheet) => {
+            ASSET_MANAGER.queueDownload(spritesheet);
+        });
+
+        const skySelection = [
+            "Sprites/Tracks/sky.webp",
+            "Sprites/Tracks/stars.webp",
+            "Sprites/Tracks/hotSky.webp",
+            "Sprites/Tracks/underwater.png"
+
+        ]
+        skySelection.forEach((spritesheet) => {
+            ASSET_MANAGER.queueDownload(spritesheet);
+        });
+
         ASSET_MANAGER.queueBGMDownload("Sounds/8bit-bop2.wav");
         ASSET_MANAGER.queueSFXDownload("Sounds/useBoost.mp3");
         ASSET_MANAGER.queueSFXDownload("Sounds/hurt.mp3");
@@ -106,9 +135,6 @@ class SceneManager {
         ASSET_MANAGER.queueDownload("./explosions.png");
         ASSET_MANAGER.queueDownload("Sprites/boost_spritesheet.png");
         ASSET_MANAGER.queueDownload("Sprites/slipstream_spritesheet.png");
-        ASSET_MANAGER.queueDownload("Sprites/Tracks/edited track.png");
-        ASSET_MANAGER.queueDownload("Sprites/Tracks/whiteland_hidden.png");
-        ASSET_MANAGER.queueDownload("Sprites/Tracks/sky.webp");
         ASSET_MANAGER.queueDownload("Sprites/Menu/fzero_title.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/bg.png");
         ASSET_MANAGER.downloadAll(() => {});
@@ -146,24 +172,31 @@ class SceneManager {
         let mapCanvas = document.getElementById("mapCanvas");
         let gameCanvas = document.getElementById("gameworld");
         let ctx = gameCanvas.getContext("2d");
-        let img = ASSET_MANAGER.getAsset("Sprites/Tracks/edited track.png");
-        let hiddenImg = ASSET_MANAGER.getAsset("Sprites/Tracks/whiteland_hidden.png");
-        const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/sky.webp");
-        //const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/bg.png");
+
+        let trackStats = trackData[this.menu.getSelectedTrackName()];
+        let img = ASSET_MANAGER.getAsset(trackStats.trackSprite);
+        let hiddenImg = ASSET_MANAGER.getAsset(trackStats.hiddenTrackSprite);
+        const imgBG = ASSET_MANAGER.getAsset(trackStats.skySprite);
+        
+    
+        
         let carName = this.menu.getSelectedCarName();
         let carStats = carData[carName];
         let targetLaps = this.menu.getLaps();
         let indestructable = this.menu.getIndestructable();
         // Add entities to Game Enginge
-        let starting_pos = {x: -140.98064874052415, y: 14.980766027134674, theta: (3*Math.PI)/2};//-1006.8800071953033};
+
+
+        
+        let starting_pos = {x: trackStats.starting_x, y: trackStats.starting_y, theta: trackStats.theta};//theta: (3*Math.PI)/2};
 	    let mainPlayer = new PlayerCar(starting_pos, hiddenImg, this.gameEngine, carStats, targetLaps, indestructable);
         this.player = mainPlayer;
         this.gameEngine.addEntity(mainPlayer, "unit");
         this.gameEngine.addEntity(new mode7(mainPlayer, img, mapCanvas, this.gameEngine, imgBG), "unit");
 
         // gameEngine.addEntity(new Enemy(gameEngine));
-        this.gameEngine.addEntity(new FinishLine(this.gameEngine), "unit");
-        this.gameEngine.addEntity(new Checkpoint(this.gameEngine), "unit");
+        this.gameEngine.addEntity(new FinishLine(this.gameEngine, trackStats.finish_x, trackStats.finish_y),"unit");
+        this.gameEngine.addEntity(new Checkpoint(this.gameEngine, trackStats.cp_x, trackStats.cp_y), "unit");
         var hud = document.getElementById("hud");
             hud.style.display="flex";
     
@@ -231,3 +264,22 @@ class SceneManager {
         this.gameEngine.timer.hasStarted = true;
     }
 }
+       // ASSET_MANAGER.queueDownload("Sprites/Tracks/whiteland_hidden.png");
+        //ASSET_MANAGER.queueDownload("Sprites/Tracks/rainbow.png");
+       // ASSET_MANAGER.queueDownload("Sprites/Tracks/stars.webp");
+        //ASSET_MANAGER.queueDownload("Sprites/Tracks/sky.webp");
+        // let img = ASSET_MANAGER.getAsset("Sprites/Tracks/rainbow.png");
+        // let hiddenImg = ASSET_MANAGER.getAsset("Sprites/Tracks/hidden_rainbow.png");
+        // const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/stars.webp");
+        //const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/bg.png");
+                //ASSET_MANAGER.queueDownload("Sprites/Tracks/edited track.png");
+        //ASSET_MANAGER.queueDownload("Sprites/Tracks/track shrunk.png");
+        //ASSET_MANAGER.queueDownload("Sprites/Tracks/sandocean.png");
+        //ASSET_MANAGER.queueDownload("Sprites/Tracks/redLava.png");
+        // ASSET_MANAGER.queueDownload("Sprites/Tracks/hotSky.webp");
+        //ASSET_MANAGER.queueDownload("Sprites/Tracks/redLava_hidden.png");
+        //ASSET_MANAGER.queueDownload("Sprites/Tracks/sandocean_hidden.png");
+        //ASSET_MANAGER.queueDownload("Sprites/Tracks/sandocean_shrunk.png");
+        //ASSET_MANAGER.queueDownload("Sprites/Tracks/redLava_shrunk.png");
+        //ASSET_MANAGER.queueDownload("Sprites/Tracks/underwater.png");
+        //ASSET_MANAGER.queueDownload("Sprites/Tracks/hidden_rainbow.png");

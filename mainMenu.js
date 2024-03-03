@@ -8,12 +8,21 @@ class MainMenu {
         this.toRaceOptionsButton = document.getElementById("toRaceButton");
         this.racerSelectCanvas = document.getElementById("selectedCarImg");
         this.racerSelectCTX = this.racerSelectCanvas.getContext('2d');
+        this.trackSelectCanvas = document.getElementById("selectedTrackImg");
+        this.trackSelectCTX = this.trackSelectCanvas.getContext('2d');
 
         //For looping through cars
         this.carNames = Object.keys(carData);
         this.carNamesLength = this.carNames.length;
         this.currentCarIndex = this.carNames.indexOf("Lambo");
         this.currentCar = this.carNames.at(this.currentCarIndex);
+
+        //For looping through tracks
+        this.trackNames = Object.keys(trackData);
+        this.trackNamesLength = this.trackNames.length;
+        this.currentTrackIndex = this.trackNames.indexOf("Digital Violet");
+        this.currentTrack = this.trackNames.at(this.currentTrackIndex);
+
         //For other settings
         this.numLaps = 3;
         this.indestructable = false;
@@ -62,6 +71,23 @@ class MainMenu {
         this.decCarButton.addEventListener("click", e=> {
             this.selectNextCar(-1);
         });
+
+
+
+
+
+        this.incTrackButton = document.getElementById("incTrackButton");
+        this.incTrackButton.addEventListener("click", e=> {
+            this.selectNextTrack(1);
+        });
+        this.decTrackButton = document.getElementById("decTrackButton");
+        this.decTrackButton.addEventListener("click", e=> {
+            this.selectNextTrack(-1);
+        });
+
+
+
+
         this.incLapsButton = document.getElementById("incLaps");
         this.incLapsButton.addEventListener("click", e=>{
             this.setLaps(1);
@@ -77,6 +103,7 @@ class MainMenu {
             });
         }
         this.selectNextCar(0);
+        this.selectNextTrack(0);
         this.currentMenu = this.menu;
         this.showMenu();
     }
@@ -177,6 +204,24 @@ class MainMenu {
         return result;
     }
 
+    selectNextTrack(direction) {
+        this.currentTrackIndex += direction;
+        if(this.currentTrackIndex < 0) {
+            this.currentTrackIndex = this.trackNamesLength - 1;
+        } else if (this.currentTrackIndex >= this.trackNamesLength) {
+            this.currentTrackIndex = 0;
+        }
+        this.currentTrack = this.trackNames.at(this.currentTrackIndex);
+        let trackNameElem = document.getElementById("trackName");
+        trackNameElem.innerText=this.currentTrack;
+        let trackPicElem = document.getElementById("selectedTrackImg");
+        trackPicElem.src = trackData[this.currentTrack].sprite;
+
+        var src = trackData[this.currentTrack].shrunkSprite;
+        this.trackSelectCTX.reset();
+        this.trackSelectCTX.drawImage(ASSET_MANAGER.getAsset(src), 0, 0, 522, 431, 0, 0, this.trackSelectCanvas.width, this.trackSelectCanvas.height);
+    }
+
     setLaps(direction) {
         this.numLaps += direction;
         if (this.numLaps < 1)
@@ -206,6 +251,11 @@ class MainMenu {
     getSelectedCarName() {
         return this.currentCar;
     }
+
+    getSelectedTrackName() {
+        return this.currentTrack;
+    }
+
     hideMenu() {
         this.menu.hidden = "hidden";
         let gw = document.getElementById("gameworld");
