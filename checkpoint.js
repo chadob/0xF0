@@ -1,14 +1,15 @@
 class Checkpoint {
-    constructor(game, x, y, width, height) {
+    constructor(game, x, y) {
         this.game = game;
-        this.x = -x;//319;
+        this.x = -x; //319;
         this.y = y; //197;
-        this.width = width; //2;
-        this.height = height //22;
+        this.width = 2;
+        this.height = 24;
         this.notReached = true;
         this.BB = new BoundingBox(this.x, this.y, this.width, this.height);										
     };
-    update() {	       
+    update() {	 
+        console.log(this.notReached);      
     };
     draw(ctx) {
 	};

@@ -8,6 +8,8 @@ const trackData = {
         "cp_y": 197,
         "cp_w": 2,
         "cp_h": 22,
+        "finish_x": 143,
+        "finish_y": 5,
         "trackSprite": "Sprites/Tracks/edited track.png",
         "skySprite": "Sprites/Tracks/sky.webp",
         "hiddenTrackSprite": "Sprites/Tracks/whiteland_hidden.png",
@@ -22,9 +24,27 @@ const trackData = {
         "cp_y": 252,
         "cp_w": 2,
         "cp_h": 23,
+        "finish_x": 143,
+        "finish_y": 5,
         "trackSprite": "Sprites/Tracks/rainbow.png",
         "skySprite": "Sprites/Tracks/stars.webp",
         "hiddenTrackSprite": "Sprites/Tracks/hidden_rainbow.png",
         "shrunkSprite" : "Sprites/Tracks/rainbow.png"
+    },
+    "Ocean": {
+        "name": "Ocean",
+        "starting_x": 494,
+        "starting_y": 461,
+        "theta": (3 * Math.PI)/2,
+        "cp_x": 150,
+        "cp_y": 100,
+        "cp_w": 2,
+        "cp_h": 23,
+        "finish_x": 496,
+        "finish_y": 452,
+        "trackSprite": "Sprites/Tracks/sandocean.png",
+        "skySprite": "Sprites/Tracks/underwater.png",
+        "hiddenTrackSprite": "Sprites/Tracks/sandocean_hidden.png",
+        "shrunkSprite" : "Sprites/Tracks/sandocean_shrunk.png"
     }
 }

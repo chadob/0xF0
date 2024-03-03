@@ -106,6 +106,10 @@ class SceneManager {
         ASSET_MANAGER.queueDownload("./explosions.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/edited track.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/track shrunk.png");
+        ASSET_MANAGER.queueDownload("Sprites/Tracks/sandocean.png");
+        ASSET_MANAGER.queueDownload("Sprites/Tracks/sandocean_shrunk.png");
+        ASSET_MANAGER.queueDownload("Sprites/Tracks/sandocean_hidden.png");
+        ASSET_MANAGER.queueDownload("Sprites/Tracks/underwater.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/hidden_rainbow.png");
         ASSET_MANAGER.queueDownload("Sprites/Menu/fzero_title.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/bg.png");
@@ -163,8 +167,8 @@ class SceneManager {
         this.gameEngine.addEntity(new mode7(mainPlayer, img, mapCanvas, this.gameEngine, imgBG));
 
         // gameEngine.addEntity(new Enemy(gameEngine));
-        this.gameEngine.addEntity(new FinishLine(this.gameEngine));
-        this.gameEngine.addEntity(new Checkpoint(this.gameEngine, trackStats.cp_x, trackStats.cp_y, trackStats.cp_w, trackStats.cp_h));
+        this.gameEngine.addEntity(new FinishLine(this.gameEngine, trackStats.finish_x, trackStats.finish_y));
+        this.gameEngine.addEntity(new Checkpoint(this.gameEngine, trackStats.cp_x, trackStats.cp_y));
         var hud = document.getElementById("hud");
             hud.style.display="flex";
     
