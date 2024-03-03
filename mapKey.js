@@ -39,7 +39,7 @@ findTerrian(possibleX, possibleY){
     else if (rgba1 == 100 && rgba2 == 255 && rgba3 == 113) {
         terrianType = "Ice";
     } // yellow for dirt
-    else if (rgba1 == 60 && rgba2 == 100 && rgba3 == 100) {
+    else if (rgba1 == 255 && rgba2 == 235 && rgba3 == 41) {
         terrianType = "Dirt";
     } // orange for lava
     else if (rgba1 == 36 && rgba2 == 100 && rgba3 == 100) {
