@@ -9,6 +9,7 @@ class Timer {
         this.second = 0;
         this.millisecond = 0;
         this.hasStarted = false;
+        this.lapTimes = [];
     };
 
     tick() {
@@ -18,64 +19,107 @@ class Timer {
 
         const gameDelta = Math.min(delta, this.maxStep);
         this.gameTime += gameDelta;
+
         if (this.hasStarted) {
-            this.millisecond += delta*1000;
-            if (this.millisecond >= 1000) {
-                this.second++;
-                this.millisecond = 0;
+            const minuteElement = document.getElementById('minute');
+            const secondElement = document.getElementById('second');
+            const millisecondElement = document.getElementById('millisecond');
+    
+            if (minuteElement && secondElement && millisecondElement) {
+                this.millisecond += delta * 1000;
+                if (this.millisecond >= 1000) {
+                    this.second++;
+                    this.millisecond = 0;
+                }
+                if (this.second >= 60) {
+                    this.second = 0;
+                    this.minute++;
+                }
+    
+                minuteElement.innerText = this.returnData(this.minute);
+                secondElement.innerText = this.returnData(this.second);
+                millisecondElement.innerText = this.returnData(this.millisecond);
             }
-            if (this.second >= 60) {
-                this.second = 0;
-                this.minute++;
-            }
-            document.getElementById('minute').innerText = this.returnData(this.minute);
-            document.getElementById('second').innerText = this.returnData(this.second);
-            document.getElementById('millisecond').innerText = this.returnData(this.millisecond);
         }
         
         return gameDelta;
     };
+
     reset() {
-        this.minute = 0;
-        this.second = 0;
-        this.millisecond = 0;
-        document.getElementById('minute').innerText = '00';
-        document.getElementById('second').innerText = '00';
-        document.getElementById('millisecond').innerText = '000';
+        const minuteElement = document.getElementById('minute');
+        const secondElement = document.getElementById('second');
+        const millisecondElement = document.getElementById('millisecond');
+    
+        if (minuteElement && secondElement && millisecondElement) {
+            this.minute = 0;
+            this.second = 0;
+            this.millisecond = 0;
+    
+            minuteElement.innerText = '00';
+            secondElement.innerText = '00';
+            millisecondElement.innerText = '000';
+        }
     }
+
     end() {
         document.getElementById('curLap').innerText = 1 + ": ";
         this.reset();
         this.hasStarted=false;
     }
+
     returnData(input) {
         return input > 10 ? input : `0${input}`
     }
-    //code to create lap time in hud
-	createLapTime(curLap) {
-		if (curLap > 1) {
-			const newDiv = document.createElement("div");
-			newDiv.classList.add("lapTime");
-			console.log("Lap " + (curLap -1) + ": " + this.minute + ":" + 
-				this.second + ":" + this.millisecond);
-			let text = document.createElement("SPAN");
-			text.innerHTML = ("Lap " + (curLap - 1) + ":&nbsp");
-			// and give it some content
 
-			// add the text node to the newly created div
-			newDiv.appendChild(text);
-			let hudMinutes = document.createTextNode(this.minute+ "'");
-			let hudSeconds = document.createTextNode(this.second+"\"");
-			let hudMilliseconds = document.createTextNode(this.millisecond);
+    // code to create lap time in hud
+    createLapTime(curLap) {
+    if (curLap > 1 && !this.gameEnded) {
+        const lapTime = this.minute * 60 + this.second + this.millisecond / 1000;
+        this.lapTimes.push(lapTime);
 
-			// add the newly created element and its content into the DOM
-			let hud = document.getElementById("hud")
-			hud.appendChild(newDiv);
-			newDiv.appendChild(hudMinutes);
-			newDiv.appendChild(hudSeconds);
-			newDiv.appendChild(hudMilliseconds);
-            this.reset();
-		}
-		
-	}
+        const newDiv = document.createElement("div");
+        newDiv.classList.add("lapTime");
+
+        // display current lap time
+        console.log("Lap " + (curLap - 1) + ": " + this.formatTime(lapTime));
+
+        let text = document.createElement("SPAN");
+        text.innerHTML = ("Lap " + (curLap - 1) + ":&nbsp");
+        newDiv.appendChild(text);
+
+        let hudMinutes = document.createTextNode(this.minute + "'");
+        let hudSeconds = document.createTextNode(this.second + "\"");
+        let hudMilliseconds = document.createTextNode(this.millisecond);
+
+        let hud = document.getElementById("hud");
+        hud.appendChild(newDiv);
+        newDiv.appendChild(hudMinutes);
+        newDiv.appendChild(hudSeconds);
+        newDiv.appendChild(hudMilliseconds);
+
+        // update best lap time
+        let bestLapDiv = document.getElementById("bestLapDiv");
+        if (!bestLapDiv) {
+            bestLapDiv = document.createElement("div");
+            bestLapDiv.classList.add("lapTime");
+            bestLapDiv.id = "bestLapDiv";
+            hud.appendChild(bestLapDiv);
+        }
+
+        let bestLapText = (this.lapTimes.length > 0 ? this.formatTime(Math.min(...this.lapTimes)) : "N/A");
+        console.log("Best Lap: " + bestLapText);
+        bestLapDiv.innerText = "Best Lap: " + bestLapText;
+
+
+        this.reset();
+        }
+    }
+
+    formatTime(time) {
+        const minutes = Math.floor(time / 60);
+        const seconds = Math.floor(time % 60);
+        const milliseconds = Math.floor((time - Math.floor(time)) * 1000);
+        
+        return `${minutes}'${seconds}"${this.returnData(milliseconds)}`;
+    }
 };
