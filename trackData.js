@@ -41,8 +41,8 @@ const trackData = {
         "hiddenTrackSprite": "Sprites/Tracks/sandocean_hidden.png",
         "shrunkSprite" : "Sprites/Tracks/sandocean_shrunk.png"
     },
-    "Ragining Inferno": {
-        "name": "Ragining Inferno",
+    "Raging Inferno": {
+        "name": "Raging Inferno",
         "starting_x": 280,
         "starting_y": 80,
         "theta": (3 * Math.PI)/2,
