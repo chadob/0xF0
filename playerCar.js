@@ -15,7 +15,7 @@ class PlayerCar {
 		//race-related settings
 		this.targetLap = targetLap;
 		this.canBoost = true;
-		this.indestructible = indestructible;
+		this.indestructible = false;
 		this.hudCurLap = document.getElementById('curLap');
 		this.position = new position(start_pos);
 		this.trackInfo = new mapKey(hiddenImage);
@@ -85,7 +85,7 @@ class PlayerCar {
 						that.checkpoint = false;
 						that.curLap++;
 						that.hudCurLap.innerText = that.curLap + ": ";
-						that.createLapTime();
+						//that.createLapTime();
 						if (that.curLap > that.targetLap) {
 							console.log("You win!");
 							that.game.timer.end();
@@ -200,7 +200,7 @@ class PlayerCar {
 		
 	}
     move(v, theta) {
-		
+		console.log(this.position)
         var possibleX = this.position.x + v * Math.sin(theta);
         var possibleY = this.position.y + v * Math.cos(theta);
 

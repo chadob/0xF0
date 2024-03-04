@@ -94,9 +94,20 @@ class mode7 {
     this.worker.postMessage({
       cmd: 'start'
     });
-
-
-    this.height = 1,
+    this.height = 1;
+    // let rising = setInterval(() => {  
+    //   this.height += 1
+    // },20);
+    // setTimeout(()=> {
+    //   clearInterval(rising);
+    //   let falling = setInterval(() => {  
+    //     this.height -= 1
+    //   },20);
+    //   setTimeout(()=> {
+    //     clearInterval(falling);
+    //   }, 3000)
+    // }, 3000)
+    
     this.horizon = this.h/2 + .00000000000001, //a change in the magitude of 1 x 10^-15 to make canvas gone,
     this.theta = this.mainCar.theta;
 

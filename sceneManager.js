@@ -107,10 +107,12 @@ class SceneManager {
         ASSET_MANAGER.queueDownload("Sprites/boost_spritesheet.png");
         ASSET_MANAGER.queueDownload("Sprites/slipstream_spritesheet.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/edited track.png");
+        ASSET_MANAGER.queueDownload("Sprites/Tracks/straightaway.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/whiteland_hidden.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/sky.webp");
         ASSET_MANAGER.queueDownload("Sprites/Menu/fzero_title.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/bg.png");
+        ASSET_MANAGER.queueDownload("Sprites/nightsky.png");
         ASSET_MANAGER.downloadAll(() => {});
         ASSET_MANAGER.downloadBGM();
         ASSET_MANAGER.downloadSFX();
@@ -146,10 +148,10 @@ class SceneManager {
         let mapCanvas = document.getElementById("mapCanvas");
         let gameCanvas = document.getElementById("gameworld");
         let ctx = gameCanvas.getContext("2d");
-        let img = ASSET_MANAGER.getAsset("Sprites/Tracks/edited track.png");
-        let hiddenImg = ASSET_MANAGER.getAsset("Sprites/Tracks/whiteland_hidden.png");
-        const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/sky.webp");
-        //const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/bg.png");
+        let img = ASSET_MANAGER.getAsset("Sprites/Tracks/straightaway.png");
+        let hiddenImg = ASSET_MANAGER.getAsset("Sprites/Tracks/straightaway.png");
+        // const imgBG = ASSET_MANAGER.getAsset("Sprites/Tracks/sky.webp");
+        const imgBG = ASSET_MANAGER.getAsset("Sprites/nightsky.png");
         let mapName = "whiteland";
         let carName = this.menu.getSelectedCarName();
         let carStats = carData[carName];
@@ -157,19 +159,19 @@ class SceneManager {
         let indestructable = this.menu.getIndestructable();
         // Add entities to Game Enginge
         //These are going to depend on each
-        let starting_pos = {x: -140.98064874052415, y: 14.980766027134674, theta: (3*Math.PI)/2};//-1006.8800071953033};
+        let starting_pos = {x: -15, y: 255, theta: (3*Math.PI)/2};//-1006.8800071953033};
 	    let mainPlayer = new PlayerCar(starting_pos, hiddenImg, this.gameEngine, carStats, targetLaps, indestructable);
         this.player = mainPlayer;
         this.gameEngine.addEntity(mainPlayer, "unit");
 
-        this.gameEngine.addEntity(new Enemy(this.gameEngine, mapName, carStats));
+        // this.gameEngine.addEntity(new Enemy(this.gameEngine, mapName, carStats));
         this.gameEngine.addEntity(new mode7(mainPlayer, img, mapCanvas, this.gameEngine, imgBG), "unit");
 
         // gameEngine.addEntity(new Enemy(gameEngine));
         this.gameEngine.addEntity(new FinishLine(this.gameEngine), "unit");
         this.gameEngine.addEntity(new Checkpoint(this.gameEngine), "unit");
         var hud = document.getElementById("hud");
-            hud.style.display="flex";
+           hud.style.display="flex";
     
         /**
          *	Adding the mode7 to the Game Engine's entity list will make it execute its update/draw

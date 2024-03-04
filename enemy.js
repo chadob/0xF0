@@ -8,7 +8,7 @@ class Enemy {
 		this.width = 30;
 		this.height = 30;
         //car initial position
-        this.position = new position({x: -140.98064874052415, y: 14.980766027134674, theta: 3(Math.PI)/2});
+        this.position = new position({x: -140.98064874052415, y: 14.980766027134674, theta: 3 * (Math.PI)/2});
         //path for car to take
         this.positionArray = mapPositionArrays[mapName];
         this.curPositionIdx = 0;
