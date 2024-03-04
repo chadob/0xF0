@@ -137,6 +137,7 @@ class SceneManager {
         ASSET_MANAGER.queueDownload("Sprites/slipstream_spritesheet.png");
         ASSET_MANAGER.queueDownload("Sprites/Menu/fzero_title.png");
         ASSET_MANAGER.queueDownload("Sprites/Tracks/bg.png");
+        ASSET_MANAGER.queueDownload("Sprites/nightsky.png");
         ASSET_MANAGER.downloadAll(() => {});
         ASSET_MANAGER.downloadBGM();
         ASSET_MANAGER.downloadSFX();
@@ -192,13 +193,15 @@ class SceneManager {
 	    let mainPlayer = new PlayerCar(starting_pos, hiddenImg, this.gameEngine, carStats, targetLaps, indestructable);
         this.player = mainPlayer;
         this.gameEngine.addEntity(mainPlayer, "unit");
+
+        // this.gameEngine.addEntity(new Enemy(this.gameEngine, mapName, carStats));
         this.gameEngine.addEntity(new mode7(mainPlayer, img, mapCanvas, this.gameEngine, imgBG), "unit");
 
         // gameEngine.addEntity(new Enemy(gameEngine));
         this.gameEngine.addEntity(new FinishLine(this.gameEngine, trackStats.finish_x, trackStats.finish_y),"unit");
         this.gameEngine.addEntity(new Checkpoint(this.gameEngine, trackStats.cp_x, trackStats.cp_y), "unit");
         var hud = document.getElementById("hud");
-            hud.style.display="flex";
+           hud.style.display="flex";
     
         /**
          *	Adding the mode7 to the Game Engine's entity list will make it execute its update/draw
@@ -262,6 +265,7 @@ class SceneManager {
     enableInput() {
         this.player.inputEnabled = true;
         this.gameEngine.timer.hasStarted = true;
+        //this.player.startRecordingPositions();
     }
 }
        // ASSET_MANAGER.queueDownload("Sprites/Tracks/whiteland_hidden.png");

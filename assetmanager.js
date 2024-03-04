@@ -38,6 +38,7 @@ class AssetManager {
 
             switch (ext) {
                 case 'jpg':
+                case 'jpeg':
                 case 'png':
                 case 'ebp':
                     var img = new Image();

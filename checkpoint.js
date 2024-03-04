@@ -9,7 +9,7 @@ class Checkpoint {
         this.BB = new BoundingBox(this.x, this.y, this.width, this.height);										
     };
     update() {	 
-        console.log(this.notReached);      
+        // console.log(this.notReached);      
     };
     draw(ctx) {
 	};
