@@ -15,7 +15,7 @@ class PlayerCar {
 		//race-related settings
 		this.targetLap = targetLap;
 		this.canBoost = true;
-		this.indestructible = false;
+		this.indestructible = indestructible;
 		this.hudCurLap = document.getElementById('curLap');
 		this.position = new position(start_pos);
 		this.trackInfo = new mapKey(hiddenImage);

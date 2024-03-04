@@ -44,6 +44,13 @@ background: linear-gradient(90deg, rgba(112,5,90,0.5634628851540616) 0%, rgba(11
 }
 .bmDiv {
     border-right: 5px solid white;
+    font-size: 16px;
+}
+h2 {
+    font-size: 20px;
+}
+h3 {
+    font-size: 16px;
 }
 .menuDiv {
     position: absolute;
@@ -86,18 +93,17 @@ background: linear-gradient(90deg, rgba(112,5,90,0.5634628851540616) 0%, rgba(11
 }
 #menuButtons {
     position: absolute;
-    top:70%;
+    top:62%;
     left:50%;
     transform: translate(-50%, -50%);
 }
-#menuButtons 
 #titleImg {
     position: absolute;
-    top:35%;
+    top:25%;
     left:50%;
     transform: translate(-50%, -50%);
-    width: 50%;
-    height: 50%;
+    width: 40%;
+    height: 40%;
 }
 /* tabindex="0" style="background: violet; border: 1px solid;" */
 #hud{
