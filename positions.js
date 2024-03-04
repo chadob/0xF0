@@ -1,6 +1,6 @@
 class position {
         constructor(posInfo) {
-            this.x = posInfo.x;
+            this.x = -posInfo.x;
             this.y = posInfo.y;
             this.theta = posInfo.theta;
             this.direction = this.updateMapDirection;

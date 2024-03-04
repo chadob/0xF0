@@ -8,12 +8,21 @@ class MainMenu {
         this.toRaceOptionsButton = document.getElementById("toRaceButton");
         this.racerSelectCanvas = document.getElementById("selectedCarImg");
         this.racerSelectCTX = this.racerSelectCanvas.getContext('2d');
+        this.trackSelectCanvas = document.getElementById("selectedTrackImg");
+        this.trackSelectCTX = this.trackSelectCanvas.getContext('2d');
 
         //For looping through cars
         this.carNames = Object.keys(carData);
         this.carNamesLength = this.carNames.length;
         this.currentCarIndex = this.carNames.indexOf("Lambo");
         this.currentCar = this.carNames.at(this.currentCarIndex);
+
+        //For looping through tracks
+        this.trackNames = Object.keys(trackData);
+        this.trackNamesLength = this.trackNames.length;
+        this.currentTrackIndex = this.trackNames.indexOf("Digital Violet");
+        this.currentTrack = this.trackNames.at(this.currentTrackIndex);
+
         //For other settings
         this.numLaps = 3;
         this.indestructable = false;
@@ -62,6 +71,23 @@ class MainMenu {
         this.decCarButton.addEventListener("click", e=> {
             this.selectNextCar(-1);
         });
+
+
+
+
+
+        this.incTrackButton = document.getElementById("incTrackButton");
+        this.incTrackButton.addEventListener("click", e=> {
+            this.selectNextTrack(1);
+        });
+        this.decTrackButton = document.getElementById("decTrackButton");
+        this.decTrackButton.addEventListener("click", e=> {
+            this.selectNextTrack(-1);
+        });
+
+
+
+
         this.incLapsButton = document.getElementById("incLaps");
         this.incLapsButton.addEventListener("click", e=>{
             this.setLaps(1);
@@ -77,6 +103,7 @@ class MainMenu {
             });
         }
         this.selectNextCar(0);
+        this.selectNextTrack(0);
         this.currentMenu = this.menu;
         this.showMenu();
     }
@@ -90,18 +117,109 @@ class MainMenu {
         }
         this.currentCar = this.carNames.at(this.currentCarIndex);
         let carNameElem = document.getElementById("carName");
-        carNameElem.innerText=this.currentCar;
+        carNameElem.innerHTML=this.currentCar;
         let carPicElem = document.getElementById("selectedCarImg");
         carPicElem.src = carData[this.currentCar].sprite;
         let carHPElem = document.getElementById("carHP");
-        carHPElem.innerText = carData[this.currentCar].body;
+        carHPElem.innerHTML = carData[this.currentCar].body;
         let carVELElem = document.getElementById("carVel");
-        carVELElem.innerText = Math.ceil(carData[this.currentCar]["top speed"] * 1000);
+        carVELElem.innerHTML = Math.ceil(carData[this.currentCar]["top speed"] * 1000);
         let carAccElem = document.getElementById("carAcc");
-        carAccElem.innerText = carData[this.currentCar].acceleration * 1000;
+        carAccElem.innerHTML = this.getLetterGradeAcc(carData[this.currentCar].acceleration * 1000);
+        let carBoostElem = document.getElementById("carBoost");
+        carBoostElem.innerHTML = this.getLetterGradeBoost(carData[this.currentCar].boost);
+        let carTurnElem = document.getElementById("carHandling");
+        carTurnElem.innerHTML = this.getLetterGradeTurning(carData[this.currentCar].handling);
         var src = carData[this.currentCar].sprite;
         this.racerSelectCTX.reset();
         this.racerSelectCTX.drawImage(ASSET_MANAGER.getAsset(src), 64, 0, 64, 64, 0, 32, this.racerSelectCanvas.width, this.racerSelectCanvas.height);
+    }
+    getLetterGradeAcc(val) {
+        let result;
+        switch(val) { //A, B, C, D, E, F, 8, 7, 6, 5, 4, 3
+            case 8:
+                result = '&#9733;&#9733;&#9733;&#9733;&#9733;&#9733;';
+                break;
+            case 7:
+                result = '&#9733;&#9733;&#9733;&#9733;&#9733;';
+                break;
+            case 6:
+                result = '&#9733;&#9733;&#9733;&#9733;';
+                break;
+            case 5:
+                result = '&#9733;&#9733;&#9733;';
+                break;
+            case 4:
+                result = '&#9733;&#9733;';
+                break;
+            case 3:
+                result = '&#9733;';
+                break;
+        }
+        return result;
+    }
+    getLetterGradeBoost(val) {
+        let result;
+        switch(val) { //A, B, C, D, E, F, 8, 7, 6, 5, 4, 3
+            case 8:
+                result = '&#9733;';
+                break;
+            case 7, 7.5:
+                result = '&#9733;&#9733;';
+                break;
+            case 6:
+                result = '&#9733;&#9733;&#9733;';
+                break;
+            case 5:
+                result = '&#9733;&#9733;&#9733;&#9733;';
+                break;
+            case 4:
+                result = '&#9733;&#9733;&#9733;&#9733;&#9733;';
+                break;
+            case 3:
+                result = '&#9733;&#9733;&#9733;&#9733;&#9733;&#9733;';
+                break;
+        }
+        return result;
+    }
+    getLetterGradeTurning(val) {
+        let result;
+        switch(val) { //A, B, C, D, E, 40, 35, 30, 25, 20
+            case 40:
+                result = '&#9733;&#9733;&#9733;&#9733;&#9733;&#9733;';
+                break;
+            case 35:
+                result = '&#9733;&#9733;&#9733;&#9733;&#9733;';
+                break;
+            case 30:
+                result = '&#9733;&#9733;&#9733;&#9733;';
+                break;
+            case 25:
+                result = '&#9733;&#9733;&#9733;';
+                break;
+            case 20:
+                result = '&#9733;&#9733;';
+                break;
+        }
+        return result;
+    }
+
+    selectNextTrack(direction) {
+        this.currentTrackIndex += direction;
+        if(this.currentTrackIndex < 0) {
+            this.currentTrackIndex = this.trackNamesLength - 1;
+        } else if (this.currentTrackIndex >= this.trackNamesLength) {
+            this.currentTrackIndex = 0;
+        }
+        this.currentTrack = this.trackNames.at(this.currentTrackIndex);
+        let trackNameElem = document.getElementById("trackName");
+        trackNameElem.innerText=this.currentTrack;
+        let trackPicElem = document.getElementById("selectedTrackImg");
+        trackPicElem.src = trackData[this.currentTrack].sprite;
+
+        var src = trackData[this.currentTrack].shrunkSprite;
+        this.trackSelectCTX.reset();
+        this.trackSelectCTX.drawImage(ASSET_MANAGER.getAsset(src), 0, 0, 522, 431, 0, 0, this.trackSelectCanvas.width, this.trackSelectCanvas.height);
     }
 
     setLaps(direction) {
@@ -133,6 +251,11 @@ class MainMenu {
     getSelectedCarName() {
         return this.currentCar;
     }
+
+    getSelectedTrackName() {
+        return this.currentTrack;
+    }
+
     hideMenu() {
         this.menu.hidden = "hidden";
         let gw = document.getElementById("gameworld");

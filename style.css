@@ -86,10 +86,11 @@ background: linear-gradient(90deg, rgba(112,5,90,0.5634628851540616) 0%, rgba(11
 }
 #menuButtons {
     position: absolute;
-    top:80%;
+    top:70%;
     left:50%;
     transform: translate(-50%, -50%);
 }
+#menuButtons 
 #titleImg {
     position: absolute;
     top:35%;
@@ -205,20 +206,10 @@ background: linear-gradient(90deg, rgba(112,5,90,0.5634628851540616) 0%, rgba(11
 }
 
 #audioControl {
-    position: absolute;
     justify-content: center;
-    top: 80%;
-    left: 50%;
-    transform: translate(-50%, 0%);
-    width: 1024px;
     color: white;
 }
 #audioControlsfx {
-    position: absolute;
     justify-content: center;
-    top: 80%;
-    left: 85%;
-    transform: translate(-50%, 0%);
-    width: 1024px;
     color: white;
 }
