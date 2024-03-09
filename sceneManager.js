@@ -104,7 +104,10 @@ class SceneManager {
             "Sprites/Tracks/sandocean_shrunk.png",
             "Sprites/Tracks/redLava.png",
             "Sprites/Tracks/redLava_hidden.png",
-            "Sprites/Tracks/redLava_shrunk.png"
+            "Sprites/Tracks/redLava_shrunk.png",
+            "Sprites/Tracks/mutecity2.png",
+            "Sprites/Tracks/mutecity2_hidden.png",
+            "Sprites/Tracks/mutecity2_shrunk.png"
         ]
         trackSelection.forEach((spritesheet) => {
             ASSET_MANAGER.queueDownload(spritesheet);
@@ -114,7 +117,8 @@ class SceneManager {
             "Sprites/Tracks/sky.webp",
             "Sprites/Tracks/stars.webp",
             "Sprites/Tracks/hotSky.webp",
-            "Sprites/Tracks/underwater.png"
+            "Sprites/Tracks/underwater.png",
+            "Sprites/Tracks/mutecity2bg.png"
 
         ]
         skySelection.forEach((spritesheet) => {

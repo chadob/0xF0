@@ -49,7 +49,7 @@ class mode7 {
    *  - canvas: an HTML <canvas> tag
    */
   constructor(car, img_tag, canvas, game_engine, imgBG){
-
+    this.car = car;
     /* Game Engine entity reference that we can use to access information about gamestate/keys */
     this.gameEngine = game_engine;
 
@@ -94,7 +94,7 @@ class mode7 {
     this.worker.postMessage({
       cmd: 'start'
     });
-    this.height = 1;
+    this.height = car.height;
     // let rising = setInterval(() => {  
     //   this.height += 1
     // },20);
@@ -137,7 +137,7 @@ class mode7 {
    * This method was added to comply with the update/draw loop of the Game Engine
    */
   draw() {
-    this.update_worker(this.mainCar.x, this.mainCar.y, this.height, this.horizon, this.mainCar.theta);
+    this.update_worker(this.mainCar.x, this.mainCar.y, this.car.height, this.horizon, this.mainCar.theta);
   }
   /*
   * Passes a camera position, height, horizon level, and rotation to the worker.

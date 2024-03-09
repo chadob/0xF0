@@ -54,5 +54,19 @@ const trackData = {
         "skySprite": "Sprites/Tracks/hotSky.webp",
         "hiddenTrackSprite": "Sprites/Tracks/redLava_hidden.png",
         "shrunkSprite" : "Sprites/Tracks/redLava_shrunk.png"
+    },
+    "Mute City 2": {
+        "name": "Mute City 2",
+        "starting_x": 280,
+        "starting_y": 40,
+        "theta": (Math.PI)/2,
+        "cp_x": 663,
+        "cp_y": 306,
+        "finish_x": 281,
+        "finish_y": 69,
+        "trackSprite": "Sprites/Tracks/mutecity2.png",
+        "skySprite": "Sprites/Tracks/mutecity2bg.png",
+        "hiddenTrackSprite": "Sprites/Tracks/mutecity2_hidden.png",
+        "shrunkSprite" : "Sprites/Tracks/mutecity2_shrunk.png"
     }
 }

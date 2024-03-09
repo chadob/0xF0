@@ -44,9 +44,9 @@ class PlayerCar {
 		this.maxBoostVelocity = carStats.max_boost_velocity;
 		this.max_vel = carStats["top speed"];
 		this.boostCost = carStats.boost;
-
+		this.canJump = true;
         this.velocity = 0,
-		
+		this.height = 1;
         this.decel = 0.1,	//0.01
 
     // // Paul likes these settings
@@ -329,45 +329,76 @@ class PlayerCar {
 
 	//lose health on collision
 	updateHealthAndRoadCond(terrian){
-		if (terrian == "Wall" && this.indestructible === false) {
-			this.health -= 5;
-			ASSET_MANAGER.playAsset("Sounds/hurt.mp3", 'sfx');
-			this.indestructible = true;
-			setTimeout(()=> {
-				this.indestructible = false;
-			}, 250);
-			ASSET_MANAGER.pauseAsset("Sounds/engine.mp3", 'sfx');			
-			ASSET_MANAGER.startAtAutoRepeatTime("Sounds/engine.mp3",this.velocity/this.max_vel * 5,6, 'sfx');
-
-		//bright pink for boost
-		} else if (terrian == "Boost") {
-			if (ASSET_MANAGER.getAudioAsset("Sounds/onBoost.mp3", 'sfx').paused) {
-				ASSET_MANAGER.startAtAutoRepeatTime("Sounds/onBoost.mp3",0,0, 'sfx');
-			}
-			this.health = Math.min(this.maxHealth, this.health + 40* this.game.clockTick);
-		} // lime green for ice 
-		else if (terrian ==  "Ice") {
-			this.turn_velocity = 0;
-		} // yellow for dirt
-		else if (terrian == "Dirt") {
-			this.velocity = Math.max(0.2, this.velocity - this.game.clockTick * 5);
-		} // orange for lava
-		else if (terrian == "Lava") {
-			this.health = Math.max(0, this.health-= (20* this.game.clockTick));
-		} else {
-			let onBoostSound = ASSET_MANAGER.getAudioAsset("Sounds/onBoost.mp3", 'sfx');
-			if (onBoostSound.paused == false) {
-				onBoostSound.pause();
+		if (this.height == 1) {
+			if (terrian == "Wall" && this.indestructible === false) {
+				this.health -= 5;
+				ASSET_MANAGER.playAsset("Sounds/hurt.mp3", 'sfx');
+				this.indestructible = true;
+				setTimeout(()=> {
+					this.indestructible = false;
+				}, 250);
+				ASSET_MANAGER.pauseAsset("Sounds/engine.mp3", 'sfx');			
+				ASSET_MANAGER.startAtAutoRepeatTime("Sounds/engine.mp3",this.velocity/this.max_vel * 5,6, 'sfx');
+	
+			//bright pink for boost
+			} else if (terrian == "Boost") {
+				if (ASSET_MANAGER.getAudioAsset("Sounds/onBoost.mp3", 'sfx').paused) {
+					ASSET_MANAGER.startAtAutoRepeatTime("Sounds/onBoost.mp3",0,0, 'sfx');
+				}
+				this.health = Math.min(this.maxHealth, this.health + 40* this.game.clockTick);
+			} // lime green for ice 
+			else if (terrian ==  "Ice") {
+				this.turn_velocity = 0;
+			} // yellow for dirt
+			else if (terrian == "Dirt") {
+				this.velocity = Math.max(0.2, this.velocity - this.game.clockTick * 5);
+			} // orange for lava
+			else if (terrian == "Lava") {
+				this.health = Math.max(0, this.health-= (20* this.game.clockTick));
+			} else if (terrian == "Jump") {
+				this.jump();
+			} else if (terrian == "Killzone") {
+				sceneManager.explodingDeadCarAnimation(true);	
+				console.log("You lose");
+				this.game.timer.end();	
+				document.querySelectorAll('.lapTime').forEach(e => e.remove());
+				this.inputEnabled = false;
+				sceneManager.finishedRaceAnimation(true);
+			} else {
+				let onBoostSound = ASSET_MANAGER.getAudioAsset("Sounds/onBoost.mp3", 'sfx');
+				if (onBoostSound.paused == false) {
+					onBoostSound.pause();
+				}
 			}
 		}
+		
 	};
-
+	//increase and decrease hight
+	jump() {
+		console.log("jump")
+		if (this.canJump) {
+			this.canJump = false;
+			let goingUp = setInterval(() => {
+				this.height+=.25;
+				console.log(this.height)
+			}, 50);
+			setTimeout(()=> {
+				clearInterval(goingUp);
+				let goingDown = setInterval(() => {
+					this.height -= .25;
+				}, 50);
+				setTimeout(() => {
+					clearInterval(goingDown);
+					this.height = 1;
+					this.canJump = true;
+				}, 1000 * this.velocity);
+			}, 1000 * this.velocity);
+		}	
+	}
 	//Pixel color collision detection
     canMove( possibleX, possibleY) {
 		let x = Math.floor(Math.abs(possibleX));
 		let y = Math.floor(possibleY);
-
-	
 		let findWalls = this.trackInfo.whereIsWall[x][y];
 		let typeOfTerrain = this.trackInfo.terrianMap[x][y];
 		let canDrive = typeOfTerrain != 'Wall';
@@ -376,13 +407,14 @@ class PlayerCar {
 		// absolute val of w (x) decreases as we go west
 		// absolute val of w (x) increases as we go east 
 		if (findWalls.length == 2 && canDrive){
-			canDrive = this.lookForDarkSide(findWalls, -(possibleX + x), (possibleY - y));
-			
+			canDrive = this.lookForDarkSide(findWalls, -(possibleX + x), (possibleY - y));	
 		}
-
-		this.updateHealthAndRoadCond(typeOfTerrain);
-		// console.log(typeOfTerrain);
-		return canDrive;
+		this.updateHealthAndRoadCond(typeOfTerrain);	
+		if (this.height == 1) {
+			return canDrive;
+		} else {
+			return true;
+		}		
     };
 
 
