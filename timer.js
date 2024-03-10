@@ -109,7 +109,7 @@ class Timer {
         let bestLapText = (this.lapTimes.length > 0 ? this.formatTime(Math.min(...this.lapTimes)) : "N/A");
         console.log("Best Lap: " + bestLapText);
         bestLapDiv.innerText = "Best Lap: " + bestLapText;
-
+        document.getElementById("lastBestLap").innerText = bestLapText;
 
         this.reset();
         }

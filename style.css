@@ -97,6 +97,23 @@ h3 {
     left:50%;
     transform: translate(-50%, -50%);
 }
+#lastRaceStats{
+    background: rgb(112,5,90);
+    background: linear-gradient(90deg, rgba(112,5,90,0.5634628851540616) 0%, rgba(112,5,80,0.47942927170868344) 100%);
+    position: absolute;
+    bottom:1%;
+    right:1%;
+    font-family: FZERO_SNES;
+    font-size: 12pt;
+    font-weight:lighter;
+    /* -webkit-text-stroke-width: .05px;
+  -webkit-text-stroke-color: black; */
+    border-color: white;
+    border-radius: 10px;
+    border-width: 4px;
+    color: white;
+    text-align: left;
+}
 #titleImg {
     position: absolute;
     top:25%;

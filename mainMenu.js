@@ -102,6 +102,9 @@ class MainMenu {
                 this.setIndestructable();
             });
         }
+        this.lastTrackSpan = document.getElementById("lastTrack");
+        this.lastRacerSpan = document.getElementById("lastRacer");
+        this.lastLapSpan = document.getElementById("lastBestLap");
         this.selectNextCar(0);
         this.selectNextTrack(0);
         this.currentMenu = this.menu;
@@ -283,5 +286,9 @@ class MainMenu {
                 container.hidden = true;
             }, 4000);
         }
+    }
+    updateLastRaceStats(track, racer) {
+        this.lastTrackSpan.innerHTML = track;
+        this.lastRacerSpan.innerHTML = racer;
     }
 }
