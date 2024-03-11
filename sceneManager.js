@@ -205,6 +205,11 @@ class SceneManager {
         let carStats = carData[carName];
         let targetLaps = this.menu.getLaps();
         let indestructable = this.menu.getIndestructable();
+
+        // Use selections to reference later
+        this.lastTrack = trackStats.name;
+        this.lastRacer = carName;
+
         // Add entities to Game Enginge
 
 
@@ -235,6 +240,7 @@ class SceneManager {
         this.gameEngine.start();
         console.log("Race Loaded");
         console.log("WITH LAPS: " + targetLaps + " IND: " + indestructable + " RACER: " + carName);
+        document.getElementById("lastBestLap").innerText = "DNF";
     }
     
     deLoadRace(callback) {
@@ -275,6 +281,7 @@ class SceneManager {
             container.appendChild(raceEndText);
             container.hidden = false;
             setTimeout(() => {
+                sceneManager.updateLastRaceStats();
                 sceneManager.playerDeath();
                 raceEndText.remove();
                 container.hidden = true;
@@ -286,6 +293,9 @@ class SceneManager {
         this.player.inputEnabled = true;
         this.gameEngine.timer.hasStarted = true;
         //this.player.startRecordingPositions();
+    }
+    updateLastRaceStats() {
+        this.menu.updateLastRaceStats(this.lastTrack, this.lastRacer);
     }
 }
        // ASSET_MANAGER.queueDownload("Sprites/Tracks/whiteland_hidden.png");
