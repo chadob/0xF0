@@ -45,6 +45,7 @@ class PlayerCar {
 		this.max_vel = carStats["top speed"];
 		this.boostCost = carStats.boost;
 		this.canJump = true;
+		this.canArrow = true;
         this.velocity = 0,
 		this.height = 1;
         this.decel = 0.1,	//0.01
@@ -76,7 +77,9 @@ class PlayerCar {
         this.game.entities.forEach(function (entity) {
             if (entity.BB && that.BB.collide(entity.BB)) {
 				if (entity instanceof Checkpoint) {
+					// console.log("checkpoint")
 					if (that.checkpoint == false) {
+						
 						that.checkpoint = true;
 					}
 				}
@@ -357,6 +360,8 @@ class PlayerCar {
 				this.health = Math.max(0, this.health-= (20* this.game.clockTick));
 			} else if (terrian == "Jump") {
 				this.jump();
+			} else if (terrian == "Arrow") {
+				this.arrow();
 			} else if (terrian == "Killzone") {
 				sceneManager.explodingDeadCarAnimation(true);	
 				console.log("You lose");
@@ -373,6 +378,20 @@ class PlayerCar {
 		}
 		
 	};
+	//Increase speed temporarily
+	arrow() {
+		if (this.canArrow) {
+			this.canArrow = false;
+			let speedUp = setInterval(()=> {
+				this.velocity += .1;
+			}, 100);
+			setTimeout(()=> {
+				clearInterval(speedUp);
+				this.canArrow = true;
+			}, 1000);
+		}	 
+	}
+
 	//increase and decrease hight
 	jump() {
 		console.log("jump")
@@ -380,7 +399,6 @@ class PlayerCar {
 			this.canJump = false;
 			let goingUp = setInterval(() => {
 				this.height+=.25;
-				console.log(this.height)
 			}, 50);
 			setTimeout(()=> {
 				clearInterval(goingUp);

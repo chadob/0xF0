@@ -107,7 +107,19 @@ class SceneManager {
             "Sprites/Tracks/redLava_shrunk.png",
             "Sprites/Tracks/mutecity2.png",
             "Sprites/Tracks/mutecity2_hidden.png",
-            "Sprites/Tracks/mutecity2_shrunk.png"
+            "Sprites/Tracks/mutecity2_shrunk.png",
+            "Sprites/Tracks/bigBlue.png",
+            "Sprites/Tracks/bigBlue_hidden.png",
+            "Sprites/Tracks/bigBlue_shrunk.png",
+            "Sprites/Tracks/porttown.png",
+            "Sprites/Tracks/porttown_hidden.png",
+            "Sprites/Tracks/porttown_shrunk.png",
+            "Sprites/Tracks/redcanyon.png",
+            "Sprites/Tracks/redcanyon_hidden.png",
+            "Sprites/Tracks/redcanyon_shrunk.png",
+            "Sprites/Tracks/deathwind.png",
+            "Sprites/Tracks/deathwind_hidden.png",
+            "Sprites/Tracks/deathwind_shrunk.png"
         ]
         trackSelection.forEach((spritesheet) => {
             ASSET_MANAGER.queueDownload(spritesheet);
@@ -118,7 +130,11 @@ class SceneManager {
             "Sprites/Tracks/stars.webp",
             "Sprites/Tracks/hotSky.webp",
             "Sprites/Tracks/underwater.png",
-            "Sprites/Tracks/mutecity2bg.png"
+            "Sprites/Tracks/mutecity2bg.png",
+            "Sprites/Tracks/bigBlueBG.png",
+            "Sprites/Tracks/porttownbg.png",
+            "Sprites/Tracks/redcanyonbg.png",
+            "Sprites/Tracks/deathwindbg.png"
 
         ]
         skySelection.forEach((spritesheet) => {
