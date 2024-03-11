@@ -44,6 +44,15 @@ findTerrian(possibleX, possibleY){
     } // orange for lava
     else if (rgba1 == 36 && rgba2 == 100 && rgba3 == 100) {
         terrianType = "Lava";
+    } // cyan for jump
+    else if (rgba1 == 82 && rgba2 == 247 && rgba3 == 225) {
+        terrianType = "Jump";
+    } // red for arrow
+    else if (rgba1 == 255 && rgba2 == 0 && rgba3 == 0) {
+        terrianType = "Arrow";
+    } // white for killzone
+    else if (rgba1 == 255 && rgba2 == 255 && rgba3 == 255) {
+        terrianType = "Killzone";
     } 
     else if (rgba1+rgba2+rgba3 <= 50) { //arbitrary val, have a few missed wall spots when its == 0
         terrianType = "Wall";
