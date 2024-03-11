@@ -43,7 +43,7 @@ const trackData = {
     },
     "Raging Inferno": {
         "name": "Raging Inferno",
-        "starting_x": 280,
+        "starting_x": 279,
         "starting_y": 80,
         "theta": (3 * Math.PI)/2,
         "cp_x": 663,
