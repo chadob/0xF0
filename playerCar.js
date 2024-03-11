@@ -203,7 +203,6 @@ class PlayerCar {
 		
 	}
     move(v, theta) {
-		// console.log(this.position)
         var possibleX = this.position.x + v * Math.sin(theta);
         var possibleY = this.position.y + v * Math.cos(theta);
 
@@ -394,7 +393,6 @@ class PlayerCar {
 
 	//increase and decrease hight
 	jump() {
-		console.log("jump")
 		if (this.canJump) {
 			this.canJump = false;
 			let goingUp = setInterval(() => {
